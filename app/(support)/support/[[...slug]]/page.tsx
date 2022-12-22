@@ -7,7 +7,7 @@ import { DashboardTableOfContents } from "@/components/docs/toc"
 import { DocsPageHeader } from "@/components/docs/page-header"
 import { DocsPager } from "@/components/docs/pager"
 
-interface DocPageProps {
+interface SupportPageProps {
   params: {
     slug: string[]
   }
@@ -21,7 +21,7 @@ export async function generateStaticParams(): Promise<
   }))
 }
 */
-export default async function DocPage({ params }: DocPageProps) {
+export default async function SopportPage({ params }: SupportPageProps) {
   const slug = params?.slug?.join("/") || ""
   // const doc = allDocs.find((doc) => doc.slugAsParams === slug)
   /* 

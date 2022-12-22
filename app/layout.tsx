@@ -1,4 +1,5 @@
 import { Inter as FontSans } from "@next/font/google"
+import 'tailwindcss/tailwind.css'
 
 import "@/styles/globals.css"
 
