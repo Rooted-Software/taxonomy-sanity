@@ -2,7 +2,7 @@ import { BookIcon } from '@sanity/icons'
 import { orderRankOrdering, orderRankField } from '@sanity/orderable-document-list'
 import { format, parseISO } from 'date-fns'
 import { defineField, defineType } from 'sanity'
-
+import {vimeoPlugin } from 'sanity-plugin-rsvimeo'
 import authorType from './author'
 
 /**
@@ -66,13 +66,18 @@ export default defineType({
       type: 'datetime',
       initialValue: () => new Date().toISOString(),
     }),
+    {
+      title: 'Video file',
+      name: 'video',
+      type: 'vimeo.video',
+    },
     defineField({
       name: 'author',
       title: 'Author',
       type: 'reference',
       to: [{ type: authorType.name }],
     }),
-    orderRankField({type: 'post', hidden: false }),
+    orderRankField({type: 'post' }),
    
   ],
   preview: {

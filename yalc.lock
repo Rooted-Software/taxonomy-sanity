@@ -1,0 +1,8 @@
+{
+  "version": "v1",
+  "packages": {
+    "sanity-plugin-rsvimeo": {
+      "signature": "4d962ad8f991767108fe36a682e6a638"
+    }
+  }
+}
