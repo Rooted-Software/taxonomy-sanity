@@ -1,9 +1,9 @@
 {
-  "name": "taxonomy",
+  "name": "taxonomy-sanity",
   "version": "0.1.0",
   "private": true,
   "author": {
-    "name": "Rooted Template - Taxonomy + Strapi",
+    "name": "Rooted Template - Taxonomy + Sanity",
     "url": "https://twitter.com/shadcn"
   },
   "scripts": {
