@@ -8,11 +8,9 @@ import { getAllPosts, getSettings } from 'lib/sanity.client'
 import { previewData } from 'next/headers'
 import Link from 'next/link'
 
-import HomeData from './HomeData'
-
 export default async function IndexRoute() {
   // Fetch queries in parallel
-  const [settings, posts] = await Promise.all([getSettings(), HomeData()])
+  const [settings, posts] = await Promise.all([getSettings(), getAllPosts()])
 
   if (previewData()) {
     const token = previewData().token || null
