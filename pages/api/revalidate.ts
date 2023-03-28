@@ -54,10 +54,10 @@ export default async function revalidate(
     console.log("staleRoutes: ", staleRoutes);
 
     // remove '/' link from staleRoutes list if it exists because it breaks the res.revalidate function below
-    // if(staleRoutes.includes('/')) {
-    //   staleRoutes.splice(staleRoutes.indexOf('/'), 1)
-    // }
-    // console.log("staleRoutes after slice: ", staleRoutes);
+    if(staleRoutes.includes('/')) {
+      staleRoutes.splice(staleRoutes.indexOf('/'), 1)
+    }
+    console.log("staleRoutes after slice: ", staleRoutes);
 
     await Promise.all(staleRoutes.map((route) => res.revalidate(route)))
 
