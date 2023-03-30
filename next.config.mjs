@@ -5,7 +5,6 @@ import withPWAInit from "@ducanh2912/next-pwa";
 const withPWA = withPWAInit({
   dest: "public",
   register: true,
-  cacheOnFrontEndNav: true, 
   fallbacks: {
     image: "/static/images/fallback.png",
     document: '~offline',  // if you want to fallback to another page rather than /_offline
