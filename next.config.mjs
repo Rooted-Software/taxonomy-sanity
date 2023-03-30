@@ -1,9 +1,10 @@
 /** @type {import('next').NextConfig} */
-require('webpack')
+const webpack = import("webpack");
 // import { withContentlayer } from "next-contentlayer"
 import withPWAInit from "@ducanh2912/next-pwa";
 const withPWA = withPWAInit({
   dest: "public",
+  register: true,
   cacheOnFrontEndNav: true, 
   fallbacks: {
     image: "/static/images/fallback.png",
@@ -16,13 +17,17 @@ const withPWA = withPWAInit({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  future: { webpack5: true },
-  webpack5: true,
+  reactStrictMode: false,
+    webpack5: true,
+    webpack: (config) => {
+        config.resolve.fallback = { fs: false };
+        return config;
+    },
   // @TODO turn swcMinify back on once the agressive dead code elimination bug that casues
   // `ReferenceError: FieldPresenceWithOverlay is not defined` is fixed
   swcMinify: false,
     //setting to false to enable draggable
-  reactStrictMode: false,
+
   images: {
     domains: ['avatars.githubusercontent.com'],
     remotePatterns: [
