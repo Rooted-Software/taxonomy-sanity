@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+require('webpack')
 // import { withContentlayer } from "next-contentlayer"
 import withPWAInit from "@ducanh2912/next-pwa";
 const withPWA = withPWAInit({
