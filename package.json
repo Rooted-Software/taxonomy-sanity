@@ -85,6 +85,7 @@
     "suspend-react": "^0.0.8",
     "tailwind-merge": "^1.6.2",
     "tailwindcss-animate": "^1.0.5",
+    "webpack": "5.76.3",
     "zod": "^3.19.1"
   },
   "devDependencies": {
