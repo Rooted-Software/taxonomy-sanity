@@ -8,7 +8,7 @@ const withPWA = withPWAInit({
   cacheOnFrontEndNav: true, 
   fallbacks: {
     image: "/static/images/fallback.png",
-    // document: '/other-offline',  // if you want to fallback to another page rather than /_offline
+    document: '~offline',  // if you want to fallback to another page rather than /_offline
     // font: '/static/font/fallback.woff2',
     // audio: ...,
     // video: ...,
