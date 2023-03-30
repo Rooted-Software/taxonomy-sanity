@@ -1,5 +1,17 @@
 /** @type {import('next').NextConfig} */
 // import { withContentlayer } from "next-contentlayer"
+import withPWAInit from "@ducanh2912/next-pwa";
+const withPWA = withPWAInit({
+  dest: "public",
+  cacheOnFrontEndNav: true, 
+  fallbacks: {
+    image: "/static/images/fallback.png",
+    // document: '/other-offline',  // if you want to fallback to another page rather than /_offline
+    // font: '/static/font/fallback.woff2',
+    // audio: ...,
+    // video: ...,
+  },
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -29,4 +41,4 @@ const nextConfig = {
   },
 }
 
-export default nextConfig
+export default withPWA(nextConfig);
