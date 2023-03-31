@@ -18,8 +18,10 @@ export function StreamButton({
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [vidStream, setVidStream] = React.useState<any>('')
   const [estimateSpace, setEstimateSpace] = React.useState<any>('')
+  const [count, setCount] = React.useState<number>(0)
+  const [error, setError] = React.useState<string>('')
   async function onClick() {
-    const width = '320';
+    const width = '1080';
     setIsLoading(true)
     setIsLoading(false)
     let constraints = {
@@ -70,7 +72,7 @@ export function StreamButton({
     }
 
  async function getFrame() {
-    const width = '320';
+    const width = '1080';
     const canvas =  document.querySelector('canvas'); 
     const context = canvas.getContext("2d");
     const video =  document.querySelector('video'); 
@@ -81,8 +83,55 @@ export function StreamButton({
     canvas.width = parseInt(width);
     canvas.height = parseInt(height);
     context.drawImage(video, 0, 0, parseInt(width), parseInt(height));
+    const base64Canvas = canvas.toDataURL("image/jpeg").split(';base64,')[1];
+    const indexedDB = window.indexedDB;
 
-    const data = canvas.toDataURL("image/png");
+        const request = indexedDB.open("imageDatabase", 1);
+        request.onerror = function (event) {
+            console.error("An error occurred with IndexedDB");
+            console.error(event);
+            setError('An error occurred with IndexedDB ' );
+          };
+
+          request.onupgradeneeded = function () {
+            //1
+            const db = request.result;
+          
+            //2
+            const store = db.createObjectStore("imageDatabase", { keyPath: "id" });
+          
+            //3
+            store.createIndex("imageData", ["imageData"], { unique: false });
+        
+            // 4
+   
+          };
+
+          request.onsuccess = function () {
+            console.log("Database opened successfully");
+          
+            const db = request.result;
+          
+            // 1
+            const transaction = db.transaction("imageDatabase", "readwrite");
+          
+            //2
+            const store = transaction.objectStore("imageDatabase");
+            setCount(count+1); 
+          
+            //3
+            store.put({ id: count, imageData: base64Canvas });
+      
+          
+            //4
+       
+           
+          
+            // 6
+            transaction.oncomplete = function () {
+              db.close();
+            };
+          };
 
     }
  }
@@ -130,7 +179,9 @@ export function StreamButton({
     <video id="video"> </video>
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <div className="output">
-        {estimateSpace}
+        {estimateSpace} <br/>
+        {count}
+        {error}
 </div>
     </div>
   )
