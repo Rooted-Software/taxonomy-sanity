@@ -17,7 +17,7 @@ export function StreamButton({
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [vidStream, setVidStream] = React.useState<any>('')
-  
+  const [estimateSpace, setEstimateSpace] = React.useState<any>('')
   async function onClick() {
     const width = '320';
     setIsLoading(true)
@@ -28,6 +28,15 @@ export function StreamButton({
           facingMode: 'environment'
         }
       };
+      if ('indexedDB' in window) {
+        const estimate = await navigator.storage.estimate()
+        console.log(estimate)
+        // indexedDB supported
+        setEstimateSpace(estimate?.quota)
+      }
+      else {
+        console.log('IndexedDB is not supported.');
+      }
 
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
   
@@ -112,7 +121,7 @@ export function StreamButton({
     <video id="video"> </video>
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <div className="output">
-
+        {estimateSpace}
 </div>
     </div>
   )
