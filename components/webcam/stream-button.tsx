@@ -117,10 +117,28 @@ export function StreamButton({
           
             //2
             const store = transaction.objectStore("imageDatabase");
-            setCount(count+1); 
+            const countRequest =store.count();
+      
+                countRequest.onsuccess = () => {
+                console.log(countRequest.result);
+                setCount(countRequest.result + 1); 
+                store.put({ id: countRequest.result + 1, imageData: base64Canvas });
+                transaction.oncomplete = function () {
+                    db.close();
+                  };
+                };
+
+           
           
             //3
-            store.put({ id: count, imageData: base64Canvas });
+            countRequest.onerror = function (event) {
+                console.error("An error occurred with IndexedDB");
+                console.error(event);
+                setError('An error occurred with IndexedDB ' );
+                transaction.oncomplete = function () {
+                    db.close();
+                  };
+              };
       
           
             //4
@@ -128,9 +146,7 @@ export function StreamButton({
            
           
             // 6
-            transaction.oncomplete = function () {
-              db.close();
-            };
+           
           };
 
     }
