@@ -17,7 +17,7 @@ export function StreamButton({
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [vidStream, setVidStream] = React.useState<any>('')
-  const [storageAmnt, setStorageAmnt] = React.useState<any>(0)
+  
   async function onClick() {
     const width = '320';
     setIsLoading(true)
@@ -57,8 +57,7 @@ export function StreamButton({
     const context = canvas.getContext("2d");
     const video =  document.querySelector('video'); 
     const height = ((video.videoHeight / video.videoWidth) * parseInt(width)).toString();
-    console.log( navigator.storage.estimate()) 
-    setStorageAmnt(navigator.storage.estimate()) 
+
    
   if (width && height) {
     canvas.width = parseInt(width);
