@@ -57,9 +57,8 @@ export function StreamButton({
     const context = canvas.getContext("2d");
     const video =  document.querySelector('video'); 
     const height = ((video.videoHeight / video.videoWidth) * parseInt(width)).toString();
-    const {quota} = await navigator.storage.estimate()
-    console.log( quota) 
-    setStorageAmnt(quota/ (1024 * 1024)) 
+    console.log( navigator.storage.estimate()) 
+    setStorageAmnt(navigator.storage.estimate()) 
    
   if (width && height) {
     canvas.width = parseInt(width);
@@ -114,7 +113,7 @@ export function StreamButton({
     <video id="video"> </video>
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <div className="output">
-{storageAmnt}
+
 </div>
     </div>
   )
