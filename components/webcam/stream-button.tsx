@@ -29,10 +29,19 @@ export function StreamButton({
         }
       };
       if ('indexedDB' in window) {
-        const estimate = await navigator.storage.estimate()
-        console.log(estimate)
-        // indexedDB supported
-        setEstimateSpace(estimate?.quota)
+
+        if (navigator.storage && navigator.storage.persist) {
+            navigator.storage.persist().then((persistent) => {
+              if (persistent) {
+                console.log("Storage will not be cleared except by explicit user action");
+                setEstimateSpace("Storage will not be cleared except by explicit user action")
+              } else {
+                console.log("Storage may be cleared by the UA under storage pressure.");
+                setEstimateSpace(false)
+              }
+            });
+          }
+        
       }
       else {
         console.log('IndexedDB is not supported.');
