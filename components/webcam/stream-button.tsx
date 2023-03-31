@@ -17,7 +17,7 @@ export function StreamButton({
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [vidStream, setVidStream] = React.useState<any>('')
-  
+  const [storageAmnt, setStorageAmnt] = React.useState<any>(0)
   async function onClick() {
     const width = '320';
     setIsLoading(true)
@@ -57,7 +57,9 @@ export function StreamButton({
     const context = canvas.getContext("2d");
     const video =  document.querySelector('video'); 
     const height = ((video.videoHeight / video.videoWidth) * parseInt(width)).toString();
-
+    const {quota} = await navigator.storage.estimate()
+    console.log( quota) 
+    setStorageAmnt(quota/ (1024 * 1024)) 
    
   if (width && height) {
     canvas.width = parseInt(width);
@@ -65,8 +67,7 @@ export function StreamButton({
     context.drawImage(video, 0, 0, parseInt(width), parseInt(height));
 
     const data = canvas.toDataURL("image/png");
-    const photo =  document.querySelector('photo'); 
-    photo.setAttribute("src", data);
+
     }
  }
   return (
@@ -113,7 +114,7 @@ export function StreamButton({
     <video id="video"> </video>
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <div className="output">
-  <img id="photo" alt="The screen capture will appear in this box." src=''/>
+{storageAmnt}
 </div>
     </div>
   )
