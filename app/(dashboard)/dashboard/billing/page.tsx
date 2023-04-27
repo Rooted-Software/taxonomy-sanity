@@ -1,26 +1,39 @@
 import { redirect } from "next/navigation"
 
-import { getCurrentUser } from "@/lib/session"
 import { authOptions } from "@/lib/auth"
+import { getCurrentUser } from "@/lib/session"
 import { stripe } from "@/lib/stripe"
-import { getUserSubscriptionPlan as getUserSubscriptionPlan } from "@/lib/subscription"
-import { Card } from "@/ui/card"
-import { DashboardHeader } from "@/components/dashboard/header"
-import { DashboardShell } from "@/components/dashboard/shell"
-import { BillingForm } from "@/components/dashboard/billing-form"
+import { getUserSubscriptionPlan } from "@/lib/subscription"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { BillingForm } from "@/components/billing-form"
+import { DashboardHeader } from "@/components/header"
+import { Icons } from "@/components/icons"
+import { DashboardShell } from "@/components/shell"
+
+export const metadata = {
+  title: "Billing",
+  description: "Manage billing and your subscription plan.",
+}
 
 export default async function BillingPage() {
   const user = await getCurrentUser()
 
   if (!user) {
-    redirect(authOptions.pages.signIn)
+    redirect(authOptions?.pages?.signIn || "/login")
   }
 
   const subscriptionPlan = await getUserSubscriptionPlan(user.id)
 
   // If user has a pro plan, check cancel status on Stripe.
   let isCanceled = false
-  if (subscriptionPlan.isPro) {
+  if (subscriptionPlan.isPro && subscriptionPlan.stripeSubscriptionId) {
     const stripePlan = await stripe.subscriptions.retrieve(
       subscriptionPlan.stripeSubscriptionId
     )
@@ -33,38 +46,30 @@ export default async function BillingPage() {
         heading="Billing"
         text="Manage billing and your subscription plan."
       />
-      <div className="grid gap-10">
+      <div className="grid gap-8">
+        <Alert className="!pl-14">
+          <Icons.warning />
+          <AlertTitle>This is a demo app.</AlertTitle>
+          <AlertDescription>
+            Taxonomy app is a demo app using a Stripe test environment. You can
+            find a list of test card numbers on the{" "}
+            <a
+              href="https://stripe.com/docs/testing#cards"
+              target="_blank"
+              rel="noreferrer"
+              className="font-medium underline underline-offset-8"
+            >
+              Stripe docs
+            </a>
+            .
+          </AlertDescription>
+        </Alert>
         <BillingForm
           subscriptionPlan={{
             ...subscriptionPlan,
             isCanceled,
           }}
         />
-        <Card>
-          <Card.Header>
-            <Card.Title>Note</Card.Title>
-          </Card.Header>
-          <Card.Content className="space-y-4 pb-6 text-sm">
-            <p>
-              Taxonomy app is a demo app using a Stripe test environment.{" "}
-              <strong>
-                You can test the upgrade and won&apos;t be charged.
-              </strong>
-            </p>
-            <p>
-              You can find a list of test card numbers on the{" "}
-              <a
-                href="https://stripe.com/docs/testing#cards"
-                target="_blank"
-                rel="noreferrer"
-                className="font-medium underline underline-offset-8"
-              >
-                Stripe docs
-              </a>
-              .
-            </p>
-          </Card.Content>
-        </Card>
       </div>
     </DashboardShell>
   )

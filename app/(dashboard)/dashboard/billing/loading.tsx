@@ -1,6 +1,6 @@
-import { DashboardHeader } from "@/components/dashboard/header"
-import { DashboardShell } from "@/components/dashboard/shell"
-import { Card } from "@/ui/card"
+import { CardSkeleton } from "@/components/card-skeleton"
+import { DashboardHeader } from "@/components/header"
+import { DashboardShell } from "@/components/shell"
 
 export default function DashboardBillingLoading() {
   return (
@@ -10,8 +10,7 @@ export default function DashboardBillingLoading() {
         text="Manage billing and your subscription plan."
       />
       <div className="grid gap-10">
-        <Card.Skeleton />
-        <Card.Skeleton />
+        <CardSkeleton />
       </div>
     </DashboardShell>
   )
