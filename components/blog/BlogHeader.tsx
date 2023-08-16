@@ -15,7 +15,7 @@ export default function BlogHeader({
     case 1:
       return (
         <header className="mt-16 mb-10 flex flex-col items-center md:mb-12 md:flex-row md:justify-between">
-          <h1 className="text-6xl text-accent-1 font-bold leading-tight tracking-tighter md:pr-8 md:text-8xl">
+          <h1 className="text-6xl font-bold leading-tight tracking-tighter text-accent-1 md:pr-8 md:text-8xl">
             {title}
           </h1>
           <h4
