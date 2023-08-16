@@ -5,12 +5,19 @@ import { Prisma } from '@prisma/client'
 import { th } from 'date-fns/locale'
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import EmailProvider from 'next-auth/providers/email'
 import { Client } from 'postmark'
+import Mailgun, { MailgunClientOptions, MessagesSendResult } from 'mailgun.js';
+
+
+
 
 type Credentials = { 
   email: string,
   password: string
 }
+
+
 
 const FormData = require('form-data')
 
@@ -49,6 +56,43 @@ export const authOptions: NextAuthOptions = {
     signIn: '/login?from=/dashboard',
   },
   providers: [
+    EmailProvider({
+      
+      from: process.env.SMTP_FROM,
+      sendVerificationRequest: async ({ identifier, url, provider }) => {
+        const user = await db.user.findUnique({
+          where: {
+            email: identifier,
+          },
+          select: {
+            emailVerified: true,
+          },
+        })
+        
+        const templateId = user?.emailVerified
+          ? process.env.MAILGUN_SIGN_IN_TEMPLATE
+          : process.env.MAILGUN_ACTIVATION_TEMPLATE
+        if (!templateId) {
+          throw new Error('Missing template id')
+        }
+
+        const mailgun = new Mailgun(FormData);
+        const mg = mailgun.client({username: 'api', key: process.env.MAILGUN_API_KEY || 'key-yourkeyhere'});
+
+        const mailgunData = {
+          from: process.env.SMTP_FROM,
+          to: identifier,
+          template: templateId,
+          'h:X-Mailgun-Variables': JSON.stringify({
+            action_url: url,
+            product_name: siteConfig.name,
+          })
+        };
+   
+          const result = await mg.messages.create('donorsync.org', mailgunData);
+       
+      },
+    }),
     CredentialsProvider({
       id: 'virtuous',
       // The name to display on the sign in form (e.g. 'Sign in with...')

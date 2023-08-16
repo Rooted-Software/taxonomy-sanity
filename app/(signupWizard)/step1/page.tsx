@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { useContext } from "react";
 import { cookies } from 'next/headers';
 import { getCsrfToken } from 'next-auth/react';
+
 export const metadata = {
   title: 'Create an account',
   description: 'Create an account to get started.',
@@ -32,6 +33,7 @@ export default function RegisterPage() {
             </p>
           </div>
           <UserVirtuousAuthForm csrfToken={''}/>
+          <UserAuthForm />
           <p className="px-8 text-center text-sm text-muted-foreground">
             By clicking continue, you agree to our{' '}
             <Link

@@ -85,6 +85,7 @@
     "inngest": "^2.3.0",
     "intl-segmenter-polyfill": "^0.4.4",
     "lucide-react": "^0.92.0",
+    "mailgun.js": "^9.2.1",
     "next": "^13.4.10",
     "next-auth": "^4.22.1",
     "next-contentlayer": "^0.3.1",
