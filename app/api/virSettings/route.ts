@@ -18,7 +18,7 @@ export async function PATCH(
 
       const session = await getServerSession(authOptions)
 
-      if (!session?.user || !session?.user.email) {
+      if (!session?.user || !session?.user.email || !session?.user?.team.id) {
         return new Response(null, { status: 403 })
       }
       const { user } = session
@@ -41,6 +41,15 @@ export async function PATCH(
         create: {
           teamId: user.team.id,
           virtuousAPI: body.apiKey,
+        },
+      })
+
+      const team = await db.team.update({
+        where: {
+          id: user.team.id,
+        },
+        data: {
+          name: body.teamName,
         },
       })
       console.log(setting)

@@ -47,7 +47,7 @@ export default function PricingPage() {
               Billed Monthly
             </p>
           </div>
-          <Link href="/step1" className={cn(buttonVariants({ size: 'lg' }))}>
+          <Link href="/signUp" className={cn(buttonVariants({ size: 'lg' }))}>
             Get Started
           </Link>
         </div>

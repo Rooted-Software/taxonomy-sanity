@@ -1,4 +1,4 @@
-import { UserVirtuousAuthForm } from '@/components/dashboard/user-virtuous-auth-form'
+import { UserVirtuousAuthForm } from '@/components/user-virtuous-auth-form'
 import { Icons } from '@/components/icons'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -42,7 +42,7 @@ export default function LoginPage() {
         <UserAuthForm />
         <p className="px-8 text-center text-sm text-muted-foreground">
           <Link
-            href="/step1"
+            href="/signUp"
             className="underline underline-offset-4 hover:text-accent-1"
           >
             Don&apos;t have an account? Sign Up

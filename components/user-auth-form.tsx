@@ -36,7 +36,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     const signInResult = await signIn('email', {
       email: data.email.toLowerCase(),
       redirect: false,
-      callbackUrl: searchParams?.get('from') || '/step2',
+      callbackUrl: searchParams?.get('from') || '/step1',
     })
 
     setIsLoading(false)
@@ -56,16 +56,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   }
 
   return (
-    <div className={cn('mx-auto grid w-full items-center gap-6 px-0 md:w-1/2', className)} {...props}>
+    <div className={cn('mx-auto grid w-full items-center gap-6 px-0', className)} {...props}>
       <div className="relative ">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
         </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
-          </span>
-        </div>
+       
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-2">

@@ -6,10 +6,14 @@ import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 import * as React from 'react'
 
-interface PostCreateButtonProps
-  extends React.HTMLAttributes<HTMLButtonElement> {}
+interface ButtonProps
+  extends React.HTMLAttributes<HTMLButtonElement> {
+  className?: string
+  responseCallback?: Function
 
-export function ApiCallButton({ className, ...props }: PostCreateButtonProps) {
+}
+
+export function ApiCallButton({ className, responseCallback, ...props }: ButtonProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [organizationName, setOrganizationName] = React.useState<string>('')
@@ -47,6 +51,7 @@ export function ApiCallButton({ className, ...props }: PostCreateButtonProps) {
     console.log(data)
     if (data?.organizationName) {
       setOrganizationName(data.organizationName)
+      if (typeof(responseCallback) === 'function') {responseCallback(data.organizationName)}
       setSuccess(true)
     }
 
@@ -61,11 +66,11 @@ export function ApiCallButton({ className, ...props }: PostCreateButtonProps) {
 
 
   return (
-    <div>
-      {!success  ? <button
+    <div className='mx-auto'>
+      {!success  ? <><div className='pb-4'>Test your Api Key to verify the organization and continue.</div><button
         onClick={onClick}
         className={cn(
-          'hover:bg- relative ml-6 inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+          'hover:bg- relative inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
           {
             'cursor-not-allowed opacity-60': isLoading,
           })}
@@ -75,13 +80,13 @@ export function ApiCallButton({ className, ...props }: PostCreateButtonProps) {
         {isLoading ? (
           <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
         ) : (
-          <Icons.chevronRight className="mr-2 h-4 w-4" />
+          <Icons.test className="mr-2 h-4 w-4" />
         )}
         Test Virtuous API Call
-      </button> : <button
+      </button></> : <><div className='pb-4'>Organization name: {organizationName}</div><button
         onClick={ContinueOnClick}
         className={cn(
-          'hover:bg- relative ml-6 inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+          'hover:bg- relative  inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
           {
             'cursor-not-allowed opacity-60': isLoading,
           })}
@@ -94,8 +99,9 @@ export function ApiCallButton({ className, ...props }: PostCreateButtonProps) {
           <Icons.chevronRight className="mr-2 h-4 w-4" />
         )}
         Success:  Click to Continue
-      </button>}
-      <div>Organization Name: {organizationName}</div>
+      </button></>
+      }
+      
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { UserVirtuousAuthForm } from '@/components/dashboard/user-virtuous-auth-form'
+import { UserVirtuousAuthForm } from '@/components/user-virtuous-auth-form'
 import { Icons } from '@/components/icons'
 import { buttonVariants } from '@/components/ui/button'
 import { UserAuthForm } from '@/components/user-auth-form'

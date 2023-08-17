@@ -11,10 +11,11 @@ import { useRouter } from 'next/navigation'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
+import { ApiCallButton } from '@/components/dashboard/api-call-button'
 
 interface VirtuousSettingsFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
-
+  teamName?: string
   apiKey?: string
 }
 
@@ -23,6 +24,7 @@ type FormData = z.infer<typeof apiKeySchema>
 export function VirtuousSettingsForm({
   apiKey,
   className,
+  teamName,
   ...props
 }: VirtuousSettingsFormProps) {
   const router = useRouter()
@@ -36,8 +38,18 @@ export function VirtuousSettingsForm({
       apiKey: apiKey,
     },
   })
+  const [tested, setTested] = React.useState<boolean>(false)
   const [isSaving, setIsSaving] = React.useState<boolean>(false)
   const [label, setLabel] = React.useState<string>('Save')
+  const [updatedTeamName, setUpdatedTeamName] = React.useState(teamName || '')
+  const responseCallback = (teamN)=> {
+    console.log('New team Name')
+    console.log(teamN) 
+    setUpdatedTeamName(teamN)
+    setTested(true)
+    setLabel('Success: Click to Continue')
+
+  }
   async function onSubmit(data: FormData) {
     setIsSaving(true)
     console.log(data)
@@ -48,6 +60,7 @@ export function VirtuousSettingsForm({
       },
       body: JSON.stringify({
         apiKey: data.apiKey,
+        teamName: updatedTeamName || teamName,
       }),
     })
 
@@ -67,7 +80,7 @@ export function VirtuousSettingsForm({
       type: 'success',
     })
 
-    router.refresh()
+    router.push('/step2')
   }
 
   return (
@@ -90,7 +103,7 @@ export function VirtuousSettingsForm({
             </label>
             <input
               id="apiKey"
-              className="mx-auto my-0 mb-2 block h-9 w-[350px] rounded-md border border-slate-300 py-2 px-3 text-sm text-slate-600 placeholder:text-slate-400 hover:border-slate-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-800 focus:ring-offset-1"
+              className="mx-auto my-0 mb-2 block h-9 w-[350px] rounded-full border border-slate-300 py-2 px-3 text-sm text-slate-600 placeholder:text-slate-400 hover:border-slate-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-800 focus:ring-offset-1"
               {...register('apiKey')}
             />
             {errors?.apiKey && (
@@ -100,12 +113,12 @@ export function VirtuousSettingsForm({
             )}
           </div>
         </CardContent>
-        <CardFooter className='w-100 items-center text-center '>
-          <button
+        <CardFooter className='w-100 grid-1 grid items-center text-center'>
+          {tested ? <><div className='pb-4'>Organization name: {updatedTeamName}</div><button
             type="submit"
             
             className={cn(
-              'w-sm mx-auto h-9  rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+              'hover:bg-relative mx-auto inline-flex h-9 w-1/2 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
               {
                 'cursor-not-allowed opacity-60': isSaving,
               },
@@ -113,11 +126,13 @@ export function VirtuousSettingsForm({
             )}
             disabled={isSaving}
           >
-            {isSaving && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            <span className='mx-auto'>{label}</span>
-          </button>
+            {isSaving ?  (
+              <Icons.spinner className="display-inline float-lef mr-2 h-4 w-4 animate-spin" />
+            ) : 
+            <Icons.chevronRight className=" mr-2 h-4 w-4" /> }{label}
+          </button><p onClick={() =>setTested(false) } className="mt-4 cursor-default px-8 text-center text-sm text-muted-foreground">re-test api key</p></> : <><ApiCallButton responseCallback={responseCallback} />
+         </>
+          }
         </CardFooter>
       </Card>
     </form>

@@ -31,7 +31,7 @@ export default async function FeaturePage() {
             <p className="text-sm font-medium text-slate-600">Billed Monthly</p>
           </div>
           <Link
-            href="/step1"
+            href="/signUp"
             className="relative mt-4 inline-flex h-12 w-52 max-w-xs items-center justify-center rounded-md border border-transparent bg-brand-500 py-6 text-center font-medium text-white hover:bg-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
           >
             Get Started

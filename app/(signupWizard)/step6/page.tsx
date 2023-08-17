@@ -51,7 +51,7 @@ const getFeJournalName = async (journalId, teamId) => {
 
 export default async function ReveiwDataPage() {
     const user = await getCurrentUser()
-    if (!user) { redirect('/step1') }
+    if (!user) { redirect('/login') }
 
    
     const feAccountsData = getFeAccounts(user)

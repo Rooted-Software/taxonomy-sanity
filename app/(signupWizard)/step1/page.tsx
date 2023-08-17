@@ -1,60 +1,48 @@
-import { UserVirtuousAuthForm } from '@/components/dashboard/user-virtuous-auth-form'
-import { Icons } from '@/components/icons'
-import { buttonVariants } from '@/components/ui/button'
-import { UserAuthForm } from '@/components/user-auth-form'
-import { cn } from '@/lib/utils'
-import Link from 'next/link'
-import { useContext } from "react";
-import { cookies } from 'next/headers';
-import { getCsrfToken } from 'next-auth/react';
-
+import { getCurrentUser } from '@/lib/session'
+import { UniversalSelect } from '@/components/dashboard/universal-select'
+import { VirtuousSettingsForm } from '@/components/dashboard/virtuous-settings'
+import { db } from '@/lib/db'
+import { cache } from 'react'
+import { User } from '@prisma/client'
+import { ApiCallButton } from '@/components/dashboard/api-call-button'
 export const metadata = {
   title: 'Create an account',
   description: 'Create an account to get started.',
 }
 
-
-
-export default function RegisterPage() {
+const getApiKey = cache(async (teamId: User['teamId']) => {
+  if (!teamId) return null
+  return await db.apiSetting.findFirst({
+    where: {
+      teamId: teamId,
+    },
+    select: {
+      id: true,
+      virtuousAPI: true,
+      teamId: true,
+      team: true,
+    },
+  })
+})
+  
+export default async function ConnectVirtuousOrg() {
+    const user = await getCurrentUser()
+    console.log(user);
+    const data = await getApiKey(user?.team.id)
   return (
-    < >
-    
-      <div className="bg-dark text-white lg:p-8 ">
-        <div className="m-auto flex w-full flex-col justify-center space-y-6 ">
-          <div className="flex flex-col space-y-2 text-center  ">
-            <h1 className="text-3xl font-semibold tracking-tight">
-              Let&apos;s get started
-            </h1>
-            <p className="mb-8 pb-8 text-lg text-white">
-              (Don&apos;t worry, if you run into any issues, we are here to help.)
-            </p>
+    <>
+      <div className="bg-dark text-white">
+        <div className="m-auto flex h-screen w-full max-w-xl flex-col content-center justify-center space-y-6">
+          <div className="flex flex-col space-y-2 text-center ">
             <p className="justify-left text-lg text-white">
-              <span className='text-accent-1'>STEP 1:</span> Log into your Virtuous account to begin the process.
+              <span className='text-accent-1'>STEP 1:</span>  Paste in your Virtuous API Key
             </p>
+            <VirtuousSettingsForm apiKey={data?.virtuousAPI || ''} teamName={data?.team.name || ''}/>
           </div>
-          <UserVirtuousAuthForm csrfToken={''}/>
-          <UserAuthForm />
-          <p className="px-8 text-center text-sm text-muted-foreground">
-            By clicking continue, you agree to our{' '}
-            <Link
-              href="/terms"
-              className="underline underline-offset-4 hover:text-brand"
-            >
-              Terms of Service
-            </Link>{' '}
-            and{' '}
-            <Link
-              href="/privacy"
-              className="underline underline-offset-4 hover:text-brand"
-            >
-              Privacy Policy
-            </Link>
-            .
-          </p>
         </div>
    
       </div>
-
+  
     </>
   )
 }

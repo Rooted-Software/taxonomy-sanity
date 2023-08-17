@@ -17,7 +17,7 @@ interface StepperProps extends React.HTMLAttributes<HTMLDivElement> {
   
 }
 
-const pathValues = {register: 0, step1: 0, step2: 5, step3: 10, step4: 15, step4b: 20, step5: 25, step6: 50, step7:75, step8: 100 }
+const pathValues = {register: 0, signUp:0, step1: 2, step2: 5, step3: 10, step4: 15, step4b: 20, step5: 25, step6: 50, step7:75, step8: 100 }
 
 export function Stepper({ className, ...props }: StepperProps) {
   const [percent, setPercent] = React.useState(0)
