@@ -112,11 +112,11 @@ export function UserVirtuousAuthForm({
             )}
           </div>
 
-          <div className="w-100 mt-8 grid pt-8"></div>
+          <div className="w-100 grid md:mt-8 md:pt-4"></div>
           <div className="grid "></div>
 
           <button
-            className="col-span-2 mx-auto mt-8 inline-flex w-1/2 items-center justify-center justify-self-center rounded-full bg-accent-1 px-5 py-2.5 text-center text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-4 focus:ring-[#24292F]/50 disabled:opacity-50 dark:hover:bg-[#050708]/30 dark:focus:ring-slate-500"
+            className="col-span-2 mx-auto inline-flex w-full items-center justify-center justify-self-center rounded-full bg-accent-1 px-5 py-2.5 text-center text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-4 focus:ring-[#24292F]/50 disabled:opacity-50 dark:hover:bg-[#050708]/30 dark:focus:ring-slate-500 md:mt-1 md:w-1/2"
             disabled={isLoading}
           >
             {isLoading && (
