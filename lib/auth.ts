@@ -221,7 +221,7 @@ export const authOptions: NextAuthOptions = {
             })
           }
          console.log('finishing login ')
-          if (!dbUser?.teamId) {
+          if (!dbUser.teamId) {
             const newTeam = await setDefaultNewTeam(dbUser); 
             dbUser.teamId = newTeam.id
             dbUser = await db.user.findFirst({
@@ -280,21 +280,40 @@ export const authOptions: NextAuthOptions = {
       // console.log(token)
       // console.log('jwt-user')
       // console.log(user)
-      const dbUser = await db.user.findFirst({
+      var dbUser = await db.user.findFirst({
         where: {
           email: token.email,
         },include: { 
           team: true, 
         }
       })
-      // console.log("In JWT DB USER")
-      // console.log(dbUser)
       if (!dbUser) {
         if (user) {
           token.id = user?.id
         }
         return token
       }
+      if (!dbUser.teamId) {
+        const newTeam = await setDefaultNewTeam(dbUser); 
+        dbUser.teamId = newTeam.id
+        dbUser = await db.user.findFirst({
+          where: {
+            email: token.email,
+          },
+          include: {
+            team: true, 
+          }
+        })
+      }
+      if (!dbUser) {
+        if (user) {
+          token.id = user?.id
+        }
+        return token
+      }
+      // console.log("In JWT DB USER")
+      // console.log(dbUser)
+   
 
       return {
         id: dbUser.id,

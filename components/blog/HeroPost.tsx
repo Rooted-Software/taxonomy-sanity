@@ -34,7 +34,7 @@ export default function HeroPost(
         </div>
         <div>
         </div>
-        <div>{excerpt && <p className="display-block mb-4 text-lg leading-relaxed text-white">{excerpt} <Link href={`/blog/${slug}`} className="text-accent-1 pl-3 hover:underline">
+        <div>{excerpt && <p className="display-block mb-4 text-lg leading-relaxed text-white">{excerpt} <Link href={`/blog/${slug}`} className="pl-3 text-accent-1 hover:underline">
               read more
             </Link></p>}
          {/*  {author && (
