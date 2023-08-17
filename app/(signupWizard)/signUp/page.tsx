@@ -30,7 +30,7 @@ export default function RegisterPage() {
               (Don&apos;t worry, if you run into any issues, we are here to help.)
             </p>
             <p className="justify-left text-lg text-white">
-              <span className='text-accent-1'>STEP 1:</span> Log into your Virtuous account to begin the process.
+              <span className='text-accent-1'>STEP 1:</span> Log in with your Virtuous account or email address to begin the process.
             </p>
           </div>
 

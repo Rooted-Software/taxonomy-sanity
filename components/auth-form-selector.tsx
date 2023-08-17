@@ -25,7 +25,7 @@ export default function AuthFormSelector() {
    {selectedMethod === '' ? <>
    <button className={cn(buttonVariants(), 'mx-4 rounded-full' )} onClick={() => setSelectedMethod('Virtuous')} >
             
-              <Icons.virtuous className="mr-2 h-4 w-4" />
+              <Icons.key className="mr-2 h-4 w-4" />
         
             Virtuous
           </button>
