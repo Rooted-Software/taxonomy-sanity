@@ -277,9 +277,9 @@ export const authOptions: NextAuthOptions = {
     },
     async jwt({ token, user }) {
       console.log('in jwt-token')
-      // console.log(token)
-      // console.log('jwt-user')
-      // console.log(user)
+      console.log(token)
+      console.log('jwt-user')
+      console.log(user)
       var dbUser = await db.user.findFirst({
         where: {
           email: token.email,
