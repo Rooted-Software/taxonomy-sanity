@@ -126,15 +126,12 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
     try {
       const session = await getServerSession(authOptions)
-  
       if (!session) {
         return new Response('Unauthorized', { status: 403 })
       }
-  
       const { user } = session
       console.log('POST RE Journal Entry Batches (test) API Route')
       const start = performance.now();
-
       const feAccountsData = getFeAccounts(user)
       const projectsData = getVirtuousProjects(user)
       const mappingData = getProjectAccountMappings(user)
@@ -145,6 +142,7 @@ export async function POST(req: Request) {
       console.log('default credit account')
       console.log(defaultCreditAccount)
       console.log(defaultDebitAccount)
+
       function lookupProject(projectId) { 
         const project = projects.find(p => p.project_id === projectId)
         return project?.name
@@ -152,7 +150,6 @@ export async function POST(req: Request) {
 
       function lookupProjectId(projectId) { 
         const project = projects.find(p => p.id === projectId)
-
         return project?.name
       }
 
@@ -171,22 +168,27 @@ export async function POST(req: Request) {
         return account?.class
       }
 
+      function lookupAccountClassByAcctNo(accountNo) { 
+        const account = feAccounts.find(a => a.account_number === accountNo)
+        return account?.class
+      }
+
       function lookupAccountTransactionCodes(accountId) { 
         const account = feAccounts.find(a => a.account_id === accountId)
         return account?.default_transaction_codes
       }
 
-      function lookupMapping(projectId) { 
+      function lookupMapping(projectId) {
         console.log('project id: ' + projectId)
         console.log(typeof(projectId))
         const tempProj = projects.find(p => p.id === projectId)
         console.log(tempProj)
         const mapping = mappings.find(m => m.virProjectId === tempProj?.project_id)
-        console.log('mapping found')
+        console.log('mapping found?')
         console.log(mapping)
         if (!mapping || mapping===undefined || mapping===null) { 
             console.log('mapping not found -- looking up default credit account')
-            return lookupAccount(defaultCreditAccount)
+            return lookupAccountNumber(defaultCreditAccount)
           } 
         return lookupAccountNumber(mapping?.feAccountId)
       }
@@ -217,7 +219,6 @@ export async function POST(req: Request) {
           id: parseInt(user.team.defaultJournal),
           teamId: user.team.id
           }, 
-          
         },
         select: { 
           id: true,
@@ -227,13 +228,11 @@ export async function POST(req: Request) {
       })
       console.log(defaultJournal);
       var batchTotal: number = 0.00;
-      
-      gifts.forEach((gift) => {
-        
+      gifts.forEach((gift, index) => {
         var totalDesignations: number =0.00;  
         batchTotal = gift.amount !==null ? batchTotal + gift.amount.toNumber() : batchTotal;
         //create default distribution for gift
-     
+        console.log(`***********   Gift ${index}   ********** `)
         console.log('initial distributions')
         console.log(distributions)
         var overflowDistributions = [] as Array<any>
@@ -265,6 +264,7 @@ export async function POST(req: Request) {
           console.log('designation')
           console.log(designation)
           const accno = lookupMapping(designation?.projectId)
+          
           journalEntries.push(
             {
               type_code: "Credit",
@@ -275,7 +275,7 @@ export async function POST(req: Request) {
               reference: "DonorSync",
               amount: designation && designation.amountDesignated ? designation.amountDesignated : 0,
               notes: "From DonorSync",
-              class: lookupAccountClass(accno), 
+              class: lookupAccountClassByAcctNo(accno), 
               distributions: subDistributions
             }
             )}
