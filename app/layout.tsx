@@ -27,17 +27,16 @@ interface RootLayoutProps {
 }
 
 export const metadata = {
+  metadataBase: new URL(siteConfig.url),
   title: {
     default: siteConfig.name,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
   keywords: [
-    'Next.js',
-    'React',
-    'Tailwind CSS',
-    'Server Components',
-    'Radix UI',
+    'Virtuous',
+    'Financial Edge',
+    'Integration'
   ],
   authors: [
     {
@@ -66,9 +65,9 @@ export const metadata = {
     creator: '@rooted.software',
   },
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
+    icon: '/favicon/favicon.ico',
+    shortcut: '/favicon/favicon-16x16.png',
+    apple: '/favicon/apple-touch-icon.png',
   },
   manifest: `${siteConfig.url}/site.webmanifest`,
 }
