@@ -232,7 +232,7 @@ export async function POST(req: Request) {
         var totalDesignations: number =0.00;  
         batchTotal = gift.amount !==null ? batchTotal + gift.amount.toNumber() : batchTotal;
         //create default distribution for gift
-        console.log(`***********   Gift ${index}   ********** `)
+
         console.log('initial distributions')
         console.log(distributions)
         var overflowDistributions = [] as Array<any>
@@ -257,7 +257,7 @@ export async function POST(req: Request) {
             {
               "transaction_code_values": designation && designation?.projectId !==undefined  && designation?.projectId !==null ? lookupMappingTransCode(designation?.projectId) : {}, //lookup default transaction codes
               "percent": 100.0,
-              "amount": gift.amount?.toNumber(),
+              "amount": designation && designation.amountDesignated ? designation.amountDesignated :0,
           })
         
           totalDesignations= totalDesignations + (designation?.amountDesignated || 0);
