@@ -186,12 +186,17 @@ export function UniversalSelect({
 
 
 <DropdownMenu>
-        <DropdownMenuTrigger className="text-md m-5 h-10 w-full overflow-hidden  rounded-full border border-accent-1 bg-accent-1 py-2 px-5 text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+        {!isLoading ? <DropdownMenuTrigger className="text-md m-5 h-10 w-full overflow-hidden  rounded-full border border-accent-1 bg-accent-1 py-2 px-5 text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
         {selectLabel()}
           <svg className="float-right ml-2.5 mt-2 h-2.5 w-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4"/>
   </svg>
-        </DropdownMenuTrigger>
+        </DropdownMenuTrigger> : <div className="text-md mx-5 mt-4 mb-0 h-10 w-full overflow-hidden rounded-full  border border-accent-1 bg-accent-1 py-2 px-5  text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+       <div className=''>{selectLabel()} 
+          <svg className="float-right ml-2.5 mt-2 h-2.5 w-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4"/>
+  </svg></div> 
+        </div> }
         
 
         <DropdownMenuContent align='start' className='w-100 border-whiteSomke dropdown ml-5 border-none bg-whiteSmoke text-dark'>

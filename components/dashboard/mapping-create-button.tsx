@@ -476,7 +476,7 @@ export function MappingCreateButton({
         <h1 className='py-8 text-2xl text-dark'>Mappings </h1>
 
         {mappings?.length ? (
-         <div className='justify-left m-8 overflow-scroll bg-whiteSmoke p-4 text-left text-dark' style={{height: '55vh'}}>
+         <div className='justify-left m-8 overflow-scroll bg-whiteSmoke p-2 text-left text-dark' style={{height: '50vh'}}>
           {mappings.map((mapping) => (
             <div className='p-1' key={mapping.id} >
             <div className="flex items-center" > <Icons.trash className="mr-2 h-4 w-4 text-red" onClick={()=>onDeleteMapping(mapping.id)} /> {lookupProject(mapping.virProjectId)} <Icons.arrowRight className="mr-2 h-4 w-4" />  {lookupAccount(mapping.feAccountId)}

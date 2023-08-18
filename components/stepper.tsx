@@ -34,15 +34,15 @@ useEffect(() => {
 }, [path, percent])
 
   return (
-    <div className=' absolute bottom-0 left-0 w-full items-center justify-center bg-white p-0 xl:p-8'> 
-<div className='relative top-[50px] left-[5%] m-auto  ml-4 w-[90%] bg-[#E8F1FB] xl:top-[50px]'>
+    <div className=' absolute bottom-0 left-0 w-full items-center justify-center bg-white p-0 xl:p-8'><div className="mx-auto w-full md:w-2/3">
+<div className='relative top-[50px] left-[10%] m-auto  ml-4 w-[80%] bg-[#E8F1FB] xl:top-[50px] 2xl:left-[5%] 2xl:w-[90%]'>
   <div className={`advanceTransition  rounded-xl border-[20px] border-b border-accent-1`} style={{width: `${percent}%`}}></div>
 </div>
 <div className='w-100 m-auto ml-8 py-2 px-8'>
 <ol className="flex w-full items-center">
 <li className="after:width:110% flex w-full items-center rounded-3xl text-dark after:inline-block after:h-1 after:w-full after:border-[0px] after:content-['']">
-<span className="flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-full bg-white drop-shadow-lg dark:bg-blue-800 lg:h-[60px] lg:w-[60px]">
-  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-1 dark:bg-blue-800 lg:h-[50px] lg:w-[50px]">
+<span className="flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-full bg-white drop-shadow-lg dark:bg-blue-800 lg:h-[60px] lg:w-[60px] ">
+  <span className="flex h-[50px] w-[50px] shrink-0 items-center justify-center rounded-full bg-accent-1 dark:bg-blue-800 lg:h-[50px] lg:w-[50px]">
   <svg x="16" y="18" width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M13.5233 0L6 7.71133L2.476 4.37067L0 6.848L6 12.6667L16 2.47667L13.5233 0Z" fill={percent >= 0 ? '#6BE4BC' : "#E8F1FB"}/>
   </svg>
@@ -79,7 +79,7 @@ useEffect(() => {
 </li>
 <li className="flex items-center">
 <span className="flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-full bg-white text-white drop-shadow-lg dark:bg-blue-800 lg:h-[60px] lg:w-[60px]">
-  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-1 dark:bg-blue-800 lg:h-[50px] lg:w-[50px]">
+  <span className="flex h-[50px] w-[50px] shrink-0 items-center justify-center rounded-full bg-accent-1 dark:bg-blue-800 lg:h-[50px] lg:w-[50px]">
  {percent}%
   </span>
 </span>
@@ -128,6 +128,7 @@ useEffect(() => {
 
 </li>
 </ol>
+</div>
 </div>
 </div>
   )

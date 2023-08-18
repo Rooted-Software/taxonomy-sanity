@@ -93,7 +93,7 @@ export function RESetupForm({
             <button
               type="submit"
               className={cn(
-                'relative ml-6 inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+                'relative inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
                 {
                   'cursor-not-allowed opacity-60': isSaving,
                 },
@@ -112,7 +112,7 @@ export function RESetupForm({
             <button
               type="submit"
               className={cn(
-                'hover:bg- relative ml-6 inline-flex h-9 items-center rounded-full border border-transparent bg-whiteSmoke px-4 py-2 text-sm font-medium text-dark focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+                'hover:bg- relative inline-flex h-9 items-center rounded-full border border-transparent bg-whiteSmoke px-4 py-2 text-sm font-medium text-dark focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
                 {
                   'cursor-not-allowed opacity-60': isSaving,
                 },

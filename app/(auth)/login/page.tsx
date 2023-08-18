@@ -1,11 +1,9 @@
-import { UserVirtuousAuthForm } from '@/components/user-virtuous-auth-form'
 import { Icons } from '@/components/icons'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { UserAuthForm } from '@/components/user-auth-form'
-
+import AuthFormSelector from '@/components/auth-form-selector'
 
 export const metadata: Metadata = {
   title: 'Login',
@@ -38,8 +36,7 @@ export default function LoginPage() {
             Enter your email to sign in to your account
           </p>
         </div>
-        <UserVirtuousAuthForm />
-        <UserAuthForm />
+        <AuthFormSelector />
         <p className="px-8 text-center text-sm text-muted-foreground">
           <Link
             href="/signUp"

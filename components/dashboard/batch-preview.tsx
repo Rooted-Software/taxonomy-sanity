@@ -539,12 +539,12 @@ export function BatchPreview({
           )}
           </div>
           </div>
-          <div className="m-auto flex flex-row justify-center space-y-3 xl:space-y-6 ">
+          <div className="m-auto flex flex-row items-start  justify-center space-y-3 xl:space-y-6 ">
          <div className="space-y-2 text-center"> {!synced ? <div>
           <button
         onClick={postFE}
         className={cn(
-          `relative m-8 inline-flex h-9 max-w-md items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
+          `relative m-4 inline-flex h-9 max-w-md items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
           {
             'cursor-not-allowed opacity-60': isLoading || gifts.length === 0,
           },
@@ -563,7 +563,7 @@ export function BatchPreview({
       <button
         onClick={advanceStep}
         className={cn(
-          `relative m-8 inline-flex h-9 max-w-md items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
+          `relative m-4 inline-flex h-9 max-w-md items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
           {
             'cursor-not-allowed opacity-60': isLoading,
           },
