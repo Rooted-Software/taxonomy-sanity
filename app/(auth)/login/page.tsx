@@ -1,7 +1,7 @@
 import AuthFormSelector from '@/components/auth-form-selector'
-import { Icons } from '@/components/icons'
 import { MainNav } from '@/components/main-nav'
 import { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
@@ -18,7 +18,13 @@ export default function LoginPage() {
       <div className="bg-dark text-white lg:p-8 ">
         <div className="m-auto flex w-full flex-col justify-center space-y-6 ">
           <div className="flex flex-col space-y-2 text-center  ">
-            <Icons.logo className="mx-auto h-6 w-6" />
+            <Image
+              width={50}
+              height={50}
+              src="/icon.png"
+              alt=""
+              className="mx-auto"
+            />
             <h1 className="text-2xl font-semibold tracking-tight">
               Welcome back
             </h1>
