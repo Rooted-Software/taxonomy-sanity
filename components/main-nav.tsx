@@ -4,6 +4,7 @@ import { Icons } from '@/components/icons'
 import { MobileNav } from '@/components/mobile-nav'
 import { siteConfig } from '@/config/site'
 import { cn } from '@/lib/utils'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useSelectedLayoutSegment } from 'next/navigation'
 import * as React from 'react'
@@ -24,7 +25,7 @@ export function MainNav({ items, children }: MainNavProps) {
         href="https://donorsync.org"
         className="hidden items-center space-x-2 md:flex"
       >
-        <Icons.logo />
+        <Image width={24} height={24} src="/icon.png" alt="" />
         <span className="hidden font-bold sm:inline-block">
           {siteConfig.name}
         </span>
@@ -52,7 +53,11 @@ export function MainNav({ items, children }: MainNavProps) {
         className="flex items-center space-x-2 md:hidden"
         onClick={() => setShowMobileMenu(!showMobileMenu)}
       >
-        {showMobileMenu ? <Icons.close /> : <Icons.logo />}
+        {showMobileMenu ? (
+          <Icons.close />
+        ) : (
+          <Image width={24} height={24} src="/icon.png" alt="" />
+        )}
         <span className="font-bold">Menu</span>
       </button>
       {showMobileMenu && items && (
