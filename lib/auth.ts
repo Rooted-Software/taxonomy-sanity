@@ -58,7 +58,7 @@ export const authOptions: NextAuthOptions = {
   providers: [
     EmailProvider({
       
-      from: process.env.SMTP_FROM,
+      from: process.env.INFO_EMAIL_ADDRESS,
       sendVerificationRequest: async ({ identifier, url, provider }) => {
         const user = await db.user.findUnique({
           where: {
@@ -80,7 +80,7 @@ export const authOptions: NextAuthOptions = {
         const mg = mailgun.client({username: 'api', key: process.env.MAILGUN_API_KEY || 'key-yourkeyhere'});
 
         const mailgunData = {
-          from: process.env.SMTP_FROM,
+          from: process.env.INFO_EMAIL_ADDRESS,
           to: identifier,
           template: templateId,
           'h:X-Mailgun-Variables': JSON.stringify({
