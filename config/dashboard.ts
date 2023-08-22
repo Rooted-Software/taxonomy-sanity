@@ -6,17 +6,17 @@ export const dashboardConfig: DashboardConfig = {
     {
       title: 'Dashboard',
       href: '/dashboard',
-      icon: 'post',
+      icon: 'clipboard',
     },
     {
       title: 'Batch Management',
       href: '/batchManagement',
-      icon: 'post',
+      icon: 'wallet',
     },
     {
       title: 'Project Mapping',
       href: '/projectMapping',
-      icon: 'post',
+      icon: 'map',
     },
     {
       title: 'Billing',
@@ -31,6 +31,7 @@ export const dashboardConfig: DashboardConfig = {
     {
       title: 'Support',
       href: '/support',
+      icon: 'lifeRing'
     },
   ],
 }
