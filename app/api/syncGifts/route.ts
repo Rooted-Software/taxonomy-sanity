@@ -1,7 +1,6 @@
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { RequiresProPlanError } from '@/lib/exceptions'
-import { getUserSubscriptionPlan } from '@/lib/subscription'
 import { virApiFetch } from '@/lib/virApiFetch'
 import { getServerSession } from 'next-auth/next'
 import * as z from 'zod'

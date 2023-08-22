@@ -13,7 +13,7 @@ import {
 import { authOptions } from '@/lib/auth'
 import { getCurrentUser } from '@/lib/session'
 import { stripe } from '@/lib/stripe'
-import { getUserSubscriptionPlan } from '@/lib/subscription'
+import { getTeamSubscriptionPlan } from '@/lib/subscription'
 import { redirect } from 'next/navigation'
 
 export const metadata = {
@@ -28,7 +28,7 @@ export default async function BillingPage() {
     redirect(authOptions?.pages?.signIn || '/login')
   }
 
-  const subscriptionPlan = await getUserSubscriptionPlan(user.id)
+  const subscriptionPlan = await getTeamSubscriptionPlan(user.team.id)
 
   // If user has a pro plan, check cancel status on Stripe.
   let isCanceled = false

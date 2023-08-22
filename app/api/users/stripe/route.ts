@@ -1,7 +1,7 @@
 import { proPlan } from '@/config/subscriptions'
 import { authOptions } from '@/lib/auth'
 import { stripe } from '@/lib/stripe'
-import { getUserSubscriptionPlan } from '@/lib/subscription'
+import { getTeamSubscriptionPlan } from '@/lib/subscription'
 import { absoluteUrl } from '@/lib/utils'
 import { getServerSession } from 'next-auth/next'
 import { z } from 'zod'
@@ -16,7 +16,7 @@ export async function GET(req: Request) {
       return new Response(null, { status: 403 })
     }
 
-    const subscriptionPlan = await getUserSubscriptionPlan(session.user.id)
+    const subscriptionPlan = await getTeamSubscriptionPlan(session.user.team.id)
 
     // The user is on the pro plan.
     // Create a portal session to manage subscription.
