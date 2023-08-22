@@ -15,6 +15,7 @@ import {
 import { UserNameForm } from '@/components/user-name-form'
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
+import { getFeAccountsFromBlackbaud } from '@/lib/feAccounts'
 import { getCurrentUser } from '@/lib/session'
 import { User } from '@prisma/client'
 import { redirect } from 'next/navigation'
@@ -81,6 +82,7 @@ export default async function SettingsPage() {
   }
   const apiKey = await getApiKey(user.team.id)
   const data = await reSettingsForUser(user.team.id)
+  const feAccounts = await getFeAccountsFromBlackbaud(user)
   return (
     <DashboardShell>
       <DashboardHeader
@@ -164,6 +166,7 @@ export default async function SettingsPage() {
                   ]}
                   selected={user?.defaultDebitAccount}
                   redirect="/dashboard/settings"
+                  initialData={feAccounts}
                 />
               </div>
             </div>
@@ -184,6 +187,7 @@ export default async function SettingsPage() {
                   subType="credit"
                   selected={user?.defaultCreditAccount}
                   redirect="/dashboard/settings"
+                  initialData={feAccounts}
                 />
               </div>
             </div>
