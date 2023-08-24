@@ -1,17 +1,14 @@
 
 import { authOptions } from '@/lib/auth'
-import { absoluteUrl } from '@/lib/utils'
 import { db } from '@/lib/db'
 import { getServerSession } from 'next-auth/next'
 import { z } from 'zod'
-import { reFetch } from '@/lib/reFetch'               
-import { upsertFeAccount } from '@/lib/feAccounts'
+import { getFeAccountsFromBlackbaud, upsertFeAccountFromId } from '@/lib/feAccounts'
 
 const userUpdateSchema = z.object({
   selectValue: z.string().optional(),
   subType: z.string().optional(),
 })
-
 
 export async function GET(req: Request) {
   try {
@@ -20,25 +17,10 @@ export async function GET(req: Request) {
     if (!session?.user || !session?.user.email) {
       return new Response(null, { status: 403 })
     }
+
     const { user } = session
-    console.log('RE Accounts')
-    try {
-      const res2 = await reFetch('https://api.sky.blackbaud.com/generalledger/v1/accounts','GET', user.team.id)
-      console.log('after form')
-      console.log(res2.status)
-      if (res2.status !== 200) {
-        console.log('returning status')
-        return res2;
-      }
-      console.log('returning something else')
-      const data = await res2.json()
-      data?.value.forEach((account) => {
-        upsertFeAccount(account, session.user.team.id)
-      })
-      return new Response(JSON.stringify(data.value));
-    } catch (error) {
-      return error
-    }
+    const accounts = await getFeAccountsFromBlackbaud(user);
+    return new Response(JSON.stringify(accounts));
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 })
@@ -47,7 +29,6 @@ export async function GET(req: Request) {
     return new Response(null, { status: 500 })
   }
 }
-
 
 export async function POST(
   req: Request,
@@ -71,6 +52,12 @@ export async function POST(
     const body = userUpdateSchema.parse(json)
     console.log('Test Subtype');
     console.log(body.subType); 
+
+    // Cache FE Account so that we can always get to it during processing
+    if (body.selectValue) {
+      upsertFeAccountFromId(body.selectValue, user.team.id);
+    }
+
     if (body.subType === 'credit') {
       const userSettings = await db.team.update({
         where: {

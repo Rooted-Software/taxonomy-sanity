@@ -13,10 +13,10 @@ import {
 import { toast } from '@/components/ui/use-toast'
 import { cn, formatDate } from '@/lib/utils'
 import * as React from 'react'
-import { UserSubscriptionPlan } from 'types'
+import { TeamSubscriptionPlan } from 'types'
 
 interface BillingFormProps extends React.HTMLAttributes<HTMLFormElement> {
-  subscriptionPlan: UserSubscriptionPlan & {
+  subscriptionPlan: TeamSubscriptionPlan & {
     isCanceled: boolean
   }
 }

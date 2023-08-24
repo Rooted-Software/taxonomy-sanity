@@ -42,6 +42,7 @@ export function VirtuousSettingsForm({
   const [isSaving, setIsSaving] = React.useState<boolean>(false)
   const [label, setLabel] = React.useState<string>('Save')
   const [updatedTeamName, setUpdatedTeamName] = React.useState(teamName || '')
+  const [formApiKey, setFormApiKey] = React.useState(apiKey )
   const responseCallback = (teamN)=> {
     console.log('New team Name')
     console.log(teamN) 
@@ -59,7 +60,7 @@ export function VirtuousSettingsForm({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        apiKey: data.apiKey,
+        apiKey: formApiKey,
         teamName: updatedTeamName || teamName,
       }),
     })
@@ -103,8 +104,9 @@ export function VirtuousSettingsForm({
             </label>
             <input
               id="apiKey"
+              onChange={(e)=>setFormApiKey( e.target.value || '')}
               className="mx-auto my-0 mb-2 block h-9 w-[350px] rounded-full border border-slate-300 py-2 px-3 text-sm text-slate-600 placeholder:text-slate-400 hover:border-slate-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-800 focus:ring-offset-1"
-              {...register('apiKey')}
+           
             />
             {errors?.apiKey && (
               <p className="text-red-600 px-1 text-xs">
@@ -130,7 +132,7 @@ export function VirtuousSettingsForm({
               <Icons.spinner className="display-inline float-lef mr-2 h-4 w-4 animate-spin" />
             ) : 
             <Icons.chevronRight className=" mr-2 h-4 w-4" /> }{label}
-          </button><p onClick={() =>setTested(false) } className="mt-4 cursor-default px-8 text-center text-sm text-muted-foreground">re-test api key</p></> : <><ApiCallButton responseCallback={responseCallback} />
+          </button><p onClick={() =>setTested(false) } className="mt-4 cursor-default px-8 text-center text-sm text-muted-foreground">re-test api key</p></> : <><ApiCallButton apiKey={formApiKey || ''} responseCallback={responseCallback} />
          </>
           }
         </CardFooter>

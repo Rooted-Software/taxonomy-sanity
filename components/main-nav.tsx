@@ -22,7 +22,7 @@ export function MainNav({ items, children }: MainNavProps) {
   return (
     <div className="flex gap-6 md:gap-10">
       <Link
-        href="https://donorsync.org"
+        href="https://app.donorsync.org"
         className="hidden items-center space-x-2 md:flex"
       >
         <Image width={24} height={24} src="/icon.png" alt="" />
