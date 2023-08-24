@@ -4,7 +4,6 @@ import { MappingCreateButton } from '@/components/dashboard/mapping-create-butto
 import { VirtuousSyncButton } from '@/components/dashboard/virtuous-sync-button'
 import { EmptyPlaceholder } from '@/components/empty-placeholder'
 import { Stepper } from '@/components/stepper'
-import { getFeAccounts } from '@/lib/feAccounts'
 import { getCurrentUser } from '@/lib/session'
 import { getVirtuousBatches } from '@/lib/virGifts'
 import { getVirtuousProjects } from '@/lib/virProjects'

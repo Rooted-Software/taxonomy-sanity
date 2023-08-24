@@ -43,7 +43,7 @@ export async function PATCH(
           virtuousAPI: body.apiKey,
         },
       })
-
+      
       const team = await db.team.update({
         where: {
           id: user.team.id,
@@ -64,3 +64,60 @@ export async function PATCH(
     }
   }
 
+
+  
+  export async function POST(
+    //this is used for testing an api key
+  req: Request,
+  ) {
+
+    const session = await getServerSession(authOptions)
+
+    if (!session?.user || !session?.user.email || !session?.user?.team.id) {
+      return new Response(null, { status: 403 })
+    }
+    const { user } = session
+ 
+  
+   
+    // Get the request body and validate it.
+    const json = await req.json()
+    console.log('getting json')
+    console.log(json)
+    const body = apiKeySchema.parse(json)
+    console.log(body) 
+
+    try { 
+      const params = {
+        method: 'GET',
+        headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${body.apiKey}`,
+        },
+  
+    } 
+      const res2 = await fetch(
+          'https://api.virtuoussoftware.com/api/Organization/Current',
+          params,
+          )
+      
+      
+    if (res2.status !== 200) {
+      console.log('Initial response failed - this could indicate a malformed request')
+      console.log(res2)
+        
+      const data = await res2.json()
+      console.log(data)
+      
+    return new Response(JSON.stringify(data));
+  }
+    const data = await res2.json()
+    console.log(data)
+
+    return new Response(JSON.stringify(data));
+    } catch (err) { 
+      console.log(err) 
+      console.log('Bigger issues than the refresh token')
+      return {json: ()=>null, status: 409}
+    }
+  }

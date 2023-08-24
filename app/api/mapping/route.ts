@@ -1,6 +1,6 @@
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
-import { postPatchSchema } from '@/lib/validations/post'
+import { upsertFeAccountFromId } from '@/lib/feAccounts'
 import { getServerSession } from 'next-auth'
 import * as z from 'zod'
 
@@ -101,6 +101,12 @@ export async function POST(
     const body = mappingCreateSchema.parse(json)
     console.log(user)
     console.log(body)
+
+    // Cache FE Account so that we can always get to it during processing
+    if (body.feAccountID) {
+      upsertFeAccountFromId(body.feAccountID, user.team.id);
+    }
+    
     if (body?.virProjectIDs?.length == 0) {
       // update default account if nothing is set....this is defunct
       const userSettings = await db.team.update({
