@@ -10,19 +10,27 @@ interface ButtonProps
   extends React.HTMLAttributes<HTMLButtonElement> {
   className?: string
   responseCallback?: Function
-
+  apiKey?: string
 }
 
-export function ApiCallButton({ className, responseCallback, ...props }: ButtonProps) {
+export function ApiCallButton({ className, apiKey, responseCallback, ...props }: ButtonProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [organizationName, setOrganizationName] = React.useState<string>('')
   const [success, setSuccess] = React.useState<boolean>(false)
   async function onClick() {
+    console.log('onClick:' + apiKey)
     setIsLoading(true)
     setOrganizationName('Loading...')
-    const response = await fetch('/api/virOrg', {
-      method: 'GET',
+    const response = await fetch(`/api/virSettings`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        apiKey: apiKey,
+       
+      }),
     })
 
     setIsLoading(false)
