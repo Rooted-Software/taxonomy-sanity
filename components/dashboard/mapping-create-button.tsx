@@ -479,7 +479,7 @@ export function MappingCreateButton({
          <div className='justify-left m-8 overflow-scroll bg-whiteSmoke p-2 text-left text-dark' style={{height: '50vh'}}>
           {mappings.map((mapping) => (
             <div className='p-1' key={mapping.id} >
-            <div className="flex items-center" > <Icons.trash className="mr-2 h-4 w-4 text-red" onClick={()=>onDeleteMapping(mapping.id)} /> {lookupProject(mapping.virProjectId)} <Icons.arrowRight className="mr-2 h-4 w-4" />  {lookupAccount(mapping.feAccountId)}
+            <div className="flex items-center" > <Icons.trash className="text-red mr-2 h-4 w-4" onClick={()=>onDeleteMapping(mapping.id)} /> {lookupProject(mapping.virProjectId)} <Icons.arrowRight className="mr-2 h-4 w-4" />  {lookupAccount(mapping.feAccountId)}
              
         </div>
               </div>
@@ -551,7 +551,7 @@ export function MappingCreateButton({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-md overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"

@@ -86,7 +86,7 @@ export function UserVirtuousAuthForm({
               {...register('email')}
             />
             {errors?.email && (
-              <p className="text-red-600 px-1 text-xs">
+              <p className="px-1 text-xs text-red-600">
                 {errors.email.message}
               </p>
             )}
@@ -106,7 +106,7 @@ export function UserVirtuousAuthForm({
               {...register('password')}
             />
             {errors?.password && (
-              <p className="text-red-600 px-1 text-xs">
+              <p className="px-1 text-xs text-red-600">
                 {errors.password.message}
               </p>
             )}
