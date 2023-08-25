@@ -25,7 +25,7 @@ export async function POST(req: Request) {
   const authStuff = `Basic ${Buffer.from(
     process.env.AUTH_CLIENT_ID + ':' + process.env.AUTH_CLIENT_SECRET
   ).toString('base64')}`
-  const bodyStuff = `grant_type=authorization_code&redirect_uri=https%3A%2F%2Fapp.donorsync.org%2Fdashboard%2Fsettings%2FreCallBack&code=${body?.code}`
+  const bodyStuff = `grant_type=authorization_code&redirect_uri=${encodeURI(process.env.AUTH_REDIRECT_URI || '')}&code=${body?.code}`
   console.log(authStuff)
   console.log(bodyStuff)
   const res2 = await fetch('https://oauth2.sky.blackbaud.com/token', {

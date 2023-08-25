@@ -42,7 +42,7 @@ export function VirtuousSettingsForm({
   const [isSaving, setIsSaving] = React.useState<boolean>(false)
   const [label, setLabel] = React.useState<string>('Save')
   const [updatedTeamName, setUpdatedTeamName] = React.useState(teamName || '')
-  const [formApiKey, setFormApiKey] = React.useState(apiKey )
+  const [formApiKey, setFormApiKey] = React.useState(apiKey)
   const responseCallback = (teamN)=> {
     console.log('New team Name')
     console.log(teamN) 
@@ -106,7 +106,7 @@ export function VirtuousSettingsForm({
               id="apiKey"
               onChange={(e)=>setFormApiKey( e.target.value || '')}
               className="mx-auto my-0 mb-2 block h-9 w-[350px] rounded-full border border-slate-300 py-2 px-3 text-sm text-slate-600 placeholder:text-slate-400 hover:border-slate-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-800 focus:ring-offset-1"
-           
+              value={apiKey}
             />
             {errors?.apiKey && (
               <p className="px-1 text-xs text-red-600">
