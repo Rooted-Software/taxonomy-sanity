@@ -4,7 +4,7 @@ import { db } from '@/lib/db'
 import { getServerSession } from 'next-auth/next'
 import { z } from 'zod'
 import { virApiFetch  } from '@/lib/virApiFetch'
-import { upsertGift } from '@/lib/virGifts'
+import { upsertGiftBatch } from '@/lib/virGifts'
 
 
 export async function GET(req: Request) {
@@ -43,7 +43,7 @@ export async function GET(req: Request) {
           console.log(unique)
     
           unique.forEach((gift: string) => {
-            upsertGift(gift, session.user.id)
+            upsertGiftBatch(gift, session.user.team.id)
           })
     
       return new Response(JSON.stringify(data));

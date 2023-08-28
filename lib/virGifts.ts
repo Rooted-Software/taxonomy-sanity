@@ -29,7 +29,7 @@ export const getVirtuousBatches = async (user) => {
     let batches = await getBatches(user)
       var today = new Date();
       today.setDate(today.getDate() - 1);
-      if (batches.length < 1 || (new Date (batches[0].updatedAt) <  today )) {
+      if (batches.length < 1000 || (new Date (batches[0].updatedAt) <  today )) {
         console.log('no initial batches or stale batches...querying virtuous')
         const body = {
             groups: [
@@ -56,13 +56,13 @@ export const getVirtuousBatches = async (user) => {
     console.log(unique)
 
     unique.forEach((gift: string) => {
-      upsertGift(gift, user.team.id)
+      upsertGiftBatch(gift, user.team.id)
     })
   }
   return await getBatches(user)
 }
 
-  export async function upsertGift(gift: string, teamId) {
+  export async function upsertGiftBatch(gift: string, teamId) {
     await db.giftBatch.upsert({
       where: {
         teamId_batch_name: { 

@@ -151,7 +151,7 @@ model FeSetting {
 
 model GiftBatch {
   id         String    @id @default(cuid())
-  batch_name String    @unique
+  batch_name String    
   synced     Boolean   @default(false)
   reBatchNo  Int?  
   syncedAt   DateTime? @map(name: "synced_at")
@@ -229,11 +229,11 @@ model Gift {
 model VirtuousProject {
   project_id             String                  @id @default(cuid())
   id                     Int
-  name                   String?
-  projectCode            String?
+  name                   String? @db.VarChar(254)
+  projectCode            String? 
   externalAccountingCode String?
   onlineDisplayName      String?
-  description            String?
+  description            String? @db.VarChar(254)
   type                   String?
   isPublic               Boolean?
   isActive               Boolean?
@@ -314,7 +314,7 @@ model FeAccount {
 
   account_id            Int 
   account_number        String
-  description           String?
+  description           String? 
   prevent_data_entry    Boolean?
   prevent_posting_data  Boolean?
   class                 String?
