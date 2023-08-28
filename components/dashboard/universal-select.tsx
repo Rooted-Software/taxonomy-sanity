@@ -107,7 +107,7 @@ export function UniversalSelect({
     ) {
       return <>Loading...</>
     }
-    if (returnedData.length === 0) {
+    if (!returnedData || returnedData.length === 0) {
       return <>Loading...</>
     }
     console.log('Selected Value')

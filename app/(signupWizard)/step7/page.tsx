@@ -51,7 +51,7 @@ export default async function ReveiwDataPage() {
   const mappingData = getProjectAccountMappings(user)
   const batchData = getVirtuousBatches(user)
   const feEnvironmentData = getFeEnvironment(user)
-  const feGetJournalName = getFeJournalName(user.team.defaultJournal, user.id)
+  const feGetJournalName = getFeJournalName(user.team.defaultJournal, user.team.id)
   const [projects, feAccounts, mappings, batches, feEnvironment, journalName] =
     await Promise.all([
       projectsData,
@@ -65,6 +65,7 @@ export default async function ReveiwDataPage() {
     redirect('/step2')
   }
   if (!journalName) {
+ 
     redirect('/step3')
   }
 

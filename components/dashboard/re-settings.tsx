@@ -89,7 +89,7 @@ export function RESettingsForm({
     <form className={cn(className)} onSubmit={() => onSubmit()} {...props}>
       <Card className="m-0 p-0">
         <CardHeader className="m-0 p-0" >
-          <CardTitle className="text-md font-normal text-accent-1">RE Configuration</CardTitle>
+          <CardTitle className="text-md font-normal text-accent-1">FE Configuration</CardTitle>
          
         </CardHeader>
         <CardContent className='m-0 px-0 pt-0'>
