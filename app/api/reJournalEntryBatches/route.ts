@@ -132,10 +132,10 @@ export async function POST(req: Request) {
       const { user } = session
       console.log('POST RE Journal Entry Batches (test) API Route')
       const start = performance.now();
-      const feAccountsData = getFeAccounts(user)
-      const projectsData = getVirtuousProjects(user)
-      const mappingData = getProjectAccountMappings(user)
-      const batchData = getVirtuousBatches(user)
+      const feAccountsData = getFeAccounts(user.team.id)
+      const projectsData = getVirtuousProjects(user.team.id)
+      const mappingData = getProjectAccountMappings(user.team.id)
+      const batchData = getVirtuousBatches(user.teamId)
       const [projects, feAccounts, mappings, batches] = await Promise.all([projectsData, feAccountsData, mappingData, batchData])
       const defaultCreditAccount = parseInt(user?.team.defaultCreditAccount)
       const defaultDebitAccount = parseInt(user?.team.defaultDebitAccount)

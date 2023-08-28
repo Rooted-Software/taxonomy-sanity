@@ -31,7 +31,7 @@ export default async function DashboardPage({ searchParams }) {
     redirect(authOptions?.pages?.signIn || '/login')
   }
 
-  const feEnvironment = await getFeEnvironment(user)
+  const feEnvironment = await getFeEnvironment(user.team.id)
 
   const batches = await db.giftBatch.findMany({
     where: {

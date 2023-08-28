@@ -19,7 +19,7 @@ export async function GET(req: Request) {
     }
 
     const { user } = session
-    const accounts = await getFeAccountsFromBlackbaud(user);
+    const accounts = await getFeAccountsFromBlackbaud(user.team.id);
     return new Response(JSON.stringify(accounts));
   } catch (error) {
     if (error instanceof z.ZodError) {

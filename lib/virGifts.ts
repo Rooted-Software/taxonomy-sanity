@@ -2,7 +2,7 @@ import { db } from '@/lib/db'
 import { virApiFetch } from './virApiFetch'
 
 
-export const getBatches = async (user) => {
+export const getBatches = async (teamId) => {
     return await db.giftBatch.findMany({
       select: {
         id: true,
@@ -14,7 +14,7 @@ export const getBatches = async (user) => {
         updatedAt: true,
       },
       where: {
-        teamId: user.team.id,
+        teamId: teamId,
       },
       orderBy: {
         updatedAt: 'desc',
@@ -25,11 +25,11 @@ export const getBatches = async (user) => {
 
 
 // attempt to get batches, but if there are none, request them from Virtuous
-export const getVirtuousBatches = async (user) => {
-    let batches = await getBatches(user)
+export const getVirtuousBatches = async (teamId) => {
+    let batches = await getBatches(teamId)
       var today = new Date();
       today.setDate(today.getDate() - 1);
-      if (batches.length < 1000 || (new Date (batches[0].updatedAt) <  today )) {
+      if (batches.length < 1|| (new Date (batches[0].updatedAt) <  today )) {
         console.log('no initial batches or stale batches...querying virtuous')
         const body = {
             groups: [
@@ -41,7 +41,7 @@ export const getVirtuousBatches = async (user) => {
             descending: 'true',
           }
       
-    const res = await virApiFetch('https://api.virtuoussoftware.com/api/Gift/Query/FullGift?skip=0&take=1000', 'POST', user.team.id, body)
+    const res = await virApiFetch('https://api.virtuoussoftware.com/api/Gift/Query/FullGift?skip=0&take=1000', 'POST', teamId, body)
 
     
     if (res.status !== 200) {
@@ -56,10 +56,10 @@ export const getVirtuousBatches = async (user) => {
     console.log(unique)
 
     unique.forEach((gift: string) => {
-      upsertGiftBatch(gift, user.team.id)
+      upsertGiftBatch(gift, teamId)
     })
   }
-  return await getBatches(user)
+  return await getBatches(teamId)
 }
 
   export async function upsertGiftBatch(gift: string, teamId) {

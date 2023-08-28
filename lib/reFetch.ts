@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client'
 
 export async function reFetch(url, method, id, body = {}) { 
     //get reSettings from server
+    console.log(url, method, id, body)
     console.log('In reFetch method')
     const reSettings = await db.feSetting.findFirst({
       select: {

@@ -11,7 +11,7 @@ export const metadata = {
   description: 'Select which projects should map to which accounts.',
 }
 
-const getVirtuousProjects = async (user) => {
+const getVirtuousProjects = async (teamId) => {
   let projects = await db.virtuousProject.findMany({
     select: {
       id: true,
@@ -28,7 +28,7 @@ const getVirtuousProjects = async (user) => {
       updatedAt: true,
     },
     where: {
-      teamId: user.team.id,
+      teamId: teamId,
     },
     orderBy: {
       onlineDisplayName: 'asc',
@@ -100,7 +100,7 @@ const getVirtuousProjects = async (user) => {
   return projects
 }
 
-const getProjectAccountMappings = async (user) => {
+const getProjectAccountMappings = async (teamId) => {
   return await db.projectAccountMapping.findMany({
     select: {
       id: true,
@@ -108,7 +108,7 @@ const getProjectAccountMappings = async (user) => {
       feAccountId: true,
     },
     where: {
-      teamId: user.team.id,
+      teamId: teamId,
     },
   })
 }
@@ -118,9 +118,9 @@ export default async function DataMapPage() {
   if (!user) {
     return null
   }
-  const feAccountsData = getFeAccountsFromBlackbaud(user)
-  const projectsData = getVirtuousProjects(user)
-  const mappingData = getProjectAccountMappings(user)
+  const feAccountsData = getFeAccountsFromBlackbaud(user.team.id)
+  const projectsData = getVirtuousProjects(user.team.id)
+  const mappingData = getProjectAccountMappings(user.team.id)
   const [projects, feAccounts, mappings] = await Promise.all([
     projectsData,
     feAccountsData,

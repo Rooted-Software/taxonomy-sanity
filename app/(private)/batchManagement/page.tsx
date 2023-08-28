@@ -17,14 +17,14 @@ import { getProjectAccountMappings } from '@/lib/virProjects'
 import { redirect } from 'next/navigation'
 import { notFound } from 'next/navigation'
 
-const getFeEnvironment = async (user) => {
+const getFeEnvironment = async (teamId) => {
   return await db.feSetting.findFirst({
     select: {
       id: true,
       environment_id: true,
     },
     where: {
-      teamId: user.team.id,
+      teamId: teamId,
     },
   })
 }
@@ -50,17 +50,17 @@ const getFeJournalName = async (journalId, teamId) => {
 
 // Get Batches from Latest Gifts for Samples
 
-export default async function ReveiwDataPage() {
+export default async function BatchManagementPage() {
   const user = await getCurrentUser()
   if (!user) {
     redirect('/login')
   }
 
-  const feAccountsData = getFeAccountsFromBlackbaud(user)
-  const projectsData = getVirtuousProjects(user)
-  const mappingData = getProjectAccountMappings(user)
-  const batchData = getVirtuousBatches(user)
-  const feEnvironmentData = getFeEnvironment(user)
+  const feAccountsData = getFeAccountsFromBlackbaud(user.team.id)
+  const projectsData = getVirtuousProjects(user.team.id)
+  const mappingData = getProjectAccountMappings(user.team.id)
+  const batchData = getVirtuousBatches(user.team.id)
+  const feEnvironmentData = getFeEnvironment(user.team.id)
   const feGetJournalName = getFeJournalName(
     user?.team.defaultJournal,
     user.team.id

@@ -1,8 +1,4 @@
 import { BatchPreview } from '@/components/dashboard/batch-preview'
-import { MappingCreateButton } from '@/components/dashboard/mapping-create-button'
-import { VirtuousSyncButton } from '@/components/dashboard/virtuous-sync-button'
-import { EmptyPlaceholder } from '@/components/empty-placeholder'
-import { Stepper } from '@/components/stepper'
 import { db } from '@/lib/db'
 import { getFeAccountsFromBlackbaud } from '@/lib/feAccounts'
 import { getCurrentUser } from '@/lib/session'
@@ -10,51 +6,28 @@ import { getVirtuousBatches } from '@/lib/virGifts'
 import { getVirtuousProjects } from '@/lib/virProjects'
 import { getProjectAccountMappings } from '@/lib/virProjects'
 import { redirect } from 'next/navigation'
-
-const getFeEnvironment = async (user) => {
-  return await db.feSetting.findFirst({
-    select: {
-      id: true,
-      environment_id: true,
-    },
-    where: {
-      teamId: user.team.id,
-    },
-  })
-}
+import { getFeEnvironment } from '@/lib/feEnvironment'
+import { getFeJournalName } from '@/lib/feEnvironment'
 
 export const metadata = {
   title: 'Review your data',
   description: 'Double Check Your Mapping Before Syncing.',
 }
 
-// get FE journal name based on user's default journal
-const getFeJournalName = async (journalId, teamId) => {
-  return await db.feJournal.findFirst({
-    select: {
-      journal: true,
-      id: true,
-    },
-    where: {
-      teamId: teamId,
-      id: parseInt(journalId),
-    },
-  })
-}
 
 // Get Batches from Latest Gifts for Samples
 
-export default async function ReveiwDataPage() {
+export default async function ReviewDataPage() {
   const user = await getCurrentUser()
   if (!user) {
     redirect('/login')
   }
 
-  const feAccountsData = getFeAccountsFromBlackbaud(user)
-  const projectsData = getVirtuousProjects(user)
-  const mappingData = getProjectAccountMappings(user)
-  const batchData = getVirtuousBatches(user)
-  const feEnvironmentData = getFeEnvironment(user)
+  const feAccountsData = getFeAccountsFromBlackbaud(user.team.id)
+  const projectsData = getVirtuousProjects(user.team.id)
+  const mappingData = getProjectAccountMappings(user.team.id)
+  const batchData = getVirtuousBatches(user.team.id)
+  const feEnvironmentData = getFeEnvironment(user.team.id)
   const feGetJournalName = getFeJournalName(
     user?.team?.defaultJournal,
     user.team.id

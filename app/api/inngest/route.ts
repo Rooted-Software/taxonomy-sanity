@@ -26,7 +26,7 @@ export const prepareAutomation = inngest.createFunction(
   { event: "app/prepare" },
   async ({ step }) => {
     // Load all the users from your database:
-    const teams = await step.run("Load users", async() =>await db.team.findMany({
+    const teams = await step.run("Load teams", async() =>await db.team.findMany({
       where: {
         automation: true,
       },
@@ -67,11 +67,11 @@ export const loadBatches = inngest.createFunction(
   async ({ event, step }) => {
   
     // 3️⃣ We can now grab the email and user id from the event payload
-    const { email, user_id } = event.data;
+    const { name, team_id } = event.data;
   
     // 4️⃣ Finally, prcoess batches
-    const user = {id: user_id, }; 
-    const batches =  await getVirtuousBatches(user)
+    const team = {id: team_id, }; 
+    const batches =  await getVirtuousBatches(team_id)
     const unSyncedBatches = batches.filter(batch => !batch.synced);
     console.log('unSyncedBatches')
     console.log(unSyncedBatches);
@@ -83,7 +83,7 @@ export const loadBatches = inngest.createFunction(
       return {
         name: "app/sync.batches",
         data: {
-          user_id: user.id,
+          team_id: team.id,
           batch_id: batch.id,
         }
       }
@@ -98,11 +98,11 @@ export const syncBatches = inngest.createFunction(
   { event: "app/sync.batches" },
   async ({ event }) => {
     // 3️⃣ We can now grab the batch id and user id from the event payload
-    const {  user_id, batch_id } = event.data;
+    const {  team_id, batch_id } = event.data;
     console.log('syncing batch')
     // 4️⃣ Finally, we actually synch the batch
-    const user = {id: user_id, }; 
-    await syncBatchGifts(user_id, batch_id)
+    const team = {id: team_id, }; 
+    await syncBatchGifts(team_id, batch_id)
     
     
     // 🎇 That's it! - We've used two functions to reliably perform a scheduled

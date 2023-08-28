@@ -82,7 +82,7 @@ export default async function SettingsPage() {
   }
   const apiKey = await getApiKey(user.team.id)
   const data = await reSettingsForUser(user.team.id)
-  const feAccounts = await getFeAccountsFromBlackbaud(user)
+  const feAccounts = await getFeAccountsFromBlackbaud(user.team.id)
   return (
     <DashboardShell>
       <DashboardHeader

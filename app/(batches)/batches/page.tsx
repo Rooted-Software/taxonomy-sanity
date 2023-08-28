@@ -16,10 +16,10 @@ import { User } from '@prisma/client'
 import { redirect } from 'next/navigation'
 import { cache } from 'react'
 
-const getBatches = async (user) => {
+const getBatches = async (teamId) => {
   return await db.giftBatch.findMany({
     where: { 
-      teamId: user.team.id,
+      teamId: teamId,
     }, 
     select: {
       id: true,
@@ -42,7 +42,7 @@ export default async function DashboardPage() {
     redirect('auth/signIn')
   }
 
-  const batches = await getBatches(user)
+  const batches = await getBatches(user.team.id)
 
   return (
     <DashboardShell>

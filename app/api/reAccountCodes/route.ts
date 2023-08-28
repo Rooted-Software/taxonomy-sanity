@@ -46,7 +46,7 @@ export async function GET(req: Request) {
     const { user } = session
     console.log('RE Accounts')
     try {
-      const res2 = await reFetch('https://api.sky.blackbaud.com/generalledger/v1/accounts/codes','GET', user.id
+      const res2 = await reFetch('https://api.sky.blackbaud.com/generalledger/v1/accounts/codes','GET', user.team.id
       )
       console.log('after form')
       console.log(res2.status)

@@ -1,13 +1,7 @@
 import { AutosaveSwitch } from '@/components/autosave-switch'
-import { BatchPreview } from '@/components/dashboard/batch-preview'
-import { MappingCreateButton } from '@/components/dashboard/mapping-create-button'
-import { VirtuousSyncButton } from '@/components/dashboard/virtuous-sync-button'
-import { EmptyPlaceholder } from '@/components/empty-placeholder'
-import { Stepper } from '@/components/stepper'
+
 import { getCurrentUser } from '@/lib/session'
-import { getVirtuousBatches } from '@/lib/virGifts'
-import { getVirtuousProjects } from '@/lib/virProjects'
-import { getProjectAccountMappings } from '@/lib/virProjects'
+
 import Link from 'next/link'
 
 export const metadata = {

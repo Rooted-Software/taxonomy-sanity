@@ -20,22 +20,22 @@ const mapFeAccount = (account, teamId) => ({
   teamId: teamId,
 })
 
-export const getFeAccountsFromBlackbaud = async (user) => {
+export const getFeAccountsFromBlackbaud = async (teamId) => {
   const res = await reFetch(
     'https://api.sky.blackbaud.com/generalledger/v1/accounts',
     'GET',
-    user.team.id
+    teamId
   )
   if (res.status !== 200) {
     throw new Error('Unable to fetch accounts')
   } else {
     const data = await res.json()
     //console.log('accounts', data)
-    return data.value.map((account) => mapFeAccount(account, user.team.id))
+    return data.value.map((account) => mapFeAccount(account, teamId))
   }
 }
 
-export const getFeAccounts = async (user) => {
+export const getFeAccounts = async (teamId) => {
   return await db.feAccount.findMany({
     select: {
       account_id: true,
@@ -47,7 +47,7 @@ export const getFeAccounts = async (user) => {
       default_transaction_codes: true,
     },
     where: {
-      teamId: user.team.id,
+      teamId: teamId,
     },
     orderBy: {
       description: 'asc',
@@ -56,6 +56,7 @@ export const getFeAccounts = async (user) => {
 }
 
 export const upsertFeAccountFromId = async (accountId, teamId) => {
+  console.log('in upsertFeAccountFromId')
   const res = await reFetch(
     `https://api.sky.blackbaud.com/generalledger/v1/accounts/${accountId}`,
     'GET',

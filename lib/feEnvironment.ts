@@ -1,7 +1,7 @@
 
 import { db } from '@/lib/db'
 
-export const getFeEnvironment = async (user) => {
+export const getFeEnvironment = async (teamId) => {
     return await db.feSetting.findFirst({
       select: {
         id: true,
@@ -9,7 +9,20 @@ export const getFeEnvironment = async (user) => {
        
       }, 
       where: {
-        teamId: user.team.id,
+        teamId: teamId,
       }
+    })
+  }
+
+export  const getFeJournalName = async (journalId, teamId) => {
+    return await db.feJournal.findFirst({
+      select: {
+        journal: true,
+        id: true,
+      },
+      where: {
+        teamId: teamId,
+        id: parseInt(journalId),
+      },
     })
   }

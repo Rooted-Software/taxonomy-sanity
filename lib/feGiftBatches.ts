@@ -24,12 +24,12 @@ export type DesignationType = {
     batchName: z.string(),
   })
 
-async function updateGiftBatch(batchName, reBatchNo, userId) {
+async function updateGiftBatch(batchName, reBatchNo, teamId) {
     return await db.giftBatch.update({
       where: {
-        userId_batch_name: { 
+        teamId_batch_name: { 
         batch_name: batchName,
-        userId: userId
+        teamId: teamId
         }
       },
       data: {
@@ -44,10 +44,10 @@ async function updateGiftBatch(batchName, reBatchNo, userId) {
     })
   }
   
-  async function createSyncHistory(batchId, status, duration ,userId) {
+  async function createSyncHistory(batchId, status, duration ,teamId) {
     await db.syncHistory.create({
       data: {
-        userId: userId,
+        teamId: teamId,
         giftBatchId: batchId,
         syncType: 'automatic',
         syncMessage: status,
@@ -59,7 +59,7 @@ async function updateGiftBatch(batchName, reBatchNo, userId) {
     })
   }
   
-  export async function getBatchGifts(user, batchName) {
+  export async function getBatchGifts(teamId, batchName) {
     const gifts = await db.gift.findMany({
       select: {
         id: true,
@@ -75,7 +75,7 @@ async function updateGiftBatch(batchName, reBatchNo, userId) {
         updatedAt: true,
       },
       where: {
-        userId: user.id,
+        teamId: teamId,
         batch: batchName,
       },
       orderBy: {
@@ -85,25 +85,32 @@ async function updateGiftBatch(batchName, reBatchNo, userId) {
     return gifts
   }
      
-export async function syncBatchGifts(userId, batchId) {
+export async function syncBatchGifts(teamId, batchId, userId?) {
+  
+    if (!teamId) {
+      const user = await db.user.findUnique({
+        where: { id: userId },
+      })
+      teamId = user?.teamId }
+    if (!teamId) throw new Error('Team ID is required')
 
      console.log('POST RE Journal Entry Batches (test) API Route')
       const start = performance.now();
 
-      const user = await db.user.findUnique({
-        where: { id: userId },
+      const team = await db.team.findUnique({
+        where: { id: teamId },
       })
 
-      if (user === null || user.defaultJournal  === null || user.defaultCreditAccount  === null || user.defaultDebitAccount=== null) { 
+      if (team === null || team.defaultJournal  === null || team.defaultCreditAccount  === null || team.defaultDebitAccount=== null) { 
         return {status: 'failure', message: 'not all required fields are set'}
       }
-      const feAccountsData = getFeAccounts(user)
-      const projectsData = getVirtuousProjects(user)
-      const mappingData = getProjectAccountMappings(user)
-      const batchData = getVirtuousBatches(user)
+      const feAccountsData = getFeAccounts(teamId)
+      const projectsData = getVirtuousProjects(teamId)
+      const mappingData = getProjectAccountMappings(teamId)
+      const batchData = getVirtuousBatches(teamId)
       const [projects, feAccounts, mappings, batches] = await Promise.all([projectsData, feAccountsData, mappingData, batchData])
-      const defaultCreditAccount = parseInt(user.defaultCreditAccount)
-      const defaultDebitAccount = parseInt(user.defaultDebitAccount)
+      const defaultCreditAccount = parseInt(team.defaultCreditAccount)
+      const defaultDebitAccount = parseInt(team.defaultDebitAccount)
       console.log('default credit account')
       console.log(defaultCreditAccount)
 
@@ -157,14 +164,14 @@ export async function syncBatchGifts(userId, batchId) {
       })
       console.log('should have batch no')
       if (batch && batch?.batch_name !==null) { 
-      const gifts = await getBatchGifts(user.id, batch.batch_name)
+      const gifts = await getBatchGifts(team.id, batch.batch_name)
       console.log(gifts)
       var journalEntries = [] as Array<any>
-      console.log(user.defaultJournal);
+      console.log(team.defaultJournal);
       const defaultJournal = await db.feJournal.findUnique({where: {
-          userId_id: { 
-          id: parseInt(user.defaultJournal),
-          userId: user.id
+          teamId_id: { 
+          id: parseInt(team.defaultJournal),
+          teamId: team.id
           }, 
           
         },
@@ -292,7 +299,7 @@ export async function syncBatchGifts(userId, batchId) {
         console.log(util.inspect(bodyJson, false, null, true /* enable colors */));
         console.log('journal entries')
         console.log(journalEntries)
-        const res2 = await reFetch('https://api.sky.blackbaud.com/generalledger/v1/journalentrybatches','POST', user.id, bodyJson)
+        const res2 = await reFetch('https://api.sky.blackbaud.com/generalledger/v1/journalentrybatches','POST', team.id, bodyJson)
         var synced= false;
         var status= 'failed'
         console.log("back from call")
@@ -304,7 +311,7 @@ export async function syncBatchGifts(userId, batchId) {
         if (res2.status === 200) {
           // update batch status
           
-          info  = await  updateGiftBatch(batch.batch_name, data.record_id , user.id)
+          info  = await  updateGiftBatch(batch.batch_name, data.record_id , team.id)
 
           synced = true;
           status = 'success'
@@ -313,7 +320,7 @@ export async function syncBatchGifts(userId, batchId) {
       const total = end-start;
       console.log (Math.trunc(total /1000))
       console.log(info)
-      createSyncHistory(info.id,  status, Math.trunc(total /1000), user.id)
+      createSyncHistory(info.id,  status, Math.trunc(total /1000), team.id)
     }
     return {status: 'success', message: 'sync complete'}
     }

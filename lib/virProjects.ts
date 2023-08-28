@@ -1,7 +1,7 @@
 import { db } from '@/lib/db'
 import { virApiFetch } from './virApiFetch'
 
-export const getProjectAccountMappings = async (user) => {
+export const getProjectAccountMappings = async (teamId) => {
   return await db.projectAccountMapping.findMany({
     select: {
       id: true,
@@ -10,12 +10,12 @@ export const getProjectAccountMappings = async (user) => {
       
     }, 
     where: {
-      teamId: user.team.id,
+      teamId: teamId,
     },
   })
 }
 
-export const getVirtuousProjects = async (user) => {
+export const getVirtuousProjects = async (teamId) => {
   let projects = await db.virtuousProject.findMany({
     select: {
       id: true,
@@ -32,7 +32,7 @@ export const getVirtuousProjects = async (user) => {
       updatedAt: true,
     },
     where: {
-      teamId: user.team.id,
+      teamId: teamId,
     },
     orderBy: {
       onlineDisplayName: 'asc',
@@ -60,7 +60,7 @@ export const getVirtuousProjects = async (user) => {
       sortBy: 'Last Modified Date',
       descending: 'true',
     }
-    const res = await virApiFetch('https://api.virtuoussoftware.com/api/Project/Query?skip=0&take=1000', 'POST', user.team.id, body)
+    const res = await virApiFetch('https://api.virtuoussoftware.com/api/Project/Query?skip=0&take=1000', 'POST', teamId, body)
 
     console.log('after virApiFetch')
     console.log(res.status)
@@ -72,7 +72,7 @@ export const getVirtuousProjects = async (user) => {
     const data = await res.json()
     console.log(data)
     data?.list.forEach((project) => {
-      upsertProject(project, user.team.id)
+      upsertProject(project, teamId)
     })
     return await db.virtuousProject.findMany({
       select: {
@@ -90,7 +90,7 @@ export const getVirtuousProjects = async (user) => {
         updatedAt: true,
       },
       where: {
-        teamId: user.team.id,
+        teamId: teamId,
       },
       orderBy: {
         onlineDisplayName: 'asc',
