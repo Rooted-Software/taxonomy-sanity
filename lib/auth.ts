@@ -22,8 +22,8 @@ type Credentials = {
 const FormData = require('form-data')
 
 const setDefaultNewTeam = async (user: any) => {
-  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || '')
-
+  const stripe = require('stripe')(process.env.STRIPE_API_KEY || '')
+  console.log('Creating new default team')
   // create a team
   const newTeam = await db.team.create({
     data: {
@@ -40,6 +40,8 @@ const setDefaultNewTeam = async (user: any) => {
   })
 
   const customer = await stripe.customers.create({email: user.email, metadata: {teamId: newTeam.id, userId: user.id}}) 
+  console.log('customer')
+  console.log(customer)
   // update team with stripe customer id
   const updatedTeam = await db.team.update({
     where: {
