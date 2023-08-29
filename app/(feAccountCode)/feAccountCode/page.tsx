@@ -1,4 +1,3 @@
-
 import { ApiRefreshButton } from '@/components/dashboard/api-refresh-button'
 import { DashboardHeader } from '@/components/dashboard/header'
 import { KeygenButton } from '@/components/dashboard/keygen-button'
@@ -13,27 +12,11 @@ import { DashboardShell } from '@/components/shell'
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { getCurrentUser } from '@/lib/session'
+import { getVirtuousProjects } from '@/lib/virProjects'
 import { User } from '@prisma/client'
 import { redirect } from 'next/navigation'
 import { cache } from 'react'
 import * as React from 'react'
-
-const getVirtuousProjects = async () => {
-  return await db.virtuousProject.findMany({
-    select: {
-      id: true,
-      name: true,
-      project_id: true,
-      projectCode: true,
-      onlineDisplayName: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-    orderBy: {
-      onlineDisplayName: 'asc',
-    },
-  })
-}
 
 const getFeProjects = async () => {
   return await db.feProject.findMany({
@@ -57,7 +40,7 @@ const getFeProjects = async () => {
 
 export default async function ReAccountsPage() {
   const user = await getCurrentUser()
-  const projects = (await getVirtuousProjects()) || []
+  const projects = (await getVirtuousProjects(user?.team.id)) || []
   const feProjects = (await getFeProjects()) || []
 
   if (!user && authOptions?.pages?.signIn) {
@@ -72,11 +55,21 @@ export default async function ReAccountsPage() {
       ></DashboardHeader>
       <div className="">
         Get RE Accounts (Universal)
-        <UniversalButton title="Get Accounts" route="/api/reAccounts" method="GET" fields={['account_code_id', 'description', 'value']} />
+        <UniversalButton
+          title="Get Accounts"
+          route="/api/reAccounts"
+          method="GET"
+          fields={['account_code_id', 'description', 'value']}
+        />
       </div>
       <div className="">
         Get Virtuous Projects (Universal)
-        <UniversalButton title="Get Projects" route="/api/virProjects" method="GET" fields={['id', 'name', 'projectCode']} />
+        <UniversalButton
+          title="Get Projects"
+          route="/api/virProjects"
+          method="GET"
+          fields={['id', 'name', 'projectCode']}
+        />
       </div>
       <div className="">
         Get Virtuous Projects

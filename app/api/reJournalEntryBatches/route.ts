@@ -133,25 +133,14 @@ export async function POST(req: Request) {
       console.log('POST RE Journal Entry Batches (test) API Route')
       const start = performance.now();
       const feAccountsData = getFeAccounts(user.team.id)
-      const projectsData = getVirtuousProjects(user.team.id)
       const mappingData = getProjectAccountMappings(user.team.id)
       const batchData = getVirtuousBatches(user.teamId)
-      const [projects, feAccounts, mappings, batches] = await Promise.all([projectsData, feAccountsData, mappingData, batchData])
+      const [feAccounts, mappings, batches] = await Promise.all([feAccountsData, mappingData, batchData])
       const defaultCreditAccount = parseInt(user?.team.defaultCreditAccount)
       const defaultDebitAccount = parseInt(user?.team.defaultDebitAccount)
       console.log('default credit account')
       console.log(defaultCreditAccount)
       console.log(defaultDebitAccount)
-
-      function lookupProject(projectId) { 
-        const project = projects.find(p => p.project_id === projectId)
-        return project?.name
-      }
-
-      function lookupProjectId(projectId) { 
-        const project = projects.find(p => p.id === projectId)
-        return project?.name
-      }
 
       function lookupAccount(accountId) { 
         const account = feAccounts.find(a => a.account_id === accountId)
@@ -179,11 +168,7 @@ export async function POST(req: Request) {
       }
 
       function lookupMapping(projectId) {
-        console.log('project id: ' + projectId)
-        console.log(typeof(projectId))
-        const tempProj = projects.find(p => p.id === projectId)
-        console.log(tempProj)
-        const mapping = mappings.find(m => m.virProjectId === tempProj?.project_id)
+        const mapping = mappings.find(m => m.virProjectId === projectId)
         console.log('mapping found?')
         console.log(mapping)
         if (!mapping || mapping===undefined || mapping===null) { 
@@ -194,10 +179,7 @@ export async function POST(req: Request) {
       }
 
       function lookupMappingTransCode(projectId) { 
-        const tempProj = projects.find(p => p.id == projectId)
-        console.log(tempProj)
-        console.log(typeof(tempProj))
-        const mapping = mappings.find(m => m.virProjectId == tempProj?.project_id)
+        const mapping = mappings.find(m => m.virProjectId == projectId)
         console.log(mapping)
         if (!mapping || mapping===null || mapping===undefined) { 
           console.log(defaultCreditAccount)

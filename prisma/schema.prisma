@@ -47,7 +47,6 @@ model Team {
   stripeCurrentPeriodEnd DateTime?               @map(name: "stripe_current_period_end")
   giftBatches            GiftBatch[]
   gifts                  Gift[]
-  virtuousProjects       VirtuousProject[]
   feProjects             FeProject[]
   projectMappings        ProjectMapping[]
   reAccounts             FeAccount[]
@@ -226,33 +225,7 @@ model Gift {
   @@map(name: "gifts")
 }
 
-model VirtuousProject {
-  project_id             String                  @id @default(cuid())
-  id                     Int
-  name                   String? @db.VarChar(254)
-  projectCode            String? 
-  externalAccountingCode String?
-  onlineDisplayName      String?
-  description            String? @db.VarChar(254)
-  type                   String?
-  isPublic               Boolean?
-  isActive               Boolean?
-  isTaxDeductible        Boolean?
-  giftSpecifications     Json?
-  customFields           Json?
-  createdDateTimeUTC     DateTime?
-  modifiedDateTimeUTC    DateTime?
-  createdAt              DateTime                @default(now()) @map(name: "created_at")
-  updatedAt              DateTime                @default(now()) @map(name: "updated_at")
-  projectMappings        ProjectMapping[]
-  teamId                 String
-  team                   Team                    @relation(fields: [teamId], references: [id])
-  ProjectAccountMapping  ProjectAccountMapping[]
-
-  @@unique([teamId, id])
-  @@map(name: "virtuous_projects")
-}
-
+// Question: What is this?
 model FeProject {
   id                    String           @id @default(cuid())
   project_id            Int
@@ -285,9 +258,9 @@ model FeProject {
   @@map(name: "fe_projects")
 }
 
+// Deprecated
 model ProjectMapping {
   id           String          @id @default(cuid())
-  virProject   VirtuousProject @relation(fields: [virProjectId], references: [project_id])
   virProjectId String
   feProject    FeProject       @relation(fields: [feProjectId], references: [id])
   feProjectId  String
@@ -300,8 +273,8 @@ model ProjectMapping {
 
 model ProjectAccountMapping {
   id           String          @id @default(cuid())
-  virProject   VirtuousProject @relation(fields: [virProjectId], references: [project_id])
-  virProjectId String
+  virProjectId Int
+  virProjectName  String
   feAccount    FeAccount      @relation(fields: [feAccountId, teamId], references: [account_id, teamId])
   feAccountId  Int
   teamId       String
