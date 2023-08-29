@@ -62,7 +62,7 @@ export const metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     images: [`${siteConfig.url}/og.jpg`],
-    creator: '@rooted.software',
+    creator: '@rootedsoftware',
   },
   icons: {
     icon: '/favicon/favicon.ico',
