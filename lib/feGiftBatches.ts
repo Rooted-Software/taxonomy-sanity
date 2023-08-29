@@ -141,18 +141,14 @@ export async function syncBatchGifts(teamId, batchId, userId?) {
       }
 
       function lookupMapping(projectId) { 
-        const tempProj = projects.find(p => p.id === projectId)
-        console.log(tempProj)
-        const mapping = mappings.find(m => m.virProjectId === tempProj?.project_id)
+        const mapping = mappings.find(m => m.virProjectId === projectId)
         console.log(mapping)
         if (!mapping) { lookupAccount(defaultCreditAccount)} 
         return lookupAccountNumber(mapping?.feAccountId)
       }
 
       function lookupMappingTransCode(projectId) { 
-        const tempProj = projects.find(p => p.id === projectId)
-        console.log(tempProj)
-        const mapping = mappings.find(m => m.virProjectId === tempProj?.project_id)
+        const mapping = mappings.find(m => m.virProjectId === projectId)
         console.log(mapping)
         if (!mapping || mapping===null) { lookupAccount(defaultCreditAccount)} 
         return lookupAccountTransactionCodes(mapping?.feAccountId)

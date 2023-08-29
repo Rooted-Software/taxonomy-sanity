@@ -1,4 +1,3 @@
-
 import { ApiRefreshButton } from '@/components/dashboard/api-refresh-button'
 import { DashboardHeader } from '@/components/dashboard/header'
 import { KeygenButton } from '@/components/dashboard/keygen-button'
@@ -12,27 +11,11 @@ import { DashboardShell } from '@/components/shell'
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { getCurrentUser } from '@/lib/session'
+import { getVirtuousProjects } from '@/lib/virProjects'
 import { User } from '@prisma/client'
 import { redirect } from 'next/navigation'
 import { cache } from 'react'
 import * as React from 'react'
-
-const getVirtuousProjects = async () => {
-  return await db.virtuousProject.findMany({
-    select: {
-      id: true,
-      name: true,
-      project_id: true,
-      projectCode: true,
-      onlineDisplayName: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-    orderBy: {
-      onlineDisplayName: 'asc',
-    },
-  })
-}
 
 const getFeProjects = async () => {
   return await db.feProject.findMany({
@@ -56,7 +39,7 @@ const getFeProjects = async () => {
 
 export default async function ProjectsPage() {
   const user = await getCurrentUser()
-  const projects = (await getVirtuousProjects()) || []
+  const projects = (await getVirtuousProjects(user?.team.id)) || []
   const feProjects = (await getFeProjects()) || []
 
   if (!user && authOptions.pages?.signIn) {
@@ -75,7 +58,12 @@ export default async function ProjectsPage() {
       </div>
       <div className="">
         Get Virtuous Projects (Universal)
-        <UniversalButton title="Get Projects" route="/api/virProjects" method="GET" fields={['id', 'name', 'projectCode']} />
+        <UniversalButton
+          title="Get Projects"
+          route="/api/virProjects"
+          method="GET"
+          fields={['id', 'name', 'projectCode']}
+        />
       </div>
       <div>
         {projects && feProjects ? (
@@ -86,14 +74,19 @@ export default async function ProjectsPage() {
           />
         ) : null}
       </div>
-  
+
       <div className="">
         Virtuous Refresh Button
         <ApiRefreshButton className="border-slate-200 bg-white text-brand-900 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2" />
       </div>
       <div className="">
         Get RE Projects
-        <UniversalButton title="Get Projects" route="/api/virProjects" method="GET" fields={['id', 'name', 'projectCode']} />
+        <UniversalButton
+          title="Get Projects"
+          route="/api/virProjects"
+          method="GET"
+          fields={['id', 'name', 'projectCode']}
+        />
         <ReGetProjectsButton className="border-slate-200 bg-white text-brand-900 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2" />
       </div>
 
