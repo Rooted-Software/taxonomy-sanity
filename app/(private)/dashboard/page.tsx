@@ -2,7 +2,6 @@ import { ApiRefreshButton } from '@/components/dashboard/api-refresh-button'
 import { KeygenButton } from '@/components/dashboard/keygen-button'
 import { ReTestApiButton } from '@/components/dashboard/re-test-button'
 import { ReTestPostButton } from '@/components/dashboard/re-test-post-button'
-import { VirtuousGetGiftsButton } from '@/components/dashboard/virtuous-get-gifts'
 import { EmptyPlaceholder } from '@/components/empty-placeholder'
 import { DashboardHeader } from '@/components/header'
 import { PaginationButtons } from '@/components/pagination-buttons'
@@ -43,9 +42,10 @@ export default async function DashboardPage({ searchParams }) {
       batch_name: true,
       synced: true,
       createdAt: true,
+      latestGiftAt: true,
     },
     orderBy: {
-      updatedAt: 'desc',
+      latestGiftAt: 'desc',
     },
   })
 
@@ -70,10 +70,11 @@ export default async function DashboardPage({ searchParams }) {
     orderBy: {
       syncDate: 'desc',
     },
-    take: SYNC_PAGE_SIZE,
+    // Take one extra so that we can know if there are more pages available
+    take: SYNC_PAGE_SIZE + 1,
     skip: syncPage * SYNC_PAGE_SIZE,
   })
-  const historyMorePages = history.length === SYNC_PAGE_SIZE
+  const historyMorePages = history.length > SYNC_PAGE_SIZE
 
   console.log(user.id)
   return (
@@ -99,7 +100,7 @@ export default async function DashboardPage({ searchParams }) {
                   </Link>
                   <div>
                     <p className="text-sm text-muted-foreground">
-                      {formatDate(batch.createdAt?.toDateString())}
+                      {formatDate(batch.latestGiftAt?.toDateString())}
                     </p>
                   </div>
                 </div>
@@ -122,7 +123,7 @@ export default async function DashboardPage({ searchParams }) {
         {history?.length ? (
           <div className="grid-flow-row auto-rows-max divide-y divide-border rounded-md border">
             <h3 className="text-xl text-accent-1">Sync History: </h3>
-            {history.map((log) => (
+            {history.slice(0, SYNC_PAGE_SIZE).map((log) => (
               <div className="flex items-center justify-between p-4">
                 <div className="grid w-full gap-1">
                   <div className="w-full">

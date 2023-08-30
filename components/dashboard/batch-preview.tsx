@@ -6,6 +6,7 @@ import { EmptyPlaceholder } from '@/components/empty-placeholder'
 import { Icons } from '@/components/icons'
 import { toast } from '@/components/ui/use-toast'
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
@@ -22,6 +23,9 @@ interface BatchPreviewProps extends React.HTMLAttributes<HTMLButtonElement> {
   defaultJournal?: any
   feEnvironment?: string
   journalName?: string
+  batchDaysLoaded: number
+  nextBatchDays: number
+  selectedBatch?: any
 }
 
 export function BatchPreview({
@@ -35,6 +39,9 @@ export function BatchPreview({
   defaultJournal,
   feEnvironment,
   journalName,
+  batchDaysLoaded,
+  nextBatchDays,
+  selectedBatch,
   ...props
 }: BatchPreviewProps) {
   const router = useRouter()
@@ -47,7 +54,15 @@ export function BatchPreview({
       router.push('/dashboard')
     }
   }
+
+  const [isSyncing, setIsSyncing] = React.useState<boolean>(false)
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const [selectedBatchId, setSelectedBatchId] = React.useState<boolean>()
+  useEffect(() => {
+    setIsLoading(false)
+    setSelectedBatchId(selectedBatch?.id)
+  }, [selectedBatch])
+
   const [virProjectID, setVirProjectID] = React.useState<any[]>([])
   const [feAccountID, setFeAccountID] = React.useState('')
   const [feAccountObj, setFeAccountObj] = React.useState({})
@@ -83,14 +98,14 @@ export function BatchPreview({
     React.useState<boolean>(true)
   const [filterFeCase, setFilterFeCase] = React.useState<boolean>(false)
 
-  const [batchName, setBatchName] = React.useState<string>('')
-  const [batchId, setBatchId] = React.useState<string>('')
-  const [gifts, setGifts] = React.useState<any[]>([])
-  const [batchTotal, setBatchTotal] = React.useState<number>(0)
-  const [batchCredits, setBatchCredits] = React.useState<number>(0)
-  const [batchDebits, setBatchDebits] = React.useState<number>(0)
-  const [synced, setSynced] = React.useState<boolean>(false)
   const searchParams = useSearchParams()
+
+  const {
+    gifts,
+    synced,
+    batch_name: batchName,
+  } = selectedBatch ?? { gifts: [] }
+  const batchCredits = gifts.reduce((total, gift) => total + gift.amount, 0)
 
   function lookupAccount(accountId) {
     const account = feAccounts.find((a) => a.account_id === accountId)
@@ -128,19 +143,6 @@ export function BatchPreview({
     filterProjects(textFilter)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mappings, virProjectID])
-
-  useEffect(() => {
-    // some side-effect on change of props.x
-    if (searchParams?.get('batchId')) {
-      setIsLoading(true)
-      const batch = lookupBatch(searchParams.get('batchId'))
-      if (batch) {
-        setBatchName(batch.batch_name)
-        syncGifts(batch.batch_name, batch.id)
-        batch.synced === true ? setSynced(true) : setSynced(false)
-      }
-    }
-  }, [searchParams])
 
   function filterProjects(value) {
     if (!filterCase) {
@@ -259,10 +261,10 @@ export function BatchPreview({
   }
 
   async function postFE() {
-    if (isLoading) {
+    if (isSyncing) {
       return
     }
-    setIsLoading(true)
+    setIsSyncing(true)
 
     console.log('client side sync')
     const response = await fetch('/api/reJournalEntryBatches', {
@@ -271,7 +273,7 @@ export function BatchPreview({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        batchId: batchId,
+        batchId: selectedBatch.id,
         batchName: batchName,
         defaultJournal: defaultJournal,
       }),
@@ -299,68 +301,38 @@ export function BatchPreview({
     console.log(data)
     setTimeout(function () {
       console.log('Executed after 1 second')
-      setIsLoading(false)
+      setIsSyncing(false)
       console.log(response)
-      setSynced(data.synced)
       if (data.record_id && pathname === '/step6') {
         router.push(
-          `/step7?batchId=${batchId}&batchName=${batchName}&defaultJournal=${defaultJournal}&synced=${data.synced}&record_id=${data.record_id}&envid=${feEnvironment}`
+          `/step7?batchId=${selectedBatch.id}&batchName=${batchName}&defaultJournal=${defaultJournal}&synced=${data.synced}&record_id=${data.record_id}&envid=${feEnvironment}`
         )
       }
       router.refresh()
     }, 400)
   }
 
-  async function syncGifts(tempBatchName, tempBatchId) {
-    setBatchName(tempBatchName)
-    setBatchId(tempBatchId)
-    if (tempBatchName === 'none') {
-      tempBatchName = null
-    }
-    setIsLoading(true)
-
-    const response = await fetch('/api/syncGifts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        batch_name: tempBatchName,
-        batch_id: tempBatchId,
-      }),
-    })
-
-    setIsLoading(false)
-
-    if (!response?.ok) {
-      if (response.status === 429) {
-        console.log(response)
-        const data = await response.json()
-        console.log(data)
-        return toast({
-          title: 'API rate limit exceeded',
-          description: data.message,
-          variant: 'destructive',
-        })
-      }
-
-      return toast({
-        title: 'Debug Gifts.',
-        description: 'Your gifts were not synced. Please try again.',
-        variant: 'success',
-      })
-    }
-
-    const data = await response.json()
-
-    console.log(data)
-    if (data?.list) {
-      setGifts(data?.list)
-      setBatchCredits(data.list.reduce((total, gift) => total + gift.amount, 0))
-    } else {
-      setGifts([])
-    }
-    // This forces a cache invalidation.
-    router.refresh()
+  const createMoreBatchesHref = () => {
+    const params = new URLSearchParams(
+      searchParams ? Array.from(searchParams.entries()) : undefined
+    )
+    params.set('batchDays', nextBatchDays.toString())
+    return `${pathname}?${params.toString()}`
   }
+
+  const createBatchHref = (id: string) => {
+    const params = new URLSearchParams(
+      searchParams ? Array.from(searchParams.entries()) : undefined
+    )
+    params.set('batchId', id)
+    return `${pathname}?${params.toString()}`
+  }
+
+  const [isLoadingMoreBatches, setIsLoadingMoreBatches] =
+    React.useState<boolean>(false)
+  useEffect(() => {
+    setIsLoadingMoreBatches(false)
+  }, [batchDaysLoaded])
 
   return (
     <>
@@ -374,16 +346,6 @@ export function BatchPreview({
               <span className="text-accent-1">Batches</span>
             </p>
           </div>
-          <div className="flex w-full flex-row space-y-2 text-center">
-            <UniversalButton
-              icon="refresh"
-              className="bg-tightWhite text-dark"
-              title="Get More Batches"
-              route={process.env.NEXT_PUBLIC_APP_URL + '/api/virProjects'}
-              method="GET"
-              fields={['id', 'name', 'projectCode']}
-            />
-          </div>
           <div className="justify-stretch flex w-full flex-row">
             {batches?.length ? (
               <div
@@ -393,17 +355,17 @@ export function BatchPreview({
                 {batches &&
                   batches.map((batch) => (
                     <div key={batch.id} className="flex p-1">
-                      <div
+                      <Link
+                        href={createBatchHref(batch.id)}
+                        scroll={false}
                         className={`flex w-full cursor-pointer flex-row items-center p-2  ${
-                          batch.batch_name === batchName
+                          batch.id === selectedBatchId
                             ? `bg-dark text-white`
                             : `text-dark`
                         }`}
                         onClick={() => {
-                          syncGifts(batch.batch_name, batch.id)
-                          batch.synced === true
-                            ? setSynced(true)
-                            : setSynced(false)
+                          setSelectedBatchId(batch.id)
+                          setIsLoading(true)
                         }}
                       >
                         <div className="flex-col">{batch.batch_name}</div>
@@ -425,9 +387,27 @@ export function BatchPreview({
                             <></>
                           )}
                         </div>
-                      </div>
+                      </Link>
                     </div>
                   ))}
+                {batchDaysLoaded < 730 && (
+                  <Link
+                    href={createMoreBatchesHref()}
+                    scroll={false}
+                    className={cn(
+                      `relative mt-2 inline-flex items-center rounded-full bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
+                      {
+                        'cursor-not-allowed opacity-60': isLoadingMoreBatches,
+                      }
+                    )}
+                    onClick={() => setIsLoadingMoreBatches(true)}
+                  >
+                    {isLoadingMoreBatches && (
+                      <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    Load more batches
+                  </Link>
+                )}
               </div>
             ) : (
               <EmptyPlaceholder>
@@ -443,6 +423,15 @@ export function BatchPreview({
             )}
           </div>
         </div>
+        <div className="mt-2">
+          {batchDaysLoaded === 730 ? (
+            <p>Showing batches from the two years</p>
+          ) : batchDaysLoaded === 365 ? (
+            <p>Showing batches from the past year</p>
+          ) : (
+            <p>Showing batches from the past {batchDaysLoaded} days</p>
+          )}
+        </div>
       </div>
       <div className="col-span-2 h-screen bg-dark p-4 xl:p-8">
         <h1 className="font-3xl my-0 py-0 text-3xl  text-white xl:my-4 xl:py-4">
@@ -454,16 +443,6 @@ export function BatchPreview({
               <span className="text-accent-1">Gifts</span>
             </p>
           </div>
-          <div className="flex w-full flex-row space-y-2 text-center">
-            <UniversalButton
-              icon="refresh"
-              className="bg-tightWhite text-dark"
-              title="Refresh Gifts"
-              route={process.env.NEXT_PUBLIC_APP_URL + '/api/virProjects'}
-              method="GET"
-              fields={['id', 'name', 'projectCode']}
-            />
-          </div>
           <div className="flex w-full flex-row">
             <div
               className="justify-left col-span-6 w-full overflow-scroll bg-whiteSmoke p-4 text-left text-dark"
@@ -473,9 +452,22 @@ export function BatchPreview({
                 <>
                   {!isLoading ? (
                     <>
-                      <div className={`grid grid-cols-9 gap-0 text-xs `}>
-                        <div className=" col-span-4 p-2 pl-3 text-3xl">
-                          Batch # {batchName || 'TBD'}{' '}
+                      <div className="grid grid-cols-9 gap-0 text-xs">
+                        <div className="col-span-4 flex flex-col gap-2 p-2 pl-3">
+                          <p className="text-3xl">
+                            Batch # {batchName || 'TBD'}
+                          </p>
+                          {synced ? (
+                            <a
+                              className="align-items-right text-sm text-accent-1"
+                              target=""
+                              href={`javascript:window.open('https://host.nxt.blackbaud.com/journalentry/${selectedBatch.reBatchNo}?envid=${feEnvironment}', 'financialEdge', 'width=1200,height=750');`}
+                            >
+                              View in FE
+                            </a>
+                          ) : (
+                            <></>
+                          )}
                         </div>
 
                         <div className=" p-2  pl-3 "></div>
@@ -638,13 +630,13 @@ export function BatchPreview({
                       `relative m-4 inline-flex h-9 max-w-md items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
                       {
                         'cursor-not-allowed opacity-60':
-                          isLoading || gifts.length === 0,
+                          isLoading || isSyncing || gifts.length === 0,
                       }
                     )}
-                    disabled={isLoading || gifts.length === 0}
+                    disabled={isLoading || isSyncing || gifts.length === 0}
                     {...props}
                   >
-                    {isLoading ? (
+                    {isLoading || isSyncing ? (
                       <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
                       <Icons.refresh className="mr-2 h-4 w-4" />
@@ -656,17 +648,13 @@ export function BatchPreview({
                     className={cn(
                       `relative m-4 inline-flex h-9 max-w-md items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
                       {
-                        'cursor-not-allowed opacity-60': isLoading,
+                        'cursor-not-allowed opacity-60': isSyncing,
                       }
                     )}
-                    disabled={isLoading}
+                    disabled={isSyncing}
                     {...props}
                   >
-                    {isLoading ? (
-                      <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                    ) : (
-                      <Icons.arrowRight className="mr-2 h-4 w-4" />
-                    )}
+                    <Icons.arrowRight className="mr-2 h-4 w-4" />
                     {pathname === '/batchManagement'
                       ? 'Return to dashboard'
                       : 'Skip for Now'}
@@ -681,17 +669,13 @@ export function BatchPreview({
                     className={cn(
                       `relative m-8 inline-flex h-9 max-w-md items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
                       {
-                        'cursor-not-allowed opacity-60': isLoading,
+                        'cursor-not-allowed opacity-60': isSyncing,
                       }
                     )}
-                    disabled={isLoading}
+                    disabled={isSyncing}
                     {...props}
                   >
-                    {isLoading ? (
-                      <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                    ) : (
-                      <Icons.arrowRight className="mr-2 h-4 w-4" />
-                    )}
+                    <Icons.arrowRight className="mr-2 h-4 w-4" />
                     {pathname !== '/step6' ? 'Dashboard' : 'Continue'}
                   </button>
                 </div>

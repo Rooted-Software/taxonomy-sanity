@@ -1,6 +1,5 @@
 import { BatchPreview } from '@/components/dashboard/batch-preview'
 import { MappingCreateButton } from '@/components/dashboard/mapping-create-button'
-import { VirtuousSyncButton } from '@/components/dashboard/virtuous-sync-button'
 import { EmptyPlaceholder } from '@/components/empty-placeholder'
 import { MainNav } from '@/components/main-nav'
 import { DashboardNav } from '@/components/nav'
@@ -11,11 +10,18 @@ import { dashboardConfig } from '@/config/dashboard'
 import { db } from '@/lib/db'
 import { getFeAccountsFromBlackbaud } from '@/lib/feAccounts'
 import { getCurrentUser } from '@/lib/session'
-import { getVirtuousBatches } from '@/lib/virGifts'
+import {
+  dateFilterOptions,
+  getVirtuousBatch,
+  getVirtuousBatches,
+} from '@/lib/virGifts'
 import { getVirtuousProjects } from '@/lib/virProjects'
 import { getProjectAccountMappings } from '@/lib/virProjects'
 import { redirect } from 'next/navigation'
 import { notFound } from 'next/navigation'
+
+// TODO: show sync date and view in FE in gift panel
+// TODO: add note that any changes since sync date are not carried over
 
 const getFeEnvironment = async (teamId) => {
   return await db.feSetting.findFirst({
@@ -50,30 +56,48 @@ const getFeJournalName = async (journalId, teamId) => {
 
 // Get Batches from Latest Gifts for Samples
 
-export default async function BatchManagementPage() {
+export default async function BatchManagementPage({ searchParams }) {
   const user = await getCurrentUser()
   if (!user) {
     redirect('/login')
   }
 
+  const batchDays =
+    searchParams.batchDays && !Number.isNaN(searchParams.batchDays)
+      ? parseInt(searchParams.batchDays)
+      : dateFilterOptions[0]
+  const currentDateIndex = dateFilterOptions.indexOf(batchDays)
+  const nextBatchDays = dateFilterOptions[currentDateIndex + 1]
+
   const feAccountsData = getFeAccountsFromBlackbaud(user.team.id)
   const projectsData = getVirtuousProjects(user.team.id)
   const mappingData = getProjectAccountMappings(user.team.id)
-  const batchData = getVirtuousBatches(user.team.id)
+  const batchData = getVirtuousBatches(user.team.id, batchDays)
+  const selectedBatchData = searchParams.batchId
+    ? getVirtuousBatch(user.team.id, searchParams.batchId)
+    : Promise.resolve()
   const feEnvironmentData = getFeEnvironment(user.team.id)
   const feGetJournalName = getFeJournalName(
     user?.team.defaultJournal,
     user.team.id
   )
-  const [projects, feAccounts, mappings, batches, feEnvironment, journalName] =
-    await Promise.all([
-      projectsData,
-      feAccountsData,
-      mappingData,
-      batchData,
-      feEnvironmentData,
-      feGetJournalName,
-    ])
+  const [
+    projects,
+    feAccounts,
+    mappings,
+    batches,
+    feEnvironment,
+    journalName,
+    selectedBatch,
+  ] = await Promise.all([
+    projectsData,
+    feAccountsData,
+    mappingData,
+    batchData,
+    feEnvironmentData,
+    feGetJournalName,
+    selectedBatchData,
+  ])
 
   if (!feEnvironment) {
     redirect('/step2')
@@ -81,6 +105,7 @@ export default async function BatchManagementPage() {
   if (!journalName) {
     redirect('/step3')
   }
+
   return (
     <>
       <header className="sticky top-0 z-40 border-b bg-background">
@@ -107,6 +132,9 @@ export default async function BatchManagementPage() {
             defaultJournal={user?.team.defaultJournal}
             feEnvironment={feEnvironment.environment_id}
             journalName={journalName.journal}
+            batchDaysLoaded={batchDays}
+            nextBatchDays={nextBatchDays}
+            selectedBatch={selectedBatch}
             className="border-slate-200 bg-white text-brand-900 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
           />
         ) : (
