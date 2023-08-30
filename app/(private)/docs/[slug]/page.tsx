@@ -10,12 +10,9 @@ import { DocsPager } from '@/components/docs/pager'
 
 import { getAllDocsSlugs, getDocBySlug } from '@/lib/sanity.client'
 import '@/styles/mdx.css'
-import { PortableText, PortableTextComponents } from '@portabletext/react'
+import { PortableText} from '@portabletext/react'
 import { notFound } from 'next/navigation'
-import urlBuilder from '@sanity/image-url'
-import {getImageDimensions} from '@sanity/asset-utils'
-import { type SanityClient, createClient, groq } from 'next-sanity'
-import { apiVersion, dataset, projectId, useCdn } from 'lib/sanity.api'
+import { BasicImage } from '@/components/BasicImage'
 
 interface DocPageProps {
   params: {
@@ -42,34 +39,9 @@ const TableOfContents = (props) => (
 )
 
 
-
-const SampleImageComponent = ({value, isInline}) => {
-  const {width, height} = getImageDimensions(value)
-  const client = createClient({ projectId, dataset, apiVersion, useCdn })
-  return (
-    <img
-      src={urlBuilder(client)
-        .image(value)
-        .width(isInline ? 100 : 800)
-        .fit('max')
-        .auto('format')
-        .url()}
-      alt={value.alt || ' '}
-      loading="lazy"
-      style={{
-        // Display alongside text if image appears inside a block text span
-        display: isInline ? 'inline-block' : 'block',
-
-        // Avoid jumping around with aspect-ratio CSS property
-        aspectRatio: width / height,
-      }}
-    />
-  )
-}
-
 const components = {
   types: {
-    image: SampleImageComponent,
+    image: BasicImage,
     // Any other custom types you have in your content
     // Examples: mapLocation, contactForm, code, featuredProjects, latestNews, etc.
   },

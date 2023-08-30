@@ -32,9 +32,24 @@ export default async function SupportCategoryPage({
   }
   return (
     <>
+    <div className="container mt-4 grid grid-cols-1 gap-4 pt-4 lg:grid-cols-1">
+      <div className='p-4 text-lg font-semibold leading-none tracking-tight'>
+        Support
+        <p className='pt-4 font-normal'>
+           We currently are offering self service support through our documentation or email support through the form below. 
+           In addition, if you are one of our enterprise customers, you can reach out to your account manager for additional support.
+           <br/><br/>
+          <a className='underline' href='/docs/overview'>View DonorSync Documentation</a>
+        </p>
+      </div>
+    </div>
+      <div className="container mt-4 grid grid-cols-1 gap-4 pt-4 lg:grid-cols-2">
+     
       <ContactForm />
 
+      
       <div>
+        <div className='p-4 text-lg font-semibold leading-none tracking-tight'>Frequently Asked Questions</div>
         {categories?.length > 0 ? (
           categories?.map((category: any, index: number) => (
             <div
@@ -65,6 +80,7 @@ export default async function SupportCategoryPage({
           </div>
         )}
       </div>
+    </div>
     </>
   )
 }
