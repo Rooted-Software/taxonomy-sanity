@@ -6,7 +6,7 @@ import { User } from '@prisma/client'
 import { redirect } from 'next/navigation'
 import { cache } from 'react'
 import Image from 'next/image'
-
+import { ContextualHelp } from '@/components/contextual-help'
 const { AuthorizationCode } = require('simple-oauth2')
 
 const reSettingsForUser = cache(async (teamId: string) => {
@@ -77,7 +77,7 @@ export default async function ConnectFEPage() {
       <div className="h-screen content-center bg-dark text-white lg:p-8 ">
         <div className="flex h-screen w-full flex-col content-center justify-center space-y-6 pl-[20%]">
           <div className="flex flex-col space-y-2 text-left ">
-           
+          <ContextualHelp articleId="setting-up-financial-edge" />
             <p className="justify-left text-lg text-white">
               <span className='text-accent-1'>STEP 2:</span>  Now it&apos;s time to connect Financial Edge. Please be sure you if you have a pop up blocker it is disabled.
             </p>
