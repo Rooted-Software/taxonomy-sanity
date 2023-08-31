@@ -531,9 +531,9 @@ export function BatchPreview({
                             {/* do a credit for each designation */}
                             {gift.giftDesignations.length > 0 ? (
                               <>
-                                {gift.giftDesignations.map((part) => (
+                                {gift.giftDesignations.map((part, index) => (
                                   <>
-                                    <div className=" col-span-2  p-2 pl-3">
+                                    <div key={'designation'+ index} className=" col-span-2  p-2 pl-3">
                                       {lookupMapping(part.projectId)}
                                     </div>
                                     <div className=" p-2  pl-3 ">
