@@ -124,7 +124,7 @@ export function BatchPreview({
     if (!mapping) {
       return (
         <span className="">
-          {project.name} <br />
+          {project?.name} <br />
           <Icons.arrowRight className="mr-2 inline h-4 w-4" />{' '}
           {lookupAccount(parseInt(defaultCreditAccount))} (default)
         </span>
