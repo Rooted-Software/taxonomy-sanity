@@ -293,11 +293,10 @@ export function BatchPreview({
               <EmptyPlaceholder>
                 <EmptyPlaceholder.Icon name="post" />
                 <EmptyPlaceholder.Title className="text-white">
-                  No Virtuous Projects Found
+                  No Virtuous Batches Found
                 </EmptyPlaceholder.Title>
                 <EmptyPlaceholder.Description>
-                  Try adjusting the search terms, filter, or refreshing the
-                  project list from virtuous.
+                  Try loading more batches or creating a new batch in Virtuous
                 </EmptyPlaceholder.Description>
               </EmptyPlaceholder>
             )}

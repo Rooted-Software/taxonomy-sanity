@@ -105,7 +105,11 @@ export default async function BatchManagementPage({ searchParams }) {
   if (!journalName) {
     redirect('/step3')
   }
-
+  console.log('selected batch:')
+  console.log(selectedBatch)
+  selectedBatch?.gifts?.forEach((gift) => {
+    gift.giftDesignations ? console.log(gift.giftDesignations) : console.log('no gift designations') 
+  })
   return (
     <>
       <header className="sticky top-0 z-40 border-b bg-background">
