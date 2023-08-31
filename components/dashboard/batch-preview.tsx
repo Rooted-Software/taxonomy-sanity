@@ -60,6 +60,7 @@ export function BatchPreview({
   const [selectedBatchId, setSelectedBatchId] = React.useState<boolean>()
   useEffect(() => {
     setIsLoading(false)
+    setIsSyncing(false)
     setSelectedBatchId(selectedBatch?.id)
   }, [selectedBatch])
 
@@ -112,8 +113,6 @@ export function BatchPreview({
     return <span className="">{account?.description}</span>
   }
 
-
-
   function lookupMapping(projectId: number) {
     const project = projects.find((p) => p.id === projectId)
     const mapping = mappings.find((m) => m.virProjectId === projectId)
@@ -135,10 +134,6 @@ export function BatchPreview({
       </span>
     )
   }
-
- 
-
-  
 
   async function postFE() {
     if (isSyncing) {
@@ -413,7 +408,10 @@ export function BatchPreview({
                               <>
                                 {gift.giftDesignations.map((part, index) => (
                                   <>
-                                    <div key={'designation'+ index} className=" col-span-2  p-2 pl-3">
+                                    <div
+                                      key={'designation' + index}
+                                      className=" col-span-2  p-2 pl-3"
+                                    >
                                       {lookupMapping(part.projectId)}
                                     </div>
                                     <div className=" p-2  pl-3 ">
@@ -516,7 +514,7 @@ export function BatchPreview({
                     disabled={isLoading || isSyncing || gifts.length === 0}
                     {...props}
                   >
-                    {isLoading || isSyncing ? (
+                    {isSyncing ? (
                       <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
                       <Icons.refresh className="mr-2 h-4 w-4" />
