@@ -30,7 +30,8 @@ export async function virApiFetch(url, method, teamId, body) {
       })
 
     if (!account) {
-      return {json: ()=>null, status: 429}
+      console.warn('No account for team', teamId)
+      return new Response(null, { status: 400 });
     }
     try { 
         const params = body ? {
@@ -55,14 +56,14 @@ export async function virApiFetch(url, method, teamId, body) {
         
       if (res2.status !== 200) {
         console.log('Initial response failed - this could indicate a malformed request')
-        console.log(res2)
+        console.log(res2.status, Array.from(res2.headers.entries()))
         setTimeout(function() {
             return retryFetch(url, params)
           }, 1000)
        
 
         
-        return {json: ()=>null, status: res2.status}
+        return new Response(null, { status: res2.status});
       
     
     }
@@ -72,6 +73,6 @@ export async function virApiFetch(url, method, teamId, body) {
       } catch (err) { 
         console.log(err) 
         console.log('Bigger issues than the refresh token')
-        return {json: ()=>null, status: 409}
+        return new Response(null, { status: 409 });
       }
     }

@@ -156,6 +156,7 @@ model GiftBatch {
   syncedAt   DateTime? @map(name: "synced_at")
   createdAt  DateTime  @default(now()) @map(name: "created_at")
   updatedAt  DateTime  @default(now()) @map(name: "updated_at")
+  latestGiftAt DateTime
   teamId     String
   team       Team     @relation(fields: [teamId], references: [id])
   syncHistory  SyncHistory[] 

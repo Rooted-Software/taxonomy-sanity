@@ -5,7 +5,7 @@ import { db } from '@/lib/db'
 import { getServerSession } from 'next-auth/next'
 import { z } from 'zod'
 import { reFetch } from '@/lib/reFetch' 
-import { getBatches} from '@/lib/virGifts'
+import { getBatches, getVirtuousBatch, insertGifts, updateGiftBatch} from '@/lib/virGifts'
 import { any, number } from 'prop-types'
 
 import { upsertFeAccount } from '@/lib/feAccounts'
@@ -28,26 +28,6 @@ const giftBatchSchema = z.object({
 })
 
 
-async function updateGiftBatch(batchName, reBatchNo, teamId) {
-  return await db.giftBatch.update({
-    where: {
-      teamId_batch_name: { 
-      batch_name: batchName,
-      teamId: teamId
-      }
-    },
-    data: {
-      reBatchNo: reBatchNo,
-      synced: true,
-      syncedAt: new Date(),
-    },
-    select: {
-      id: true,
-    }
-   
-  })
-}
-
 async function createSyncHistory(batchId, status, duration ,teamId, userId) {
   await db.syncHistory.create({
     data: {
@@ -63,34 +43,6 @@ async function createSyncHistory(batchId, status, duration ,teamId, userId) {
    
   })
 }
-
-export async function getBatchGifts(teamId, batchName) {
-  const gifts = await db.gift.findMany({
-    select: {
-      id: true,
-      transactionId: true,
-      giftType: true,
-      giftDate: true,
-      amount: true,
-      batch: true,
-      giftDesignations: true, 
-      batch_name: true,
-      synced: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-    where: {
-      teamId: teamId,
-      batch: batchName,
-    },
-    orderBy: {
-      updatedAt: 'desc',
-    },
-  })
-  return gifts
-}
-
-
 
 export async function GET(req: Request) {
   try {
@@ -192,7 +144,8 @@ export async function POST(req: Request) {
       const body = giftBatchSchema.parse(json)
       console.log('should have batch no')
       console.log(body)
-      const gifts = await getBatchGifts(user.team.id, body.batchName)
+      const batchDetails = await getVirtuousBatch(user.team.id, body.batchId);
+      const gifts = batchDetails?.gifts;
       console.log(gifts)
       var journalEntries = [] as Array<any>
       console.log(user.team.defaultJournal);
@@ -212,7 +165,7 @@ export async function POST(req: Request) {
       var batchTotal: number = 0.00;
       gifts.forEach((gift, index) => {
         var totalDesignations: number =0.00;  
-        batchTotal = gift.amount !==null ? batchTotal + gift.amount.toNumber() : batchTotal;
+        batchTotal += gift?.amount || 0;
         //create default distribution for gift
 
         console.log('initial distributions')
@@ -224,7 +177,7 @@ export async function POST(req: Request) {
            
             "transaction_code_values": lookupAccountTransactionCodes(defaultCreditAccount), //lookup default transaction codes
             "percent": 100.0,
-            "amount": gift && gift.amount ? gift.amount.toNumber() : 0,
+            "amount": gift?.amount || 0,
         })
         console.log('overflow distributions')
         console.log(gift.giftDesignations)
@@ -263,7 +216,7 @@ export async function POST(req: Request) {
             )}
           })
           // if we don't have enough designations to cover the gift, create a default entry for the remainder
-          if (gift.amount && (totalDesignations < (gift?.amount.toNumber() || 0))) { 
+          if (gift.amount && (totalDesignations < gift.amount)) { 
             journalEntries.push(
               {
                 type_code: "Credit",
@@ -273,7 +226,7 @@ export async function POST(req: Request) {
                 encumbrance: "Regular",
                 journal: defaultJournal?.journal, //lookup default journal
                 reference: "DonorSync",
-                amount: gift?.amount.toNumber()  - totalDesignations,
+                amount: gift?.amount - totalDesignations,
                 notes: "From DonorSync",
                 distributions: overflowDistributions
               }
@@ -290,7 +243,7 @@ export async function POST(req: Request) {
                 encumbrance: "Regular",
                 journal: defaultJournal?.journal, //lookup default journal
                 reference: "DonorSync",
-                amount:  gift?.amount?.toNumber() || 0,
+                amount:  gift?.amount || 0,
                 notes: "From DonorSync",
                 distributions: overflowDistributions
               }
@@ -338,11 +291,12 @@ export async function POST(req: Request) {
         const data = await res2.json();
         console.log('this is the data')
         console.log(data) 
-        var info =<any> null;
         if (res2.status === 200) {
-          // update batch status
-          
-          info  = await  updateGiftBatch(body.batchName, data.record_id , user.team.id)
+          // update batch status and add synced gifts to DB
+          await Promise.all([
+            updateGiftBatch(body.batchName, data.record_id , user.team.id),
+            insertGifts(gifts, user.team.id, body.batchName)
+          ]);
 
           synced = true;
           status = 'success'
@@ -350,8 +304,7 @@ export async function POST(req: Request) {
       const end = performance.now();
       const total = end-start;
       console.log (Math.trunc(total /1000))
-      console.log(info)
-      createSyncHistory(info.id,  status, Math.trunc(total /1000), user.team.id, user.id)
+      createSyncHistory(body.batchId,  status, Math.trunc(total /1000), user.team.id, user.id)
         
       
       return new Response(JSON.stringify({synced: synced, record_id: data?.record_id}), {status: 200 })
@@ -361,6 +314,7 @@ export async function POST(req: Request) {
         return new Response(JSON.stringify(error.issues), { status: 422 })
       }
 
+      console.error(error);
       return new Response(null, { status: 500 })
     }
   }
