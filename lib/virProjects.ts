@@ -7,6 +7,7 @@ export const getProjectAccountMappings = async (teamId) => {
       id: true,
       virProjectId: true,
       feAccountId: true,
+      virProjectName: true,
     },
     where: {
       teamId: teamId,

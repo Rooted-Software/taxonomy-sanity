@@ -112,10 +112,7 @@ export function BatchPreview({
     return <span className="">{account?.description}</span>
   }
 
-  function lookupBatch(tempBatchId) {
-    const batch = batches.find((a) => a.id === tempBatchId)
-    return batch
-  }
+
 
   function lookupMapping(projectId: number) {
     const project = projects.find((p) => p.id === projectId)
@@ -139,126 +136,9 @@ export function BatchPreview({
     )
   }
 
-  useEffect(() => {
-    filterProjects(textFilter)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mappings, virProjectID])
+ 
 
-  function filterProjects(value) {
-    if (!filterCase) {
-      value = value.toLowerCase()
-    }
-    if (
-      value === '' ||
-      value.length === 0 ||
-      value === null ||
-      value === undefined
-    ) {
-      setFilteredProjects(
-        projects.filter((project) => {
-          if (filterIsActive) {
-            if (project.isActive !== true) {
-              return false
-            }
-          }
-          if (filterIsPublic) {
-            if (project.isPublic !== true) {
-              return false
-            }
-          }
-          if (filterIsTaxDeductible) {
-            if (project.isTaxDeductible !== true) {
-              return false
-            }
-          }
-          if (mappings.find((mapping) => mapping.virProjectId === project.id)) {
-            return false
-          }
-          return true
-        })
-      )
-    } else {
-      setFilteredProjects(
-        projects.filter((project) => {
-          if (filterIsActive) {
-            if (project.isActive !== true) {
-              return false
-            }
-          }
-          if (filterIsPublic) {
-            if (project.isPublic !== true) {
-              return false
-            }
-          }
-          if (filterIsTaxDeductible) {
-            if (project.isTaxDeductible !== true) {
-              return false
-            }
-          }
-          let wholeString = ''
-          if (filterProjectName) {
-            wholeString = wholeString + project.name
-          }
-          if (filterProjectCode) {
-            wholeString = wholeString + project.projectCode
-          }
-          if (filterExternalAccountingCode) {
-            wholeString = wholeString + project.externalAccountingCode
-          }
-          if (filterOnlineDisplayName) {
-            wholeString = wholeString + project.onlineDisplayName
-          }
-
-          if (filterDescription) {
-            wholeString = wholeString + project.description
-          }
-          if (!filterCase) {
-            wholeString = wholeString.toLowerCase()
-          }
-          if (mappings.find((mapping) => mapping.virProjectId === project.id)) {
-            return false
-          }
-
-          return wholeString.includes(value)
-        })
-      )
-    }
-  }
-
-  function filterFeAccounts(value) {
-    if (!filterFeCase) {
-      value = value.toLowerCase()
-    }
-    if (
-      value === '' ||
-      value.length === 0 ||
-      value === null ||
-      value === undefined
-    ) {
-      setFilteredAccounts(feAccounts)
-    } else {
-      setFilteredAccounts(
-        feAccounts.filter((account) => {
-          let wholeString = ''
-          if (filterAccountId) {
-            wholeString = wholeString + account.account_id
-          }
-          if (filterAccountNumber) {
-            wholeString = wholeString + account.account_number
-          }
-          if (filterAccountDescription) {
-            wholeString = wholeString + account.description
-          }
-
-          if (!filterFeCase) {
-            wholeString = wholeString.toLowerCase()
-          }
-
-          return wholeString.includes(value)
-        })
-      )
-    }
-  }
+  
 
   async function postFE() {
     if (isSyncing) {
