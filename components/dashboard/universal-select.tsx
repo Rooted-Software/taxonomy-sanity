@@ -209,11 +209,30 @@ export function UniversalSelect({
   }
 
   return (
-    <div className="w-100">
-      <div className="w-100">
-        <DropdownMenu>
-          {!isLoading ? (
-            <DropdownMenuTrigger className="text-md m-5 h-10 w-full overflow-hidden  rounded-full border border-accent-1 bg-accent-1 py-2 px-5 text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+    <div className="min-w-xl space-y-5 p-5 pt-2">
+      <DropdownMenu>
+        {!isLoading ? (
+          <DropdownMenuTrigger className="text-md h-10 w-full rounded-full border border-accent-1 bg-accent-1 py-2 px-5 text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+            {selectLabel()}
+            <svg
+              className="float-right ml-2.5 mt-2 h-2.5 w-2.5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 10 6"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="m1 1 4 4 4-4"
+              />
+            </svg>
+          </DropdownMenuTrigger>
+        ) : (
+          <div className="text-md mx-5 mt-4 mb-0 h-10 w-full overflow-hidden rounded-full  border border-accent-1 bg-accent-1 py-2 px-5  text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+            <div className="">
               {selectLabel()}
               <svg
                 className="float-right ml-2.5 mt-2 h-2.5 w-2.5"
@@ -230,96 +249,70 @@ export function UniversalSelect({
                   d="m1 1 4 4 4-4"
                 />
               </svg>
-            </DropdownMenuTrigger>
-          ) : (
-            <div className="text-md mx-5 mt-4 mb-0 h-10 w-full overflow-hidden rounded-full  border border-accent-1 bg-accent-1 py-2 px-5  text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
-              <div className="">
-                {selectLabel()}
-                <svg
-                  className="float-right ml-2.5 mt-2 h-2.5 w-2.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 10 6"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="m1 1 4 4 4-4"
-                  />
-                </svg>
-              </div>
             </div>
-          )}
+          </div>
+        )}
 
-          <DropdownMenuContent
-            align="start"
-            className="w-100 border-whiteSomke dropdown ml-5 border-none bg-whiteSmoke text-dark"
-          >
-            <input
-              type="text"
-              autoComplete="off"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              value={filterValue}
-              onChange={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                setFilterValue(e.target.value)
-                updateFilter()
-              }}
-              id="inputSearch"
-              placeholder="Search"
-            />
-            {filteredObjects?.map((item: any, index) => (
-              <DropdownMenuItem
-                className="w-100 border-whiteSomke border-none bg-whiteSmoke"
-                key={'option' + index}
-                data-value={item[fields[0]]}
-                onClick={(e) =>
-                  setSelectValue((e.target as HTMLElement).dataset.value)
-                }
-              >
-                {fields?.map((field: any, index) => {
-                  if (index > 0) {
-                    return (
-                      <Fragment key={item[field] + index + '-key'}>
-                        {' '}
-                        {item[field]}{' '}
-                      </Fragment>
-                    )
-                  } else {
-                    return (
-                      <Fragment key={item[field] + index + '-key'}></Fragment>
-                    )
-                  }
-                })}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <br />
-
-        <button
-          onClick={saveSelectedData}
-          className={cn(
-            'font-large relative inline-flex h-9 items-center rounded-full border border-transparent bg-whiteSmoke  py-1  px-5 text-lg text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
-            {
-              'cursor-not-allowed opacity-60': isLoading,
-            }
-          )}
-          disabled={isLoading}
-          {...props}
+        <DropdownMenuContent
+          align="start"
+          className="w-100 border-whiteSomke dropdown ml-5 border-none bg-whiteSmoke text-dark"
         >
-          {isLoading ? (
-            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <>{title}</>
-          )}
-        </button>
-      </div>
+          <input
+            type="text"
+            autoComplete="off"
+            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+            value={filterValue}
+            onChange={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              setFilterValue(e.target.value)
+              updateFilter()
+            }}
+            id="inputSearch"
+            placeholder="Search"
+          />
+          {filteredObjects?.map((item: any, index) => (
+            <DropdownMenuItem
+              className="w-100 border-whiteSomke border-none bg-whiteSmoke"
+              key={'option' + index}
+              data-value={item[fields[0]]}
+              onClick={(e) =>
+                setSelectValue((e.target as HTMLElement).dataset.value)
+              }
+            >
+              {fields?.map((field: any, index) => {
+                if (index > 0) {
+                  return (
+                    <Fragment key={item[field] + index + '-key'}>
+                      {' '}
+                      {item[field]}{' '}
+                    </Fragment>
+                  )
+                } else {
+                  return (
+                    <Fragment key={item[field] + index + '-key'}></Fragment>
+                  )
+                }
+              })}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <button
+        onClick={saveSelectedData}
+        className={cn(
+          'font-large relative inline-flex h-9 items-center rounded-full border border-transparent bg-whiteSmoke  py-1  px-5 text-lg text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+          {
+            'cursor-not-allowed opacity-60': isLoading,
+          }
+        )}
+        disabled={isLoading}
+        {...props}
+      >
+        {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
+        {title}
+      </button>
     </div>
   )
 }

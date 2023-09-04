@@ -1,5 +1,4 @@
 import { BatchPreview } from '@/components/dashboard/batch-preview'
-import { db } from '@/lib/db'
 import { getFeAccountsFromBlackbaud } from '@/lib/feAccounts'
 import { getFeEnvironment } from '@/lib/feEnvironment'
 import { getFeJournalName } from '@/lib/feEnvironment'
@@ -70,28 +69,26 @@ export default async function ReviewDataPage({ searchParams }) {
     redirect('/step3')
   }
   return (
-    <>
-      <div className="container grid w-screen  grid-cols-3  flex-col items-center bg-dark  lg:max-w-none lg:grid-cols-3 lg:px-0">
-        {batches && feAccounts && mappings && projects ? (
-          <BatchPreview
-            batches={batches}
-            projects={projects}
-            feAccounts={feAccounts}
-            mappings={mappings}
-            defaultCreditAccount={user?.team.defaultCreditAccount}
-            defaultDebitAccount={user?.team.defaultDebitAccount}
-            defaultJournal={user?.team.defaultJournal}
-            feEnvironment={feEnvironment.environment_id}
-            journalName={journalName.journal}
-            batchDaysLoaded={batchDays}
-            nextBatchDays={nextBatchDays}
-            selectedBatch={selectedBatch}
-            className="border-slate-200 bg-white text-brand-900 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
-          />
-        ) : (
-          `getting projects and accounts...`
-        )}
-      </div>
-    </>
+    <div className="flex h-full w-full flex-col justify-center">
+      {batches && feAccounts && mappings && projects ? (
+        <BatchPreview
+          batches={batches}
+          projects={projects}
+          feAccounts={feAccounts}
+          mappings={mappings}
+          defaultCreditAccount={user?.team.defaultCreditAccount}
+          defaultDebitAccount={user?.team.defaultDebitAccount}
+          defaultJournal={user?.team.defaultJournal}
+          feEnvironment={feEnvironment.environment_id}
+          journalName={journalName.journal}
+          batchDaysLoaded={batchDays}
+          nextBatchDays={nextBatchDays}
+          selectedBatch={selectedBatch}
+          className="border-slate-200 bg-white text-brand-900 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+        />
+      ) : (
+        `getting projects and accounts...`
+      )}
+    </div>
   )
 }

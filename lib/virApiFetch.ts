@@ -16,7 +16,7 @@ async function retryFetch(url, params, retries = 3) {
   }
 }
 
-export async function virApiFetch(url, method, teamId, body) { 
+export async function virApiFetch(url, method, teamId, body?) { 
     //get reSettings from server
     const account = await db.apiSetting.findFirst({
         select: {

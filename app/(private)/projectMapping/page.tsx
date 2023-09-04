@@ -40,7 +40,7 @@ export default async function DataMapPage() {
 
   return (
     <>
-      <div className="container grid w-screen  grid-cols-3  flex-col items-center bg-dark  lg:max-w-none lg:grid-cols-3 lg:px-0">
+      <div>
         {projects && feAccounts ? (
           <MappingCreateButton
             projects={projects}

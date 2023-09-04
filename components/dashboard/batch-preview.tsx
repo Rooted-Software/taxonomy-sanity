@@ -210,360 +210,363 @@ export function BatchPreview({
   }, [batchDaysLoaded])
 
   return (
-    <>
-      <div className="h-screen bg-dark p-4 xl:p-8">
-        <h1 className="font-3xl my-0 py-0 text-3xl  text-white xl:my-4 xl:py-4">
-          {pathname === '/batchManagement' ? 'Batch Management' : 'Data Review'}{' '}
-        </h1>
-        <div className="m-auto flex flex-col justify-center space-y-3 xl:space-y-6 ">
-          <div className="w-full text-left ">
-            <p className="justify-left text-lg text-white">
-              <span className="text-accent-1">Batches</span>
-            </p>
-          </div>
-          <div className="justify-stretch flex w-full flex-row">
-            {batches?.length ? (
-              <div
-                className={`justify-left col-span-6 w-full overflow-scroll bg-whiteSmoke p-4 text-left text-dark`}
-                style={{ height: '45vh' }}
-              >
-                {batches &&
-                  batches.map((batch) => (
-                    <div key={batch.id} className="flex p-1">
-                      <Link
-                        href={createBatchHref(batch.id)}
-                        scroll={false}
-                        className={`flex w-full cursor-pointer flex-row items-center p-2  ${
-                          batch.id === selectedBatchId
-                            ? `bg-dark text-white`
-                            : `text-dark`
-                        }`}
-                        onClick={() => {
-                          setSelectedBatchId(batch.id)
-                          setIsLoading(true)
-                        }}
-                      >
-                        <div className="flex-col">{batch.batch_name}</div>
-                        <div className="w-full flex-col  text-right">
-                          {' '}
-                          {batch.synced ? (
-                            <a
-                              className="align-items-right text-xs"
-                              target=""
-                              href={`javascript:window.open('https://host.nxt.blackbaud.com/journalentry/${batch.reBatchNo}?envid=${feEnvironment}', 'financialEdge', 'width=1200,height=750');`}
-                            >
-                              {' '}
-                              View in FE{' '}
-                              <span className="text-accent-1">
-                                &nbsp; (synced)
-                              </span>
-                            </a>
-                          ) : (
-                            <></>
-                          )}
-                        </div>
-                      </Link>
-                    </div>
-                  ))}
-                {batchDaysLoaded < 730 && (
-                  <Link
-                    href={createMoreBatchesHref()}
-                    scroll={false}
-                    className={cn(
-                      `relative mt-2 inline-flex items-center rounded-full bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
-                      {
-                        'cursor-not-allowed opacity-60': isLoadingMoreBatches,
-                      }
-                    )}
-                    onClick={() => setIsLoadingMoreBatches(true)}
-                  >
-                    {isLoadingMoreBatches && (
-                      <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                    )}
-                    Load more batches
-                  </Link>
-                )}
-              </div>
-            ) : (
-              <EmptyPlaceholder>
-                <EmptyPlaceholder.Icon name="post" />
-                <EmptyPlaceholder.Title className="text-white">
-                  No Virtuous Projects Found
-                </EmptyPlaceholder.Title>
-                <EmptyPlaceholder.Description>
-                  Try adjusting the search terms, filter, or refreshing the
-                  project list from virtuous.
-                </EmptyPlaceholder.Description>
-              </EmptyPlaceholder>
-            )}
-          </div>
-        </div>
-        <div className="mt-2">
-          {batchDaysLoaded === 730 ? (
-            <p>Showing batches from the two years</p>
-          ) : batchDaysLoaded === 365 ? (
-            <p>Showing batches from the past year</p>
-          ) : (
-            <p>Showing batches from the past {batchDaysLoaded} days</p>
-          )}
-        </div>
-      </div>
-      <div className="col-span-2 h-screen bg-dark p-4 xl:p-8">
-        <h1 className="font-3xl my-0 py-0 text-3xl  text-white xl:my-4 xl:py-4">
-          &nbsp;
-        </h1>
-        <div className="m-auto flex flex-col justify-center space-y-3 xl:space-y-6 ">
-          <div className="w-full text-left ">
-            <p className="justify-left text-lg text-white">
-              <span className="text-accent-1">Gifts</span>
-            </p>
-          </div>
-          <div className="flex w-full flex-row">
-            <div
-              className="justify-left col-span-6 w-full overflow-scroll bg-whiteSmoke p-4 text-left text-dark"
-              style={{ height: '45vh' }}
-            >
-              {gifts?.length ? (
-                <>
-                  {!isLoading ? (
-                    <>
-                      <div className="grid grid-cols-9 gap-0 text-xs">
-                        <div className="col-span-4 flex flex-col gap-2 p-2 pl-3">
-                          <p className="text-3xl">
-                            Batch # {batchName || 'TBD'}
-                          </p>
-                          {synced ? (
-                            <a
-                              className="align-items-right text-sm text-accent-1"
-                              target=""
-                              href={`javascript:window.open('https://host.nxt.blackbaud.com/journalentry/${selectedBatch.reBatchNo}?envid=${feEnvironment}', 'financialEdge', 'width=1200,height=750');`}
-                            >
-                              View in FE
-                            </a>
-                          ) : (
-                            <></>
-                          )}
-                        </div>
-
-                        <div className=" p-2  pl-3 "></div>
-                        <div className=" p-2  pl-3 "></div>
-                        <div className=" p-2  pl-3 "></div>
-
-                        <div className=" p-2  pl-3 ">
-                          <div className=" p-2  pl-3 text-right">
-                            Total debit
-                            <br />${batchCredits.toFixed(2)}
-                          </div>
-                          <div className=" p-2  pl-3 text-right">
-                            Total credit
-                            <br />${batchCredits.toFixed(2)}
-                          </div>
-                          <div className=" p-2  pl-3 text-right">
-                            Balance
-                            <br />
-                            $0.00
-                          </div>
-                        </div>
-                        <div className=" p-2  pl-3 ">
-                          <div className=" p-2  pl-3 ">
-                            Status
-                            <br />
-                            Open
-                          </div>
-                          <div className=" p-2  pl-3 ">
-                            Type
-                            <br />
-                            Regular
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        className={`grid grid-cols-9 gap-0 text-xs ${styles.wrapper}`}
-                      >
-                        <div className=" col-span-2  p-2 pl-3 font-bold">
-                          Account
-                        </div>
-                        <div className=" p-2  pl-3 font-bold">Post date</div>
-
-                        <div className=" col-span  p-2 pl-3 font-bold">
-                          Journal
-                        </div>
-                        <div className=" p-2  pl-3 font-bold">
-                          Journal reference
-                        </div>
-                        <div className=" p-2  pl-3 text-right font-bold">
-                          Debit
-                        </div>
-                        <div className=" p-2  pl-3 text-right font-bold">
-                          Credit
-                        </div>
-                        <div className=" col-span-2  p-2 pl-3 font-bold">
-                          Transaction Codes
-                        </div>
-
-                        {gifts.map((gift, index) => (
-                          <>
-                            {/* do a credit for each designation */}
-                            {gift.giftDesignations.length > 0 ? (
-                              <>
-                                {gift.giftDesignations.map((part, index) => (
-                                  <>
-                                    <div
-                                      key={'designation' + index}
-                                      className=" col-span-2  p-2 pl-3"
-                                    >
-                                      {lookupMapping(part.projectId)}
-                                    </div>
-                                    <div className=" p-2  pl-3 ">
-                                      {gift.giftDateFormatted}
-                                    </div>
-                                    <div className=" p-2  pl-3 ">
-                                      {journalName}
-                                    </div>
-                                    <div className=" p-2  pl-3 ">DonorSync</div>
-                                    <div className=" p-2  pl-3 "></div>
-                                    <div className=" p-2  pl-3 text-right">
-                                      ${part.amountDesignated.toFixed(2)}
-                                    </div>
-
-                                    <div className=" col-span-2  p-2 pl-3">
-                                      Default Transaction Codes (Set in FE)
-                                    </div>
-                                  </>
-                                ))}
-                                {/* do a credit for difference between total and designation */}
-                              </>
+    <div>
+      <h1 className="font-3xl my-0 p-4 py-0 text-3xl  font-bold text-white xl:m-4 xl:p-4">
+        {pathname === '/batchManagement' ? 'Batch Management' : 'Data Review'}{' '}
+      </h1>
+      <div className="grid max-h-full w-full grid-cols-1 md:grid-cols-3">
+        <div className="h-full bg-dark p-4 xl:p-8">
+          <div className="m-auto flex flex-col justify-center space-y-3 xl:space-y-6 ">
+            <div className="w-full text-left ">
+              <p className="justify-left text-lg text-white">
+                <span className="font-bold text-accent-1">Batches</span>
+              </p>
+            </div>
+            <div className="justify-stretch flex w-full flex-row">
+              {batches?.length ? (
+                <div
+                  className={`justify-left col-span-6 w-full overflow-scroll bg-whiteSmoke p-4 text-left text-dark`}
+                  style={{ height: '45vh' }}
+                >
+                  {batches &&
+                    batches.map((batch) => (
+                      <div key={batch.id} className="flex p-1">
+                        <Link
+                          href={createBatchHref(batch.id)}
+                          scroll={false}
+                          className={`flex w-full cursor-pointer flex-row items-center p-2  ${
+                            batch.id === selectedBatchId
+                              ? `bg-dark text-white`
+                              : `text-dark`
+                          }`}
+                          onClick={() => {
+                            setSelectedBatchId(batch.id)
+                            setIsLoading(true)
+                          }}
+                        >
+                          <div className="flex-col">{batch.batch_name}</div>
+                          <div className="w-full flex-col  text-right">
+                            {' '}
+                            {batch.synced ? (
+                              <a
+                                className="align-items-right text-xs"
+                                target=""
+                                href={`javascript:window.open('https://host.nxt.blackbaud.com/journalentry/${batch.reBatchNo}?envid=${feEnvironment}', 'financialEdge', 'width=1200,height=750');`}
+                              >
+                                {' '}
+                                View in FE{' '}
+                                <span className="text-accent-1">
+                                  &nbsp; (synced)
+                                </span>
+                              </a>
                             ) : (
-                              <>
-                                {/* do a credit if there are no designations */}
-                                <div className=" col-span-2  p-2 pl-3">
-                                  {lookupMapping(
-                                    parseInt(defaultCreditAccount)
-                                  )}
-                                </div>
-                                <div className=" p-2  pl-3 ">
-                                  {gift.giftDateFormatted}
-                                </div>
-                                <div className=" p-2  pl-3 ">{journalName}</div>
-                                <div className=" p-2  pl-3 ">DonorSync</div>
-                                <div className=" p-2  pl-3 "></div>
-                                <div className=" p-2  pl-3 text-right">
-                                  ${gift.amount.toFixed(2)}
-                                </div>
-
-                                <div className=" col-span-2  p-2 pl-3">
-                                  Default Transaction Codes (Set in FE)
-                                </div>
-                              </>
+                              <></>
                             )}
-                          </>
-                        ))}
-                        {/* do the debit for total amount */}
-                        <div className=" col-span-2  p-2 pl-3">
-                          {lookupAccount(parseInt(defaultDebitAccount))}
-                        </div>
-                        <div className=" p-2  pl-3 "></div>
-                        <div className=" p-2  pl-3 ">{journalName}</div>
-                        <div className=" p-2  pl-3 ">DonorSync</div>
-
-                        <div className=" p-2  pl-3 text-right">
-                          ${batchCredits.toFixed(2)}
-                        </div>
-                        <div className=" p-2  pl-3 "></div>
-                        <div className=" col-span-2  p-2 pl-3">
-                          Default Transaction Codes (Set in FE)
-                        </div>
+                          </div>
+                        </Link>
                       </div>
-                    </>
-                  ) : (
-                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                  )}{' '}
-                </>
+                    ))}
+                  {batchDaysLoaded < 730 && (
+                    <Link
+                      href={createMoreBatchesHref()}
+                      scroll={false}
+                      className={cn(
+                        `relative mt-2 inline-flex items-center rounded-full bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
+                        {
+                          'cursor-not-allowed opacity-60': isLoadingMoreBatches,
+                        }
+                      )}
+                      onClick={() => setIsLoadingMoreBatches(true)}
+                    >
+                      {isLoadingMoreBatches && (
+                        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                      )}
+                      Load more batches
+                    </Link>
+                  )}
+                </div>
               ) : (
-                <EmptyPlaceholder className="h-full w-full text-black">
-                  <EmptyPlaceholder.Icon name="post" className="text-white" />
-                  <EmptyPlaceholder.Title>
-                    {isLoading ? (
-                      <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                    ) : (
-                      `No Batch Selected`
-                    )}
+                <EmptyPlaceholder>
+                  <EmptyPlaceholder.Icon name="post" />
+                  <EmptyPlaceholder.Title className="text-white">
+                    No Virtuous Projects Found
                   </EmptyPlaceholder.Title>
                   <EmptyPlaceholder.Description>
-                    Select a batch to the left to see how the gifts will be
-                    synchronized with Financial Edge
+                    Try adjusting the search terms, filter, or refreshing the
+                    project list from virtuous.
                   </EmptyPlaceholder.Description>
                 </EmptyPlaceholder>
               )}
             </div>
           </div>
-          <div className="m-auto flex flex-row items-start  justify-center space-y-3 xl:space-y-6 ">
-            <div className="space-y-2 text-center">
-              {' '}
-              {!synced ? (
-                <div>
-                  <button
-                    onClick={postFE}
-                    className={cn(
-                      `relative m-4 inline-flex h-9 max-w-md items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
-                      {
-                        'cursor-not-allowed opacity-60':
-                          isLoading || isSyncing || gifts.length === 0,
-                      }
-                    )}
-                    disabled={isLoading || isSyncing || gifts.length === 0}
-                    {...props}
-                  >
-                    {isSyncing ? (
-                      <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          <div className="mt-2">
+            {batchDaysLoaded === 730 ? (
+              <p>Showing batches from the two years</p>
+            ) : batchDaysLoaded === 365 ? (
+              <p>Showing batches from the past year</p>
+            ) : (
+              <p>Showing batches from the past {batchDaysLoaded} days</p>
+            )}
+          </div>
+        </div>
+        <div className="h-full bg-dark p-4 md:col-span-2 xl:p-8">
+          <div className="m-auto flex flex-col justify-center space-y-3 xl:space-y-6 ">
+            <div className="w-full text-left ">
+              <p className="justify-left text-lg text-white">
+                <span className="font-bold text-accent-1">Gifts</span>
+              </p>
+            </div>
+            <div className="flex w-full flex-row">
+              <div
+                className="justify-left col-span-6 w-full overflow-scroll bg-whiteSmoke p-4 text-left text-dark"
+                style={{ height: '45vh' }}
+              >
+                {gifts?.length ? (
+                  <>
+                    {!isLoading ? (
+                      <>
+                        <div className="grid grid-cols-9 gap-0 text-xs">
+                          <div className="col-span-4 flex flex-col gap-2 p-2 pl-3">
+                            <p className="text-3xl">
+                              Batch # {batchName || 'TBD'}
+                            </p>
+                            {synced ? (
+                              <a
+                                className="align-items-right text-sm text-accent-1"
+                                target=""
+                                href={`javascript:window.open('https://host.nxt.blackbaud.com/journalentry/${selectedBatch.reBatchNo}?envid=${feEnvironment}', 'financialEdge', 'width=1200,height=750');`}
+                              >
+                                View in FE
+                              </a>
+                            ) : (
+                              <></>
+                            )}
+                          </div>
+
+                          <div className=" p-2  pl-3 "></div>
+                          <div className=" p-2  pl-3 "></div>
+                          <div className=" p-2  pl-3 "></div>
+
+                          <div className=" p-2  pl-3 ">
+                            <div className=" p-2  pl-3 text-right">
+                              Total debit
+                              <br />${batchCredits.toFixed(2)}
+                            </div>
+                            <div className=" p-2  pl-3 text-right">
+                              Total credit
+                              <br />${batchCredits.toFixed(2)}
+                            </div>
+                            <div className=" p-2  pl-3 text-right">
+                              Balance
+                              <br />
+                              $0.00
+                            </div>
+                          </div>
+                          <div className=" p-2  pl-3 ">
+                            <div className=" p-2  pl-3 ">
+                              Status
+                              <br />
+                              Open
+                            </div>
+                            <div className=" p-2  pl-3 ">
+                              Type
+                              <br />
+                              Regular
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className={`grid grid-cols-9 gap-0 text-xs ${styles.wrapper}`}
+                        >
+                          <div className=" col-span-2  p-2 pl-3 font-bold">
+                            Account
+                          </div>
+                          <div className=" p-2  pl-3 font-bold">Post date</div>
+
+                          <div className=" col-span  p-2 pl-3 font-bold">
+                            Journal
+                          </div>
+                          <div className=" p-2  pl-3 font-bold">
+                            Journal reference
+                          </div>
+                          <div className=" p-2  pl-3 text-right font-bold">
+                            Debit
+                          </div>
+                          <div className=" p-2  pl-3 text-right font-bold">
+                            Credit
+                          </div>
+                          <div className=" col-span-2  p-2 pl-3 font-bold">
+                            Transaction Codes
+                          </div>
+
+                          {gifts.map((gift, index) => (
+                            <>
+                              {/* do a credit for each designation */}
+                              {gift.giftDesignations.length > 0 ? (
+                                <>
+                                  {gift.giftDesignations.map((part, index) => (
+                                    <>
+                                      <div
+                                        key={'designation' + index}
+                                        className=" col-span-2  p-2 pl-3"
+                                      >
+                                        {lookupMapping(part.projectId)}
+                                      </div>
+                                      <div className=" p-2  pl-3 ">
+                                        {gift.giftDateFormatted}
+                                      </div>
+                                      <div className=" p-2  pl-3 ">
+                                        {journalName}
+                                      </div>
+                                      <div className=" p-2  pl-3 ">
+                                        DonorSync
+                                      </div>
+                                      <div className=" p-2  pl-3 "></div>
+                                      <div className=" p-2  pl-3 text-right">
+                                        ${part.amountDesignated.toFixed(2)}
+                                      </div>
+
+                                      <div className=" col-span-2  p-2 pl-3">
+                                        Default Transaction Codes (Set in FE)
+                                      </div>
+                                    </>
+                                  ))}
+                                  {/* do a credit for difference between total and designation */}
+                                </>
+                              ) : (
+                                <>
+                                  {/* do a credit if there are no designations */}
+                                  <div className=" col-span-2  p-2 pl-3">
+                                    {lookupMapping(
+                                      parseInt(defaultCreditAccount)
+                                    )}
+                                  </div>
+                                  <div className=" p-2  pl-3 ">
+                                    {gift.giftDateFormatted}
+                                  </div>
+                                  <div className=" p-2  pl-3 ">
+                                    {journalName}
+                                  </div>
+                                  <div className=" p-2  pl-3 ">DonorSync</div>
+                                  <div className=" p-2  pl-3 "></div>
+                                  <div className=" p-2  pl-3 text-right">
+                                    ${gift.amount.toFixed(2)}
+                                  </div>
+
+                                  <div className=" col-span-2  p-2 pl-3">
+                                    Default Transaction Codes (Set in FE)
+                                  </div>
+                                </>
+                              )}
+                            </>
+                          ))}
+                          {/* do the debit for total amount */}
+                          <div className=" col-span-2  p-2 pl-3">
+                            {lookupAccount(parseInt(defaultDebitAccount))}
+                          </div>
+                          <div className=" p-2  pl-3 "></div>
+                          <div className=" p-2  pl-3 ">{journalName}</div>
+                          <div className=" p-2  pl-3 ">DonorSync</div>
+
+                          <div className=" p-2  pl-3 text-right">
+                            ${batchCredits.toFixed(2)}
+                          </div>
+                          <div className=" p-2  pl-3 "></div>
+                          <div className=" col-span-2  p-2 pl-3">
+                            Default Transaction Codes (Set in FE)
+                          </div>
+                        </div>
+                      </>
                     ) : (
-                      <Icons.refresh className="mr-2 h-4 w-4" />
-                    )}
-                    Sync This Batch
-                  </button>
-                  <button
-                    onClick={advanceStep}
-                    className={cn(
-                      `relative m-4 inline-flex h-9 max-w-md items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
-                      {
-                        'cursor-not-allowed opacity-60': isSyncing,
-                      }
-                    )}
-                    disabled={isSyncing}
-                    {...props}
-                  >
-                    <Icons.arrowRight className="mr-2 h-4 w-4" />
-                    {pathname === '/batchManagement'
-                      ? 'Return to dashboard'
-                      : 'Skip for Now'}
-                  </button>
-                </div>
-              ) : (
-                <div className="text-white">
-                  {' '}
-                  {pathname !== '/step6' ? 'Synced' : 'Synced'}{' '}
-                  <button
-                    onClick={advanceStep}
-                    className={cn(
-                      `relative m-8 inline-flex h-9 max-w-md items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
-                      {
-                        'cursor-not-allowed opacity-60': isSyncing,
-                      }
-                    )}
-                    disabled={isSyncing}
-                    {...props}
-                  >
-                    <Icons.arrowRight className="mr-2 h-4 w-4" />
-                    {pathname !== '/step6' ? 'Dashboard' : 'Continue'}
-                  </button>
-                </div>
-              )}
+                      <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                    )}{' '}
+                  </>
+                ) : (
+                  <EmptyPlaceholder className="h-full w-full text-black">
+                    <EmptyPlaceholder.Icon name="post" className="text-white" />
+                    <EmptyPlaceholder.Title>
+                      {isLoading ? (
+                        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                      ) : (
+                        `No Batch Selected`
+                      )}
+                    </EmptyPlaceholder.Title>
+                    <EmptyPlaceholder.Description>
+                      Select a batch to the left to see how the gifts will be
+                      synchronized with Financial Edge
+                    </EmptyPlaceholder.Description>
+                  </EmptyPlaceholder>
+                )}
+              </div>
+            </div>
+            <div className="m-auto flex flex-row items-start  justify-center space-y-3 xl:space-y-6 ">
+              <div className="space-y-2 text-center">
+                {' '}
+                {!synced ? (
+                  <div>
+                    <button
+                      onClick={postFE}
+                      className={cn(
+                        `relative m-4 inline-flex h-9 max-w-md items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
+                        {
+                          'cursor-not-allowed opacity-60':
+                            isLoading || isSyncing || gifts.length === 0,
+                        }
+                      )}
+                      disabled={isLoading || isSyncing || gifts.length === 0}
+                      {...props}
+                    >
+                      {isSyncing ? (
+                        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                      ) : (
+                        <Icons.refresh className="mr-2 h-4 w-4" />
+                      )}
+                      Sync This Batch
+                    </button>
+                    <button
+                      onClick={advanceStep}
+                      className={cn(
+                        `relative m-4 inline-flex h-9 max-w-md items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
+                        {
+                          'cursor-not-allowed opacity-60': isSyncing,
+                        }
+                      )}
+                      disabled={isSyncing}
+                      {...props}
+                    >
+                      <Icons.arrowRight className="mr-2 h-4 w-4" />
+                      {pathname === '/batchManagement'
+                        ? 'Return to dashboard'
+                        : 'Skip for Now'}
+                    </button>
+                  </div>
+                ) : (
+                  <div className="text-white">
+                    {' '}
+                    {pathname !== '/step6' ? 'Synced' : 'Synced'}{' '}
+                    <button
+                      onClick={advanceStep}
+                      className={cn(
+                        `relative m-8 inline-flex h-9 max-w-md items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
+                        {
+                          'cursor-not-allowed opacity-60': isSyncing,
+                        }
+                      )}
+                      disabled={isSyncing}
+                      {...props}
+                    >
+                      <Icons.arrowRight className="mr-2 h-4 w-4" />
+                      {pathname !== '/step6' ? 'Dashboard' : 'Continue'}
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div></div>
-    </>
+        <div></div>
+      </div>
+    </div>
   )
 }

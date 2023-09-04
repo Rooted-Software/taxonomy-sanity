@@ -16,10 +16,9 @@ export async function GET(req: Request) {
       return new Response(null, { status: 403 })
     }
     const { user } = session
-    console.log('Virtuous Projects - API Route')
+    console.log('Virtuous Orgs - API Route')
     try {
-        const body = null
-        const res = await virApiFetch('https://api.virtuoussoftware.com/api/Organization/Current', 'GET', user.team.id, body)
+        const res = await virApiFetch('https://api.virtuoussoftware.com/api/Organization/Current', 'GET', user.team.id)
 
           console.log('after virApiFetch')
           console.log(res.status)
@@ -34,7 +33,7 @@ export async function GET(req: Request) {
           data?.list.forEach((project) => {
          
           })*/
-      return new Response(JSON.stringify(data));
+      return new Response(JSON.stringify([data]));
     } catch (error) {
         return new Response(JSON.stringify(error.issues), { status: 422 })
     }
