@@ -303,14 +303,18 @@ export function MappingCreateButton({
     router.refresh()
   }
 
+  const newLocal = 'text-accent-1 font-bold'
   return (
-    <>
-      <div className="h-screen bg-dark lg:p-8">
-        <h1 className="font-3xl py-4 text-3xl text-white"> Master Data Map</h1>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="h-full bg-dark p-8">
+        <h1 className="font-3xl py-4 text-3xl font-bold text-white">
+          {' '}
+          Master Data Map
+        </h1>
         <div className="m-auto flex flex-col justify-center space-y-6 ">
           <div className="w-full text-left ">
             <p className="justify-left text-lg text-white">
-              <span className="text-accent-1">Virtuous Projects</span>
+              <span className="font-bold text-accent-1">Virtuous Projects</span>
             </p>
           </div>
           <div className="flex w-full flex-row space-y-2 text-center">
@@ -433,13 +437,13 @@ export function MappingCreateButton({
           </>
         )}
       </div>
-      <div className="h-screen bg-dark  lg:p-8">
+      <div className="h-full bg-dark p-8">
         <h1 className="font-3xl p-4 text-3xl text-white">&nbsp;</h1>
         <div className="m-auto flex w-full flex-col justify-center space-y-6 ">
           <div className="m-auto flex w-full flex-col justify-center space-y-6 ">
             <div className="w-full text-left ">
               <p className="justify-left text-lg text-white">
-                <span className="text-accent-1">Financial Edge Accounts</span>
+                <span className={newLocal}>Financial Edge Accounts</span>
               </p>
             </div>
             <div className="flex w-full flex-row space-y-2 text-center">
@@ -594,8 +598,8 @@ export function MappingCreateButton({
           ) : null}
         </div>
       </div>
-      <div className="flex h-screen w-full flex-col bg-whiteSmoke p-8 pt-[24px] ">
-        <h1 className="py-8 text-2xl text-dark">Mappings </h1>
+      <div className="flex h-full w-full flex-col bg-whiteSmoke p-8 pt-[24px] ">
+        <h1 className="py-8 text-2xl text-dark">Mappings</h1>
 
         {mappings?.length ? (
           <div
@@ -1020,6 +1024,6 @@ export function MappingCreateButton({
           </Dialog>
         </Transition>
       </div>
-    </>
+    </div>
   )
 }
