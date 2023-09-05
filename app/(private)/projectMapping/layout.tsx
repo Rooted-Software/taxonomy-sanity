@@ -1,4 +1,3 @@
-import { DashboardNav } from '@/components/dashboard/nav'
 import { MainNav } from '@/components/main-nav'
 import { UserAccountNav } from '@/components/user-account-nav'
 import { dashboardConfig } from '@/config/dashboard'
@@ -32,11 +31,10 @@ export default async function DashboardLayout({
           />
         </div>
       </header>
- 
-        <main className="flex w-full flex-1 flex-col overflow-hidden">
-          {children}
-        </main>
 
+      <main className="flex w-full flex-1 flex-col overflow-hidden">
+        {children}
+      </main>
     </div>
   )
 }

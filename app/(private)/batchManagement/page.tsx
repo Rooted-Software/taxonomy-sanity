@@ -124,7 +124,7 @@ export default async function BatchManagementPage({ searchParams }) {
           />
         </div>
       </header>
-      <div className="container grid w-screen  grid-cols-3  flex-col items-center bg-dark  lg:max-w-none lg:grid-cols-3 lg:px-0">
+      <div>
         {batches && feAccounts && mappings && projects ? (
           <BatchPreview
             batches={batches}

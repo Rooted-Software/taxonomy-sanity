@@ -1,19 +1,12 @@
-import { ApiRefreshButton } from '@/components/dashboard/api-refresh-button'
-import { KeygenButton } from '@/components/dashboard/keygen-button'
-import { ReTestApiButton } from '@/components/dashboard/re-test-button'
-import { ReTestPostButton } from '@/components/dashboard/re-test-post-button'
 import { EmptyPlaceholder } from '@/components/empty-placeholder'
 import { DashboardHeader } from '@/components/header'
 import { PaginationButtons } from '@/components/pagination-buttons'
-import { PostCreateButton } from '@/components/post-create-button'
-import { PostItem } from '@/components/post-item'
 import { DashboardShell } from '@/components/shell'
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { getFeEnvironment } from '@/lib/feEnvironment'
 import { getCurrentUser } from '@/lib/session'
 import { formatDate } from '@/lib/utils'
-import { User } from '@prisma/client'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
@@ -21,7 +14,7 @@ export const metadata = {
   title: 'Dashboard',
 }
 
-const SYNC_PAGE_SIZE = 5
+const PAGE_SIZE = 8
 
 export default async function DashboardPage({ searchParams }) {
   const user = await getCurrentUser()
@@ -32,6 +25,10 @@ export default async function DashboardPage({ searchParams }) {
 
   const feEnvironment = await getFeEnvironment(user.team.id)
 
+  const batchPage =
+    searchParams.batchPage && !Number.isNaN(searchParams.batchPage)
+      ? parseInt(searchParams.batchPage)
+      : 0
   const batches = await db.giftBatch.findMany({
     where: {
       teamId: user.team.id,
@@ -47,7 +44,11 @@ export default async function DashboardPage({ searchParams }) {
     orderBy: {
       latestGiftAt: 'desc',
     },
+    // Take one extra so that we can know if there are more pages available
+    take: PAGE_SIZE + 1,
+    skip: batchPage * PAGE_SIZE,
   })
+  const batchesMorePages = batches.length > PAGE_SIZE
 
   const syncPage =
     searchParams.syncPage && !Number.isNaN(searchParams.syncPage)
@@ -71,10 +72,10 @@ export default async function DashboardPage({ searchParams }) {
       syncDate: 'desc',
     },
     // Take one extra so that we can know if there are more pages available
-    take: SYNC_PAGE_SIZE + 1,
-    skip: syncPage * SYNC_PAGE_SIZE,
+    take: PAGE_SIZE + 1,
+    skip: syncPage * PAGE_SIZE,
   })
-  const historyMorePages = history.length > SYNC_PAGE_SIZE
+  const historyMorePages = history.length > PAGE_SIZE
 
   console.log(user.id)
   return (
@@ -89,8 +90,8 @@ export default async function DashboardPage({ searchParams }) {
             <h3 className="text-xl text-accent-1">
               Un-synced Virtuous Gift Batches:{' '}
             </h3>
-            {batches.map((batch) => (
-              <div className="flex items-center justify-between p-4">
+            {batches.slice(0, PAGE_SIZE).map((batch) => (
+              <div className="flex items-center justify-between px-4 py-2">
                 <div className="grid gap-1">
                   <Link
                     href={`/batchManagement/?batchId=${batch.id}`}
@@ -106,6 +107,10 @@ export default async function DashboardPage({ searchParams }) {
                 </div>
               </div>
             ))}
+            <PaginationButtons
+              paramName="batchPage"
+              hasMore={batchesMorePages}
+            />
           </div>
         ) : (
           <EmptyPlaceholder className="border border-white">
@@ -123,8 +128,8 @@ export default async function DashboardPage({ searchParams }) {
         {history?.length ? (
           <div className="grid-flow-row auto-rows-max divide-y divide-border rounded-md border">
             <h3 className="text-xl text-accent-1">Sync History: </h3>
-            {history.slice(0, SYNC_PAGE_SIZE).map((log) => (
-              <div className="flex items-center justify-between p-4">
+            {history.slice(0, PAGE_SIZE).map((log) => (
+              <div className="flex items-center justify-between px-4 py-2">
                 <div className="grid w-full gap-1">
                   <div className="w-full">
                     Virtuous Batch: {log.giftBatch?.batch_name} -{' '}
