@@ -18,11 +18,11 @@ import * as z from 'zod'
 
 export default function AuthFormSelector() {
   const [selectedMethod, setSelectedMethod] = React.useState<string | null>(
-    localStorage.getItem('authMethod')
+    localStorage?.getItem('authMethod')
   )
   React.useEffect(() => {
     if (selectedMethod) {
-      localStorage.setItem('authMethod', selectedMethod)
+      localStorage?.setItem('authMethod', selectedMethod)
     }
   }, [selectedMethod])
 
