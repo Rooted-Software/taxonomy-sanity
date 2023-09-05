@@ -17,14 +17,22 @@ import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 export default function AuthFormSelector() {
-  const [selectedMethod, setSelectedMethod] = React.useState<string | null>(
-    localStorage?.getItem('authMethod')
-  )
+  let authMethod = ''
+  if (typeof window !== 'undefined') {
+    localStorage.getItem('authMethod')
+  }
+  const [selectedMethod, setSelectedMethod] = React.useState<string | null>(authMethod)
   React.useEffect(() => {
-    if (selectedMethod) {
-      localStorage?.setItem('authMethod', selectedMethod)
+    if (selectedMethod && typeof window !== 'undefined') {
+      localStorage.setItem('authMethod', selectedMethod)
     }
   }, [selectedMethod])
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setSelectedMethod(localStorage.getItem('authMethod'))
+    }
+  }, [])
 
   return (
     <div className="mx-auto  items-center">
