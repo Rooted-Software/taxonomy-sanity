@@ -17,3 +17,16 @@ export function formatDate(input: string | number): string {
 export function absoluteUrl(path: string) {
   return `${process.env.VERCEL_URL}${path}`
 }
+
+export const virDateOptions = {
+  30: '30 Days Ago',
+  60: '60 Days Ago',
+  90: '90 Days Ago',
+  180: '180 Days Ago',
+  270: '270 Days Ago',
+  365: 'One Year Ago',
+  730: 'Two Years Ago',
+}
+export const dateFilterOptions = Object.keys(virDateOptions).map((key) =>
+  parseInt(key)
+)

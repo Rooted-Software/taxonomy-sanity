@@ -1,26 +1,22 @@
 'use client'
 
-import { Checkbox } from '../ui/checkbox'
-import { UniversalButton } from './universal-button'
-import { VirtuousGetProjectsButton } from '@/components/dashboard/virtuous-get-projects'
 import { EmptyPlaceholder } from '@/components/empty-placeholder'
 import { Icons } from '@/components/icons'
 import { toast } from '@/components/ui/use-toast'
 import { cn } from '@/lib/utils'
 import { Dialog, Transition } from '@headlessui/react'
-import tr from 'date-fns/esm/locale/tr'
-import { CheckCircle } from 'lucide-react'
-import { CheckSquare } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useState, Fragment, useEffect } from 'react'
 import * as React from 'react'
-import { AnyZodObject } from 'zod'
 
 interface MappingCreateButtonProps
   extends React.HTMLAttributes<HTMLButtonElement> {
   projects: any[]
   feAccounts: any[]
   mappings: any[]
+  projectsDaysLoaded?: number
+  nextProjectDays: number
 }
 
 export function MappingCreateButton({
@@ -28,9 +24,12 @@ export function MappingCreateButton({
   feAccounts,
   mappings,
   className,
+  projectsDaysLoaded,
+  nextProjectDays,
   ...props
 }: MappingCreateButtonProps) {
   const router = useRouter()
+  const pathname = usePathname()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [virProjects, setVirProjects] = React.useState<any[]>([])
   const [feAccountID, setFeAccountID] = React.useState('')
@@ -68,7 +67,11 @@ export function MappingCreateButton({
   const [filterFeCase, setFilterFeCase] = React.useState<boolean>(false)
 
   function advanceStep() {
-    router.push('/step6')
+    if (pathname === '/projectMapping') {
+      router.push('/dashboard')
+    } else {
+      router.push('/step6')
+    }
   }
 
   function lookupProject(id) {
@@ -303,6 +306,21 @@ export function MappingCreateButton({
     router.refresh()
   }
 
+  const searchParams = useSearchParams()
+  const createMoreProjectsHref = () => {
+    const params = new URLSearchParams(
+      searchParams ? Array.from(searchParams.entries()) : undefined
+    )
+    params.set('projectDays', nextProjectDays.toString())
+    return `${pathname}?${params.toString()}`
+  }
+
+  const [isLoadingMoreProjects, setIsLoadingMoreProjects] =
+    React.useState<boolean>(false)
+  useEffect(() => {
+    setIsLoadingMoreProjects(false)
+  }, [projectsDaysLoaded])
+
   const newLocal = 'text-accent-1 font-bold'
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -435,6 +453,34 @@ export function MappingCreateButton({
               ))}
             </div>
           </>
+        )}
+
+        <div className="mt-2">
+          {projectsDaysLoaded === 730 ? (
+            <p>Showing projects from the past two years</p>
+          ) : projectsDaysLoaded === 365 ? (
+            <p>Showing projects from the past year</p>
+          ) : (
+            <p>Showing projects from the past {projectsDaysLoaded} days</p>
+          )}
+        </div>
+        {(!projectsDaysLoaded || projectsDaysLoaded < 730) && (
+          <Link
+            href={createMoreProjectsHref()}
+            scroll={false}
+            className={cn(
+              `relative mt-2 inline-flex items-center rounded-full bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
+              {
+                'cursor-not-allowed opacity-60': isLoadingMoreProjects,
+              }
+            )}
+            onClick={() => setIsLoadingMoreProjects(true)}
+          >
+            {isLoadingMoreProjects && (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            Load more projects
+          </Link>
         )}
       </div>
       <div className="h-full bg-dark p-8">
@@ -614,7 +660,7 @@ export function MappingCreateButton({
                     className="text-red mr-2 h-4 w-4"
                     onClick={() => onDeleteMapping(mapping.id)}
                   />{' '}
-                  {lookupProject(mapping.virProjectId)}{' '}
+                  {mapping.virProjectName}{' '}
                   <Icons.arrowRight className="mr-2 h-4 w-4" />{' '}
                   {lookupAccount(mapping.feAccountId)}
                 </div>
@@ -647,7 +693,9 @@ export function MappingCreateButton({
             ) : (
               <Icons.arrowRight className="mr-2 h-4 w-4" />
             )}
-            Continue (Data Review)
+            {pathname === '/projectMapping'
+              ? 'Return to dashboard'
+              : 'Continue (Data Review)'}
           </button>
         ) : null}
       </div>

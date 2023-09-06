@@ -1,24 +1,18 @@
 import { BatchPreview } from '@/components/dashboard/batch-preview'
-import { MappingCreateButton } from '@/components/dashboard/mapping-create-button'
-import { EmptyPlaceholder } from '@/components/empty-placeholder'
 import { MainNav } from '@/components/main-nav'
-import { DashboardNav } from '@/components/nav'
-import { SiteFooter } from '@/components/site-footer'
-import { Stepper } from '@/components/stepper'
 import { UserAccountNav } from '@/components/user-account-nav'
 import { dashboardConfig } from '@/config/dashboard'
 import { db } from '@/lib/db'
 import { getFeAccountsFromBlackbaud } from '@/lib/feAccounts'
 import { getCurrentUser } from '@/lib/session'
+import { dateFilterOptions } from '@/lib/utils'
 import {
-  dateFilterOptions,
+  getRelatedProjects,
   getVirtuousBatch,
   getVirtuousBatches,
 } from '@/lib/virGifts'
-import { getVirtuousProjects } from '@/lib/virProjects'
 import { getProjectAccountMappings } from '@/lib/virProjects'
 import { redirect } from 'next/navigation'
-import { notFound } from 'next/navigation'
 
 // TODO: show sync date and view in FE in gift panel
 // TODO: add note that any changes since sync date are not carried over
@@ -70,7 +64,6 @@ export default async function BatchManagementPage({ searchParams }) {
   const nextBatchDays = dateFilterOptions[currentDateIndex + 1]
 
   const feAccountsData = getFeAccountsFromBlackbaud(user.team.id)
-  const projectsData = getVirtuousProjects(user.team.id)
   const mappingData = getProjectAccountMappings(user.team.id)
   const batchData = getVirtuousBatches(user.team.id, batchDays)
   const selectedBatchData = searchParams.batchId
@@ -82,7 +75,6 @@ export default async function BatchManagementPage({ searchParams }) {
     user.team.id
   )
   const [
-    projects,
     feAccounts,
     mappings,
     batches,
@@ -90,7 +82,6 @@ export default async function BatchManagementPage({ searchParams }) {
     journalName,
     selectedBatch,
   ] = await Promise.all([
-    projectsData,
     feAccountsData,
     mappingData,
     batchData,
@@ -99,17 +90,20 @@ export default async function BatchManagementPage({ searchParams }) {
     selectedBatchData,
   ])
 
+  // Only load needed projects for selected batch
+  let projects: any[] = []
+  if (selectedBatch) {
+    projects = await getRelatedProjects(selectedBatch)
+    console.log(projects)
+  }
+
   if (!feEnvironment) {
     redirect('/step2')
   }
   if (!journalName) {
     redirect('/step3')
   }
-  console.log('selected batch:')
-  console.log(selectedBatch)
-  selectedBatch?.gifts?.forEach((gift) => {
-    gift.giftDesignations ? console.log(gift.giftDesignations) : console.log('no gift designations') 
-  })
+
   return (
     <>
       <header className="sticky top-0 z-40 border-b bg-background">

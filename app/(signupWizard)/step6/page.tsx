@@ -3,12 +3,12 @@ import { getFeAccountsFromBlackbaud } from '@/lib/feAccounts'
 import { getFeEnvironment } from '@/lib/feEnvironment'
 import { getFeJournalName } from '@/lib/feEnvironment'
 import { getCurrentUser } from '@/lib/session'
+import { dateFilterOptions } from '@/lib/utils'
 import {
-  dateFilterOptions,
+  getRelatedProjects,
   getVirtuousBatch,
   getVirtuousBatches,
 } from '@/lib/virGifts'
-import { getVirtuousProjects } from '@/lib/virProjects'
 import { getProjectAccountMappings } from '@/lib/virProjects'
 import { redirect } from 'next/navigation'
 
@@ -33,7 +33,6 @@ export default async function ReviewDataPage({ searchParams }) {
   const nextBatchDays = dateFilterOptions[currentDateIndex + 1]
 
   const feAccountsData = getFeAccountsFromBlackbaud(user.team.id)
-  const projectsData = getVirtuousProjects(user.team.id)
   const mappingData = getProjectAccountMappings(user.team.id)
   const batchData = getVirtuousBatches(user.team.id)
   const selectedBatchData = searchParams.batchId
@@ -45,7 +44,6 @@ export default async function ReviewDataPage({ searchParams }) {
     user.team.id
   )
   const [
-    projects,
     feAccounts,
     mappings,
     batches,
@@ -53,7 +51,6 @@ export default async function ReviewDataPage({ searchParams }) {
     journalName,
     selectedBatch,
   ] = await Promise.all([
-    projectsData,
     feAccountsData,
     mappingData,
     batchData,
@@ -61,6 +58,12 @@ export default async function ReviewDataPage({ searchParams }) {
     feGetJournalName,
     selectedBatchData,
   ])
+
+  // Only load needed projects for selected batch
+  let projects: any[] = []
+  if (selectedBatch) {
+    projects = await getRelatedProjects(selectedBatch)
+  }
 
   if (!feEnvironment) {
     redirect('/step2')

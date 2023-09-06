@@ -1,4 +1,6 @@
+import { virDateOptions } from './utils'
 import { virApiFetch } from './virApiFetch'
+import { getVirtuousProjects } from './virProjects'
 import { db } from '@/lib/db'
 
 export const getBatches = async (teamId, dateFilter) => {
@@ -23,19 +25,6 @@ export const getBatches = async (teamId, dateFilter) => {
     },
   })
 }
-
-const virDateOptions = {
-  30: '30 Days Ago',
-  60: '60 Days Ago',
-  90: '90 Days Ago',
-  180: '180 Days Ago',
-  270: '270 Days Ago',
-  365: 'One Year Ago',
-  730: 'Two Years Ago',
-}
-export const dateFilterOptions = Object.keys(virDateOptions).map((key) =>
-  parseInt(key)
-)
 
 // Get batches from local DB and check Virtuous for any new ones
 export const getVirtuousBatches = async (teamId, dateFilter = 30) => {
@@ -102,6 +91,10 @@ export const getVirtuousBatches = async (teamId, dateFilter = 30) => {
       )
 
       batches = await getBatches(teamId, filterDate)
+
+      if (data.total < 1000) {
+        hasMoreData = false
+      }
     } else {
       console.log(`No more data from virtuous for past ${dateFilter} days`)
       hasMoreData = false
@@ -209,63 +202,71 @@ export async function updateGiftBatch(batchName, reBatchNo, teamId) {
 }
 
 export async function insertGifts(gifts, teamId, batch_name) {
-  return await db.gift.createMany(
-    {
-      data: gifts.map((gift) => ({
-        id: gift.id,
-        transactionSource: gift.transactionSource,
-        transactionId: gift.transactionId,
-        contactId: gift.contactId,
-        contactName: gift.contactName,
-        contactUrl: gift.contactUrl,
-        giftType: gift.giftType,
-        giftTypeFormatted: gift.giftTypeFormatted,
-        giftDate: new Date(gift.giftDate),
-        giftDateFormatted: gift.giftDateFormatted,
-        amount: gift.amount,
-        amountFormatted: gift.amountFormatted,
-        currencyCode: gift.currencyCode,
-        exchangeRate: gift.exchangeRate,
-        baseCurrencyCode: gift.baseCurrencyCode,
-        batch: gift.batch,
-        createDateTimeUtc: new Date(gift.createDateTimeUtc),
-        createdByUser: gift.createdByUser,
-        modifiedDateTimeUtc: new Date(gift.modifiedDateTimeUtc),
-        modifiedByUser: gift.modifiedByUser,
-        segmentId: gift.segmentId,
-        segment: gift.segment,
-        segmentCode: gift.segmentCode,
-        segmentUrl: gift.segmentUrl,
-        mediaOutletId: gift.mediaOutletId,
-        mediaOutlet: gift.mediaOutlet,
-        grantId: gift.grantId,
-        grant: gift.grant,
-        grantUrl: gift.grantUrl,
-        notes: gift.notes,
-        tribute: gift.tribute,
-        tributeId: gift.tributeId,
-        tributeType: gift.tributeType,
-        acknowledgeIndividualId: gift.acknowledgeIndividualId,
-        receiptDate: new Date(gift.receiptDate),
-        receiptDateFormatted: gift.receiptDateFormatted,
-        contactPassthroughId: gift.contactPassthroughId,
-        contactPassthroughUrl: gift.contactPassthroughUrl,
-        contactIndividualId: gift.contactIndividual,
-        cashAccountingCode: gift.cashAccountingCode,
-        giftAskId: gift.giftAskId,
-        contactMembershipId: gift.contactMembershipId,
-        giftUrl: gift.giftUrl,
-        isTaxDeductible: gift.isTaxDeductible,
-        giftDesignations: gift.giftDesignations,
-        giftPremiums: gift.giftPremiums,
-        recurringGiftPayments: gift.recurringGiftPayments,
-        pledgePayments: gift.pledgePayments,
-        customFields: gift.customFields,
-        batch_name: gift.batch || 'none',
-        synced: true,
-        teamId,
-      })),
-      skipDuplicates: true
-    }
-  )
+  return await db.gift.createMany({
+    data: gifts.map((gift) => ({
+      id: gift.id,
+      transactionSource: gift.transactionSource,
+      transactionId: gift.transactionId,
+      contactId: gift.contactId,
+      contactName: gift.contactName,
+      contactUrl: gift.contactUrl,
+      giftType: gift.giftType,
+      giftTypeFormatted: gift.giftTypeFormatted,
+      giftDate: new Date(gift.giftDate),
+      giftDateFormatted: gift.giftDateFormatted,
+      amount: gift.amount,
+      amountFormatted: gift.amountFormatted,
+      currencyCode: gift.currencyCode,
+      exchangeRate: gift.exchangeRate,
+      baseCurrencyCode: gift.baseCurrencyCode,
+      batch: gift.batch,
+      createDateTimeUtc: new Date(gift.createDateTimeUtc),
+      createdByUser: gift.createdByUser,
+      modifiedDateTimeUtc: new Date(gift.modifiedDateTimeUtc),
+      modifiedByUser: gift.modifiedByUser,
+      segmentId: gift.segmentId,
+      segment: gift.segment,
+      segmentCode: gift.segmentCode,
+      segmentUrl: gift.segmentUrl,
+      mediaOutletId: gift.mediaOutletId,
+      mediaOutlet: gift.mediaOutlet,
+      grantId: gift.grantId,
+      grant: gift.grant,
+      grantUrl: gift.grantUrl,
+      notes: gift.notes,
+      tribute: gift.tribute,
+      tributeId: gift.tributeId,
+      tributeType: gift.tributeType,
+      acknowledgeIndividualId: gift.acknowledgeIndividualId,
+      receiptDate: new Date(gift.receiptDate),
+      receiptDateFormatted: gift.receiptDateFormatted,
+      contactPassthroughId: gift.contactPassthroughId,
+      contactPassthroughUrl: gift.contactPassthroughUrl,
+      contactIndividualId: gift.contactIndividual,
+      cashAccountingCode: gift.cashAccountingCode,
+      giftAskId: gift.giftAskId,
+      contactMembershipId: gift.contactMembershipId,
+      giftUrl: gift.giftUrl,
+      isTaxDeductible: gift.isTaxDeductible,
+      giftDesignations: gift.giftDesignations,
+      giftPremiums: gift.giftPremiums,
+      recurringGiftPayments: gift.recurringGiftPayments,
+      pledgePayments: gift.pledgePayments,
+      customFields: gift.customFields,
+      batch_name: gift.batch || 'none',
+      synced: true,
+      teamId,
+    })),
+    skipDuplicates: true,
+  })
+}
+
+export function getRelatedProjects(
+  batch: Awaited<ReturnType<typeof getVirtuousBatch>>
+) {
+  const projectIds = new Set<string>()
+  batch.gifts
+    .flatMap((gift) => gift.giftDesignations)
+    .forEach(({ projectId }) => projectIds.add(projectId))
+  return getVirtuousProjects(batch.teamId, Array.from(projectIds))
 }
