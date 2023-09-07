@@ -2,22 +2,15 @@ import { siteConfig } from '@/config/site'
 import { db } from '@/lib/db'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { Prisma } from '@prisma/client'
-import { th } from 'date-fns/locale'
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import EmailProvider from 'next-auth/providers/email'
-import { Client } from 'postmark'
 import Mailgun, { MailgunClientOptions, MessagesSendResult } from 'mailgun.js';
-
-
-
 
 type Credentials = { 
   email: string,
   password: string
 }
-
-
 
 const FormData = require('form-data')
 
@@ -40,8 +33,6 @@ const setDefaultNewTeam = async (user: any) => {
   })
 
   const customer = await stripe.customers.create({email: user.email, metadata: {teamId: newTeam.id, userId: user.id}}) 
-  console.log('customer')
-  console.log(customer)
   // update team with stripe customer id
   const updatedTeam = await db.team.update({
     where: {
@@ -51,15 +42,8 @@ const setDefaultNewTeam = async (user: any) => {
       stripeCustomerId: customer.id,
     },
   })
-
   return updatedTeam
 }
-  // update user with team
-  
-
-
-const postmarkClient = new Client(process.env.POSTMARK_API_TOKEN || '')
-
 export const authOptions: NextAuthOptions = {
   // huh any! I know.
   // This is a temporary fix for prisma client.
@@ -73,9 +57,7 @@ export const authOptions: NextAuthOptions = {
   },
   providers: [
     EmailProvider({
-
       from: process.env.INFO_EMAIL_ADDRESS,
-
       sendVerificationRequest: async ({ identifier, url, provider }) => {
         const user = await db.user.findUnique({
           where: {
@@ -105,8 +87,7 @@ export const authOptions: NextAuthOptions = {
             product_name: siteConfig.name,
           })
         };
-   
-          const result = await mg.messages.create('donorsync.org', mailgunData);
+        const result = await mg.messages.create('donorsync.org', mailgunData);
        
       },
     }),
@@ -135,8 +116,6 @@ export const authOptions: NextAuthOptions = {
         const form = new FormData()
         form.append('email', credentials.email)
         form.append('password', credentials.password)
-      
-
         const res = await fetch('https://api.virtuoussoftware.com/Token', {
           method: 'POST',
           body:
@@ -151,7 +130,6 @@ export const authOptions: NextAuthOptions = {
           },
         })
       
-
         const user = await res.json()
      
         if (!res.ok) {
@@ -213,7 +191,6 @@ export const authOptions: NextAuthOptions = {
               token_type: 'bearer',
             }
 
-          
             const newAccount = await db.account.create({
               data: accountData,
               select: {
@@ -221,7 +198,6 @@ export const authOptions: NextAuthOptions = {
               },
             })
           } else {
-           
             // update account (with tokens)
             const updatedAccount = await db.account.updateMany({
               where: {
@@ -256,15 +232,9 @@ export const authOptions: NextAuthOptions = {
             // failed to fund user or team, which should not happen at this stage
             return null 
           }
-    
-          
-          console.log('Here is the user')
           let loggedInUser: any = {id: dbUser.id, email: credentials.email, team: dbUser.team, teamId: dbUser.teamId}
-
-
           return loggedInUser
         }
-
         // Return null if user data could not be retrieved
         return null
       },
@@ -293,10 +263,10 @@ export const authOptions: NextAuthOptions = {
       return session
     },
     async jwt({ token, user }) {
-      console.log('in jwt-token')
-      console.log(token)
-      console.log('jwt-user')
-      console.log(user)
+      // console.log('in jwt-token')
+      // console.log(token)
+      // console.log('jwt-user')
+      // console.log(user)
       var dbUser = await db.user.findFirst({
         where: {
           email: token.email,
