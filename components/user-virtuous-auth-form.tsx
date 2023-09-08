@@ -34,7 +34,8 @@ export function UserVirtuousAuthForm({
   })
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const searchParams = useSearchParams()
-
+  const [twoFactor, setTwoFactor] = useState('')
+  const [twoFactorForm, setTwoFactorForm] = useState(false)
   const [error, setError] = useState(null)
 
   async function onSubmit(data: FormData) {
@@ -45,15 +46,27 @@ export function UserVirtuousAuthForm({
       redirect: false,
       password: data.password,
       callbackUrl: searchParams?.get('from') || '/step1',
+      twoFactor: data.twoFactor,
     })
     console.log(signInResult)
     setIsLoading(false)
-
+ 
     if (!signInResult?.ok) {
+      let title = 'Something went wrong.'
+    if (signInResult?.error === 'invalid_grant') {
+        title = 'Invalid email or password.'
+      }
+    if (signInResult?.error === 'user_lockout') {
+        title = 'User is locked out. Check with your admin or wait.'
+      }
+      if (signInResult?.error === 'awaiting_verification') {
+        title = 'Awaiting 2fa.'
+        setTwoFactorForm(true)
+      }
       return toast({
-        title: 'Something went wrong.',
+        title: title,
         description: 'Your sign in request failed. Please try again.',
-        type: 'error',
+        variant: 'error',
       })
     }
     console.log(signInResult); 
@@ -97,7 +110,7 @@ export function UserVirtuousAuthForm({
             </label>
             <input
               id="password"
-              placeholder="xyazb1Cfna"
+              placeholder="password"
               className="my-0 mb-2 block h-9 w-full rounded-full border border-slate-300 py-2 px-3 text-sm text-slate-500 placeholder:text-slate-500 hover:border-slate-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-800 focus:ring-offset-1"
               type="password"
               autoCapitalize="none"
@@ -110,7 +123,25 @@ export function UserVirtuousAuthForm({
                 {errors.password.message}
               </p>
             )}
-          </div>
+          </div>{twoFactorForm && (<>
+            <div className="w-100 grid md:mt-8 md:pt-4"></div>
+           <div></div>
+          <div className="col-span-2 grid"> <label className="my-2 text-xs" htmlFor="twoFactor">
+              Two Factor
+            </label>
+         
+            <input
+              id="twoFactor"  
+              placeholder="123456"
+              className="my-0 mb-2 block h-9 w-full rounded-full border border-slate-300 py-2 px-3 text-sm text-slate-500 placeholder:text-slate-500 hover:border-slate-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-800 focus:ring-offset-1"
+              type="text"
+              autoCapitalize="none"
+              autoCorrect="off" 
+              disabled={isLoading}
+              {...register('twoFactor')}
+            /></div>
+             </>
+        )}
 
           <div className="w-100 grid md:mt-8 md:pt-4"></div>
           <div className="grid "></div>

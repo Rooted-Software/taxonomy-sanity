@@ -7,4 +7,5 @@ export const userAuthSchema = z.object({
 export const virtuousAuthSchema = z.object({
   email: z.string().email(),
   password: z.string(),
+  twoFactor: z.string().optional(),
 })

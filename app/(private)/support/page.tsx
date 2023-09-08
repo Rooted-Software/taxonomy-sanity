@@ -37,7 +37,7 @@ export default async function SupportCategoryPage({
         Support
         <p className='pt-4 font-normal'>
            We currently are offering self service support through our documentation or email support through the form below. 
-           In addition, if you are one of our enterprise customers, you can reach out to your account manager for additional support.
+           In addition, if you are one of our enterprise customers, you can reach out to your account manager for additional support. 
            <br/><br/>
           <a className='underline' href='/docs/overview'>View DonorSync Documentation</a>
         </p>

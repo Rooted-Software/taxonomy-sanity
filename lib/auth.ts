@@ -10,6 +10,7 @@ import Mailgun, { MailgunClientOptions, MessagesSendResult } from 'mailgun.js';
 type Credentials = { 
   email: string,
   password: string
+  twoFactor: string
 }
 
 const FormData = require('form-data')
@@ -106,34 +107,39 @@ export const authOptions: NextAuthOptions = {
           placeholder: 'jsmith@example.com',
         },
         password: { label: 'Password', type: 'password' },
+        twoFactor: { label: '2FA', type: 'text' }
       },
       async authorize(credentials: Credentials, req) {
-        const payload = {
-          email: credentials.email,
-          password: credentials.password,
-        }
-   
+    
         const form = new FormData()
         form.append('email', credentials.email)
         form.append('password', credentials.password)
+        form.append('twoFactor', credentials.twoFactor || '')
+        
         const res = await fetch('https://api.virtuoussoftware.com/Token', {
           method: 'POST',
-          body:
+          body: credentials.twoFactor !== '' && credentials.twoFactor !== undefined && credentials.twoFactor !== 'undefined' ?(
             'grant_type=password&username=' +
             credentials.email +
             '&password=' +
-            credentials.password,
+            credentials.password +
+            '&otp=' + credentials.twoFactor + "") : ('grant_type=password&username=' +
+            credentials.email +
+            '&password=' +
+            credentials.password ),
           mode: 'no-cors',
           cache: 'no-cache',
           headers: {
             'Content-Type': 'form-data',
           },
         })
-      
+        
         const user = await res.json()
-     
-        if (!res.ok) {
-          throw new Error(user.message)
+        const {error} = user
+        if (error !== null && error !== undefined)  {
+          console.log(error)
+          throw new Error(error)
+          return error
         }
         // If no error and we have user data, return it
         if (res.ok && user) {
@@ -228,7 +234,7 @@ export const authOptions: NextAuthOptions = {
           }
 
           if (!dbUser || !dbUser?.teamId) { 
-            console.log('failed to fund user or team')
+            console.log('failed to find user or team')
             // failed to fund user or team, which should not happen at this stage
             return null 
           }
