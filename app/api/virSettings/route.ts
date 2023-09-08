@@ -112,9 +112,21 @@ export async function PATCH(
     return new Response(JSON.stringify(data));
   }
     const data = await res2.json()
-    console.log(data)
+    const resPermissions = await fetch('https://api.virtuoussoftware.com/api/Permission', params,)
+    if (res2.status !== 200) {
 
+      const permissionData = await resPermissions.json()
+      console.log(permissionData)
+      return new Response(JSON.stringify(permissionData));
+    }
+
+    const permissionData = await resPermissions.json()
+
+    const hasGiftsRead = permissionData.find((permission) => permission.module === 'Gift' && permission.action === "Read" && permission.allowed===true )
+    const hasProjectsRead = permissionData.find((permission) => permission.module === 'Project' && permission.action === "Read" && permission.allowed===true )
+    data.permissions = hasGiftsRead !== undefined && hasProjectsRead !== undefined ? true : false
     return new Response(JSON.stringify(data));
+
     } catch (err) { 
       console.log(err) 
       console.log('Bigger issues than the refresh token')

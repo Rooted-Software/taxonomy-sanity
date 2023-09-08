@@ -59,7 +59,7 @@ export function ApiCallButton({ className, apiKey, responseCallback, ...props }:
     console.log(data)
     if (data?.organizationName) {
       setOrganizationName(data.organizationName)
-      if (typeof(responseCallback) === 'function') {responseCallback(data.organizationName)}
+      if (typeof(responseCallback) === 'function') {responseCallback(data)}
       setSuccess(true)
     }
 
