@@ -32,6 +32,7 @@ import {
   Wallet,
   LifeBuoy,
   Clipboard,
+  Users,
   X,
   type Icon as LucideIcon,
 } from 'lucide-react'
@@ -41,6 +42,7 @@ export type Icon = LucideIcon
 export const Icons = {
   logo: Command,
   close: X,
+  users: Users,
   spinner: Loader2,
   chevronLeft: ChevronLeft,
   chevronRight: ChevronRight,
