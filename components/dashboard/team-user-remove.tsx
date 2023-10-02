@@ -22,15 +22,13 @@ export function TeamUserRemove({
   const [isSaving, setIsSaving] = React.useState<boolean>(false)
   const [projects, setProjects] = React.useState([])
   async function onClick() {
-    (true)
-    console.log("clicked!!", user)
     setIsSaving(true)
 
     const response = await fetch(`/api/users/${user.id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-      }
+      },
     })
 
     setIsSaving(false)
@@ -57,13 +55,12 @@ export function TeamUserRemove({
   // This forces a cache invalidation.
   // router.refresh()
 
-
   return (
     <div>
       <button
         onClick={onClick}
         className={cn(
-          'relative inline-flex h-7 items-center rounded-md border border-transparent bg-brand-500 p-4 text-sm font-sm text-white hover:bg-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+          'font-sm relative inline-flex h-7 items-center rounded-md border border-transparent bg-brand-500 p-4 text-sm text-white hover:bg-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
           {
             'cursor-not-allowed opacity-60': isSaving,
           },
@@ -77,7 +74,6 @@ export function TeamUserRemove({
         ) : null}
         Remove
       </button>
-
     </div>
   )
-};
+}
