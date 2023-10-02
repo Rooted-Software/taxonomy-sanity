@@ -63,7 +63,7 @@ export function TeamUserRemove({
       <button
         onClick={onClick}
         className={cn(
-          'relative inline-flex h-7 items-center rounded-md border border-transparent bg-brand-500 px-4 py-4 text-sm font-sm text-white hover:bg-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+          'relative inline-flex h-7 items-center rounded-md border border-transparent bg-brand-500 p-4 text-sm font-sm text-white hover:bg-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
           {
             'cursor-not-allowed opacity-60': isSaving,
           },
