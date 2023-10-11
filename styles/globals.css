@@ -78,39 +78,54 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
-  .advanceTransition { 
-    transition: width 2s, 
+  .advanceTransition {
+    transition: width 2s;
   }
   .advance-step1 {
-    animation:  progress-step1 2s ease  
+    animation: progress-step1 2s ease;
   }
   .advance-step2 {
-    animation:  progress-step2 2s ease  
+    animation: progress-step2 2s ease;
   }
   .advance-step3 {
-    animation:  progress-step3 2s ease  
+    animation: progress-step3 2s ease;
   }
 }
 
 @keyframes progress-step1 {
-  0%  { width: 0%; }
-  100%  { width: 10%; }
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 10%;
+  }
 }
 
 @keyframes progress-step2 {
-  0%  { width: 10%; }
-  100%  { width: 20%; }
+  0% {
+    width: 10%;
+  }
+  100% {
+    width: 20%;
+  }
 }
 
 @keyframes progress-step3 {
-  0%  { width: 20%; }
-  100%  { width: 25%; }
+  0% {
+    width: 20%;
+  }
+  100% {
+    width: 25%;
+  }
 }
 
 @layer utilities {
   .striped > div:nth-child(even) {
-    @apply bg-brand-100 ;
+    @apply bg-brand-100;
   }
 }
 
-.dropdown {height: 200px; overflow: scroll;}
+.dropdown {
+  height: 200px;
+  overflow: scroll;
+}
