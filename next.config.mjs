@@ -27,6 +27,9 @@ const nextConfig = {
     /// Set this to false if you want production builds to abort if there's lint errors
     ignoreDuringBuilds: process.env.VERCEL_ENV === 'production',
   },
+  compiler: {
+    styledComponents: true
+  }
 }
 
 export default nextConfig

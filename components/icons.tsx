@@ -34,6 +34,7 @@ import {
   Clipboard,
   Users,
   X,
+  Lock,
   type Icon as LucideIcon,
 } from 'lucide-react'
 
@@ -58,6 +59,7 @@ export const Icons = {
   lifeRing: LifeBuoy,
   add: Plus,
   warning: AlertTriangle,
+  lock: Lock,
   user: User,
   arrowRight: ArrowRight,
   arrowLeft: ArrowLeft,
