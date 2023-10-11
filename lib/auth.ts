@@ -41,21 +41,21 @@ const setDefaultNewTeam = async (user: any) => {
       role: 'admin',
     },
   })
-  return newTeam // this is here because strip secret key is failing on localhost
-  // const customer = await stripe.customers.create({
-  //   email: user.email,
-  //   metadata: { teamId: newTeam.id, userId: user.id },
-  // })
-  // // update team with stripe customer id
-  // const updatedTeam = await db.team.update({
-  //   where: {
-  //     id: newTeam.id,
-  //   },
-  //   data: {
-  //     stripeCustomerId: customer.id,
-  //   },
-  // })
-  // return updatedTeam
+  // return newTeam // this is here because strip secret key is failing on localhost
+  const customer = await stripe.customers.create({
+    email: user.email,
+    metadata: { teamId: newTeam.id, userId: user.id },
+  })
+  // update team with stripe customer id
+  const updatedTeam = await db.team.update({
+    where: {
+      id: newTeam.id,
+    },
+    data: {
+      stripeCustomerId: customer.id,
+    },
+  })
+  return updatedTeam
 }
 export const authOptions: NextAuthOptions = {
   // huh any! I know.
