@@ -1,21 +1,21 @@
-'use client'
+"use client"
 
-import { Icons } from '@/components/icons'
+import { Icons } from "@/components/icons"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { toast } from '@/components/ui/use-toast'
-import { cn } from '@/lib/utils'
-import '@/styles/globals.css'
-import { set } from 'date-fns'
-import { useRouter, usePathname } from 'next/navigation'
-import { any } from 'prop-types'
-import { Fragment } from 'react'
-import * as React from 'react'
+} from "@/components/ui/dropdown-menu"
+import { toast } from "@/components/ui/use-toast"
+import { cn } from "@/lib/utils"
+import "@/styles/globals.css"
+import { set } from "date-fns"
+import { usePathname, useRouter } from "next/navigation"
+import { any } from "prop-types"
+import { Fragment } from "react"
+import * as React from "react"
 
 interface UniversalButtonProps {
   title: String
@@ -46,22 +46,22 @@ export function UniversalSelect({
     selected ?? initialData?.[0][fields[0]]?.toString()
   )
   const [selectTitle, setSelecTitle] = React.useState(selected)
-  const [filterValue, setFilterValue] = React.useState('')
+  const [filterValue, setFilterValue] = React.useState("")
   const [filteredObjects, setFilteredObjects] = React.useState(initialData)
   console.log(selected)
 
   async function getInitialData() {
-    console.log('getInitialData')
+    console.log("getInitialData")
     if (isLoading && route) {
       return
     }
     setIsLoading(true)
     setReturnedData([])
-    setFilterValue('')
+    setFilterValue("")
     console.log(route)
 
     const response = await fetch(route, {
-      method: 'GET',
+      method: "GET",
     })
 
     console.log(response)
@@ -71,16 +71,16 @@ export function UniversalSelect({
         const data = await response.json()
         console.log(data)
         return toast({
-          title: 'API rate limit exceeded',
+          title: "API rate limit exceeded",
           description: data.message,
-          variant: 'destructive',
+          variant: "destructive",
         })
       }
 
       return toast({
-        title: 'Something went wrong.',
-        description: 'Your post was not created. Please try again.',
-        variant: 'destructive',
+        title: "Something went wrong.",
+        description: "Your post was not created. Please try again.",
+        variant: "destructive",
       })
     }
 
@@ -90,7 +90,7 @@ export function UniversalSelect({
       setReturnedData(data)
       setFilteredObjects(data)
 
-      if (selected === undefined || selected === null || selected === '') {
+      if (selected === undefined || selected === null || selected === "") {
         setSelectValue(data[0][fields[0]]?.toString())
       }
     }
@@ -103,20 +103,20 @@ export function UniversalSelect({
     if (
       selectValue === undefined ||
       selectValue === null ||
-      selectValue === ''
+      selectValue === ""
     ) {
       return <>Loading...</>
     }
     if (!returnedData || returnedData.length === 0) {
       return <>Loading...</>
     }
-    console.log('Selected Value')
+    console.log("Selected Value")
     console.log(selectValue)
     const aLabel = returnedData.find((item, indexA) => {
       console.log(item[fields[0]].toString() === selectValue.toString())
       return item[fields[0]].toString() === selectValue.toString()
     })
-    console.log('Selected Label')
+    console.log("Selected Label")
     console.log(aLabel)
     if (aLabel === undefined) {
       return <>Loading...</>
@@ -127,13 +127,13 @@ export function UniversalSelect({
         {fields?.map((field: any, index) => {
           if (index > 0) {
             return (
-              <Fragment key={item[field] + index + '-key'}>
-                {' '}
-                {item[field]}{' '}
+              <Fragment key={item[field] + index + "-key"}>
+                {" "}
+                {item[field]}{" "}
               </Fragment>
             )
           } else {
-            return <Fragment key={item[field] + index + '-key'}></Fragment>
+            return <Fragment key={item[field] + index + "-key"}></Fragment>
           }
         })}
       </>
@@ -141,12 +141,12 @@ export function UniversalSelect({
   }
 
   function updateFilter() {
-    if (filterValue === '' || filterValue === null) {
+    if (filterValue === "" || filterValue === null) {
       setFilteredObjects(returnedData)
     } else {
       setFilteredObjects(
         returnedData.filter((item) => {
-          var text = ''
+          var text = ""
           fields?.forEach((field: any, index) => {
             if (index > 0) {
               text = text + item[field]?.toString().toLowerCase()
@@ -159,8 +159,12 @@ export function UniversalSelect({
     }
   }
 
+  React.useEffect(() => {
+    updateFilter()
+  }, [filterValue])
+
   async function saveSelectedData() {
-    console.log('getInitialData')
+    console.log("getInitialData")
     if (isLoading) {
       return
     }
@@ -174,9 +178,9 @@ export function UniversalSelect({
     console.log(bodyJson)
 
     const response = await fetch(route, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: bodyJson,
     })
@@ -189,15 +193,15 @@ export function UniversalSelect({
         const data = await response.json()
         console.log(data)
         return toast({
-          title: 'API rate limit exceeded',
+          title: "API rate limit exceeded",
           description: data.message,
-          variant: 'destructive',
+          variant: "destructive",
         })
       }
       return toast({
-        title: 'Something went wrong.',
-        description: 'Your post was not created. Please try again.',
-        variant: 'destructive',
+        title: "Something went wrong.",
+        description: "Your post was not created. Please try again.",
+        variant: "destructive",
       })
     }
 
@@ -255,26 +259,25 @@ export function UniversalSelect({
 
         <DropdownMenuContent
           align="start"
-          className="w-100 border-whiteSomke dropdown ml-5 border-none bg-whiteSmoke text-dark"
+          className="w-100 dropdown ml-5 border-none border-whiteSmoke bg-whiteSmoke text-dark"
         >
           <input
             type="text"
             autoComplete="off"
-            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2  text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             value={filterValue}
             onChange={(e) => {
               e.preventDefault()
               e.stopPropagation()
-              setFilterValue(e.target.value)
-              updateFilter()
+              setFilterValue(e.target.value ?? null)
             }}
             id="inputSearch"
             placeholder="Search"
           />
           {filteredObjects?.map((item: any, index) => (
             <DropdownMenuItem
-              className="w-100 border-whiteSomke border-none bg-whiteSmoke"
-              key={'option' + index}
+              className="w-100 border-none border-whiteSmoke bg-whiteSmoke"
+              key={"option" + index}
               data-value={item[fields[0]]}
               onClick={(e) =>
                 setSelectValue((e.target as HTMLElement).dataset.value)
@@ -283,14 +286,14 @@ export function UniversalSelect({
               {fields?.map((field: any, index) => {
                 if (index > 0) {
                   return (
-                    <Fragment key={item[field] + index + '-key'}>
-                      {' '}
-                      {item[field]}{' '}
+                    <Fragment key={item[field] + index + "-key"}>
+                      {" "}
+                      {item[field]}{" "}
                     </Fragment>
                   )
                 } else {
                   return (
-                    <Fragment key={item[field] + index + '-key'}></Fragment>
+                    <Fragment key={item[field] + index + "-key"}></Fragment>
                   )
                 }
               })}
@@ -302,9 +305,9 @@ export function UniversalSelect({
       <button
         onClick={saveSelectedData}
         className={cn(
-          'font-large relative inline-flex h-9 items-center rounded-full border border-transparent bg-whiteSmoke  py-1  px-5 text-lg text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+          "font-large relative inline-flex h-9 items-center rounded-full border border-transparent bg-whiteSmoke  py-1  px-5 text-lg text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2",
           {
-            'cursor-not-allowed opacity-60': isLoading,
+            "cursor-not-allowed opacity-60": isLoading,
           }
         )}
         disabled={isLoading}

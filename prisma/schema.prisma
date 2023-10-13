@@ -28,12 +28,13 @@ model Account {
   createdAt         DateTime @default(now()) @map(name: "created_at")
   updatedAt         DateTime @default(now()) @map(name: "updated_at")
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([provider, providerAccountId])
   @@map(name: "accounts")
 }
 
-model Team { 
-  id                     String   @id @default(cuid())
+model Team {
+  id                     String                  @id @default(cuid())
   name                   String?
   users                  User[]
   virtuousOrg            String?
@@ -57,8 +58,9 @@ model Team {
   defaultDebitAccount    String?
   setupStep              String?
   ProjectAccountMapping  ProjectAccountMapping[]
-  automation             Boolean?                @default(false) 
-  frequency              String?                 @default("daily") 
+  automation             Boolean?                @default(false)
+  passProjectID          Boolean?                @default(false)
+  frequency              String?                 @default("daily")
   syncHistory            SyncHistory[]
 }
 
@@ -68,27 +70,28 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+
   @@map(name: "sessions")
 }
 
 model User {
-  id                     String                  @id @default(cuid())
-  name                   String?
-  email                  String?                 @unique
-  emailVerified          DateTime?
-  image                  String?
-  createdAt              DateTime                @default(now()) @map(name: "created_at")
-  updatedAt              DateTime                @default(now()) @map(name: "updated_at")
-  accounts               Account[]
-  sessions               Session[]
-  Post                   Post[]
-  teamId                 String?
-  team                   Team?                   @relation(fields: [teamId], references: [id])
-  role                   String?                 @default("user")
-  status                 String?                 @default("invited")
-  syncHistory            SyncHistory[]
-  deleted                Boolean                 @default(false)
+  id            String        @id @default(cuid())
+  name          String?
+  email         String?       @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime      @default(now()) @map(name: "created_at")
+  updatedAt     DateTime      @default(now()) @map(name: "updated_at")
+  accounts      Account[]
+  sessions      Session[]
+  Post          Post[]
+  teamId        String?
+  team          Team?         @relation(fields: [teamId], references: [id])
+  role          String?       @default("user")
+  status        String?       @default("invited")
+  syncHistory   SyncHistory[]
+  deleted       Boolean       @default(false)
+
   @@map(name: "users")
 }
 
@@ -96,6 +99,7 @@ model VerificationToken {
   identifier String
   token      String   @unique
   expires    DateTime
+
   @@unique([identifier, token])
   @@map(name: "verification_tokens")
 }
@@ -145,23 +149,24 @@ model FeSetting {
   createdAt                DateTime @default(now()) @map(name: "created_at")
   updatedAt                DateTime @default(now()) @map(name: "updated_at")
   teamId                   String   @unique
-  team                     Team    @relation(fields: [teamId], references: [id])
+  team                     Team     @relation(fields: [teamId], references: [id])
 
   @@map(name: "fe_settings")
 }
 
 model GiftBatch {
-  id         String    @id @default(cuid())
-  batch_name String    
-  synced     Boolean   @default(false)
-  reBatchNo  Int?  
-  syncedAt   DateTime? @map(name: "synced_at")
-  createdAt  DateTime  @default(now()) @map(name: "created_at")
-  updatedAt  DateTime  @default(now()) @map(name: "updated_at")
+  id           String        @id @default(cuid())
+  batch_name   String
+  synced       Boolean       @default(false)
+  reBatchNo    Int?
+  syncedAt     DateTime?     @map(name: "synced_at")
+  createdAt    DateTime      @default(now()) @map(name: "created_at")
+  updatedAt    DateTime      @default(now()) @map(name: "updated_at")
   latestGiftAt DateTime?
-  teamId     String
-  team       Team     @relation(fields: [teamId], references: [id])
-  syncHistory  SyncHistory[] 
+  teamId       String
+  team         Team          @relation(fields: [teamId], references: [id])
+  syncHistory  SyncHistory[]
+
   @@unique([teamId, batch_name])
   @@map(name: "gift_batches")
 }
@@ -263,67 +268,66 @@ model FeProject {
 
 // Deprecated
 model ProjectMapping {
-  id           String          @id @default(cuid())
+  id           String    @id @default(cuid())
   virProjectId String
-  feProject    FeProject       @relation(fields: [feProjectId], references: [id])
+  feProject    FeProject @relation(fields: [feProjectId], references: [id])
   feProjectId  String
   teamId       String
-  team        Team            @relation(fields: [teamId], references: [id])
+  team         Team      @relation(fields: [teamId], references: [id])
 
   @@index([virProjectId, teamId])
   @@map(name: "project_mappings")
 }
 
 model ProjectAccountMapping {
-  id           String          @id @default(cuid())
-  virProjectId Int
-  virProjectName  String
-  feAccount    FeAccount      @relation(fields: [feAccountId, teamId], references: [account_id, teamId])
-  feAccountId  Int
-  teamId       String
-  team         Team            @relation(fields: [teamId], references: [id])
+  id             String    @id @default(cuid())
+  virProjectId   Int
+  virProjectName String
+  feAccount      FeAccount @relation(fields: [feAccountId, teamId], references: [account_id, teamId])
+  feAccountId    Int
+  teamId         String
+  team           Team      @relation(fields: [teamId], references: [id])
+
   @@unique([virProjectId, teamId])
   @@map(name: "project_account_mappings")
 }
 
-model FeAccount { 
-
-  account_id            Int 
-  account_number        String
-  description           String? 
-  prevent_data_entry    Boolean?
-  prevent_posting_data  Boolean?
-  class                 String?
-  cashflow              String?
-  working_capital       String?
-  custom_fields         Json?
+model FeAccount {
+  account_id                Int
+  account_number            String
+  description               String?
+  prevent_data_entry        Boolean?
+  prevent_posting_data      Boolean?
+  class                     String?
+  cashflow                  String?
+  working_capital           String?
+  custom_fields             Json?
   default_transaction_codes Json?
-  date_added            DateTime?
-  added_by              String?
-  date_modified         DateTime?
-  modified_by           String?
-  createdAt             DateTime  @default(now()) @map(name: "created_at")
-  updatedAt             DateTime  @default(now()) @map(name: "updated_at")
-  teamId                String
-  team                  Team  @relation(fields: [teamId], references: [id])
-  ProjectAccountMapping ProjectAccountMapping[]
+  date_added                DateTime?
+  added_by                  String?
+  date_modified             DateTime?
+  modified_by               String?
+  createdAt                 DateTime                @default(now()) @map(name: "created_at")
+  updatedAt                 DateTime                @default(now()) @map(name: "updated_at")
+  teamId                    String
+  team                      Team                    @relation(fields: [teamId], references: [id])
+  ProjectAccountMapping     ProjectAccountMapping[]
+
   @@id([account_id, teamId])
   @@unique([account_id, teamId])
   @@map(name: "fe_accounts")
-
 }
 
 model FeAccountCode {
-  account_code_id       Int                     @id
-  value                 Int
-  category              String
-  class                 String?
-  is_contra             Boolean
-  is_control            Boolean
-  description           String
-  teamId                String
-  team                  Team                    @relation(fields: [teamId], references: [id])
-
+  account_code_id Int     @id
+  value           Int
+  category        String
+  class           String?
+  is_contra       Boolean
+  is_control      Boolean
+  description     String
+  teamId          String
+  team            Team    @relation(fields: [teamId], references: [id])
 
   @@unique([teamId, account_code_id])
   @@map(name: "fe_account_codes")
@@ -340,18 +344,19 @@ model FeJournal {
   @@map(name: "fe_journals")
 }
 
-model SyncHistory { 
-  id           String          @id @default(cuid())
+model SyncHistory {
+  id           String     @id @default(cuid())
   teamId       String
-  team         Team            @relation(fields: [teamId], references: [id])
+  team         Team       @relation(fields: [teamId], references: [id])
   userId       String?
-  User         User?           @relation(fields: [userId], references: [id])
+  User         User?      @relation(fields: [userId], references: [id])
   syncDate     DateTime
   syncType     String
   syncStatus   String
   syncMessage  String?
   syncDuration Int
-  giftBatch    GiftBatch?      @relation(fields: [giftBatchId], references: [id])
+  giftBatch    GiftBatch? @relation(fields: [giftBatchId], references: [id])
   giftBatchId  String?
+
   @@map(name: "sync_history")
 }

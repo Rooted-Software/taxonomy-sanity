@@ -1,8 +1,8 @@
-import { authOptions } from '@/lib/auth'
-import { db } from '@/lib/db'
-import { getServerSession } from 'next-auth/next'
+import { authOptions } from "@/lib/auth"
+import { db } from "@/lib/db"
+import { getServerSession } from "next-auth/next"
 
-const allowedKeys = ['automation']
+const allowedKeys = ["automation", "passProjectID"]
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions)
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 
   const { user } = session
   const data = await req.json()
-
+  console.log("data", data)
   if (Object.keys(data).every((key) => allowedKeys.includes(key))) {
     await db.team.update({
       where: {
@@ -24,7 +24,6 @@ export async function POST(req: Request) {
         id: true,
       },
     })
-    return new Response(null, { status: 200 })
   }
 
   return new Response(null, { status: 400 })
