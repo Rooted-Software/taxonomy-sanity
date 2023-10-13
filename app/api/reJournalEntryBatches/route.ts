@@ -1,24 +1,9 @@
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
-import { upsertFeAccount } from '@/lib/feAccounts'
-import { getFeAccounts } from '@/lib/feAccounts'
 import { syncBatchGifts } from '@/lib/feGiftBatches'
 import { reFetch } from '@/lib/reFetch'
-import { absoluteUrl } from '@/lib/utils'
-import {
-  getBatches,
-  getVirtuousBatch,
-  insertGifts,
-  updateGiftBatch,
-} from '@/lib/virGifts'
-import { getVirtuousBatches } from '@/lib/virGifts'
-import { getVirtuousProjects } from '@/lib/virProjects'
-import { getProjectAccountMappings } from '@/lib/virProjects'
 import { getServerSession } from 'next-auth/next'
-import { any, number } from 'prop-types'
 import { z } from 'zod'
-
-const util = require('util')
 
 export type DesignationType = {
   projectId: string
@@ -29,21 +14,6 @@ const giftBatchSchema = z.object({
   batchId: z.string(),
   batchName: z.string(),
 })
-
-async function createSyncHistory(batchId, status, duration, teamId, userId) {
-  await db.syncHistory.create({
-    data: {
-      teamId: teamId,
-      giftBatchId: batchId,
-      syncType: 'manual',
-      syncMessage: status,
-      syncStatus: status,
-      syncDuration: duration,
-      syncDate: new Date(),
-      userId: userId,
-    },
-  })
-}
 
 export async function GET(req: Request) {
   try {

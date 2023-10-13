@@ -110,19 +110,24 @@ export function BatchPreview({
 
   function lookupAccount(accountId) {
     const account = feAccounts.find((a) => a.account_id === accountId)
+    if (
+      accountId === parseInt(defaultCreditAccount) ||
+      accountId === parseInt(defaultDebitAccount)
+    ) {
+      return <span className="">{account?.description} (default)</span>
+    }
     return <span className="">{account?.description}</span>
   }
 
   function lookupMapping(projectId: number) {
     const project = projects.find((p) => p.id === projectId)
     const mapping = mappings.find((m) => m.virProjectId === projectId)
-    console.log(mapping)
     if (!mapping) {
       return (
         <span className="">
           {project?.name} <br />
           <Icons.arrowRight className="mr-2 inline h-4 w-4" />{' '}
-          {lookupAccount(parseInt(defaultCreditAccount))} (default)
+          {lookupAccount(parseInt(defaultCreditAccount))}
         </span>
       )
     }
@@ -301,7 +306,7 @@ export function BatchPreview({
           </div>
           <div className="mt-2">
             {batchDaysLoaded === 730 ? (
-              <p>Showing batches from the two years</p>
+              <p>Showing batches from the past two years</p>
             ) : batchDaysLoaded === 365 ? (
               <p>Showing batches from the past year</p>
             ) : (
@@ -437,7 +442,7 @@ export function BatchPreview({
                                 <>
                                   {/* do a credit if there are no designations */}
                                   <div className=" col-span-2  p-2 pl-3">
-                                    {lookupMapping(
+                                    {lookupAccount(
                                       parseInt(defaultCreditAccount)
                                     )}
                                   </div>
