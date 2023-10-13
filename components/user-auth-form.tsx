@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils'
 import { userAuthSchema } from '@/lib/validations/auth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signIn } from 'next-auth/react'
-import { useSearchParams } from 'next/navigation'
+import { redirect, useSearchParams } from 'next/navigation'
 import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -48,6 +48,15 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         variant: 'destructive',
       })
     }
+    // This will occur when the user tries to sign in with a deleted user
+    if (signInResult.error) {
+      return toast({
+        title: 'Email address not found',
+        description:
+          "Are you sure you're using the right email?",
+        variant: 'destructive',
+      })
+    }
 
     return toast({
       title: 'Check your email',
@@ -56,12 +65,14 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   }
 
   return (
-    <div className={cn('mx-auto grid w-full items-center gap-6 px-0', className)} {...props}>
+    <div
+      className={cn('mx-auto grid w-full items-center gap-6 px-0', className)}
+      {...props}
+    >
       <div className="relative ">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
         </div>
-       
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-2">
@@ -71,7 +82,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             </Label>
             <Input
               id="email"
-              className='bg-dark-300 rounded-full text-slate-500'
+              className="bg-dark-300 rounded-full text-slate-500"
               placeholder="name@example.com"
               type="email"
               autoCapitalize="none"
@@ -86,7 +97,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               </p>
             )}
           </div>
-          <button className={cn(buttonVariants(), 'rounded-full' ) } disabled={isLoading}>
+          <button
+            className={cn(buttonVariants(), 'rounded-full')}
+            disabled={isLoading}
+          >
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
@@ -94,8 +108,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           </button>
         </div>
       </form>
-  
-   
     </div>
   )
 }

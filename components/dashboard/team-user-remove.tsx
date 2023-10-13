@@ -1,7 +1,6 @@
 'use client'
 
-/// this should become a button that is "use client" and can handle the pop up of a modal on click
-import { Icons } from '@/components/icons'
+import { DialogConfirm } from '../dialog-confirm'
 import { toast } from '@/components/ui/use-toast'
 import { cn } from '@/lib/utils'
 import { User } from '@prisma/client'
@@ -19,19 +18,19 @@ export function TeamUserRemove({
   ...props
 }: UserRemoveButtonProps) {
   const router = useRouter()
-  const [isSaving, setIsSaving] = React.useState<boolean>(false)
-  const [projects, setProjects] = React.useState([])
-  async function onClick() {
-    setIsSaving(true)
+  const [isOpen, setOpen] = React.useState<boolean>(false)
 
+  function cancel() {
+    setOpen(false)
+  }
+
+  async function confirmRemove() {
     const response = await fetch(`/api/users/${user.id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
     })
-
-    setIsSaving(false)
 
     if (!response?.ok) {
       return toast({
@@ -45,33 +44,29 @@ export function TeamUserRemove({
       type: 'success',
     })
     router.refresh()
+    setOpen(false)
   }
-
-  // const data = await response.json()
-  // console.log(data)
-  // if (data?.value?.length > 0) {
-  //   setProjects(data.value)
-  // }
-  // This forces a cache invalidation.
-  // router.refresh()
 
   return (
     <div>
+      <DialogConfirm
+        isOpen={isOpen}
+        noBtnText="Cancel"
+        confirmMethod={confirmRemove}
+        cancelMethod={cancel}
+        yesBtnText="Confirm"
+        text={`${user.email} will no longer have access to DonorSync`}
+      />
       <button
-        onClick={onClick}
+        onClick={() => {
+          setOpen(true)
+        }}
         className={cn(
           'font-sm relative inline-flex h-7 items-center rounded-md border border-transparent bg-brand-500 p-4 text-sm text-white hover:bg-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
-          {
-            'cursor-not-allowed opacity-60': isSaving,
-          },
           className
         )}
-        disabled={isSaving}
         {...props}
       >
-        {isSaving ? (
-          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-        ) : null}
         Remove
       </button>
     </div>
