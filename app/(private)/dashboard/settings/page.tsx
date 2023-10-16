@@ -110,6 +110,7 @@ export default async function SettingsPage() {
                 route="/api/teamSettings"
               />
             </CardContent>
+            {/*
             <CardContent className="px-0 pt-2">
               <AutosaveSwitch
                 label="Pass Project ID to FE Project"
@@ -118,7 +119,7 @@ export default async function SettingsPage() {
                 route="/api/teamSettings"
               />
             </CardContent>
-          </Card>
+              </Card> */ }
           <Card className="m-0 p-0">
             <CardHeader className="m-0 p-0">
               <CardTitle className="text-md m-0 p-0 font-normal text-accent-1">

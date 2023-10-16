@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 
   const { user } = session
   const data = await req.json()
-  console.log("data", data)
+
   if (Object.keys(data).every((key) => allowedKeys.includes(key))) {
     await db.team.update({
       where: {
@@ -26,5 +26,5 @@ export async function POST(req: Request) {
     })
   }
 
-  return new Response(null, { status: 400 })
+  return new Response(null, { status: 200 })
 }

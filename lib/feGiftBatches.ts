@@ -1,11 +1,11 @@
-import { db } from '@/lib/db'
-import { getFeAccounts } from '@/lib/feAccounts'
-import { reFetch } from '@/lib/reFetch'
-import { getVirtuousBatch, insertGifts } from '@/lib/virGifts'
-import { getProjectAccountMappings } from '@/lib/virProjects'
-import { z } from 'zod'
+import { db } from "@/lib/db"
+import { getFeAccounts } from "@/lib/feAccounts"
+import { reFetch } from "@/lib/reFetch"
+import { getVirtuousBatch, insertGifts } from "@/lib/virGifts"
+import { getProjectAccountMappings } from "@/lib/virProjects"
+import { z } from "zod"
 
-const util = require('util')
+const util = require("util")
 
 export type DesignationType = {
   projectId: string
@@ -41,7 +41,7 @@ async function createSyncHistory(batchId, status, duration, teamId) {
     data: {
       teamId: teamId,
       giftBatchId: batchId,
-      syncType: 'automatic',
+      syncType: "automatic",
       syncMessage: status,
       syncStatus: status,
       syncDuration: duration,
@@ -51,7 +51,7 @@ async function createSyncHistory(batchId, status, duration, teamId) {
 }
 
 export async function syncBatchGifts(teamId: string, batchId: string) {
-  console.log('POST RE Journal Entry Batches (test) API Route')
+  console.log("POST RE Journal Entry Batches (test) API Route")
   const start = performance.now()
 
   const team = await db.team.findUnique({
@@ -64,7 +64,7 @@ export async function syncBatchGifts(teamId: string, batchId: string) {
     team.defaultCreditAccount === null ||
     team.defaultDebitAccount === null
   ) {
-    return { status: 'failure', message: 'not all required fields are set' }
+    return { status: "failure", message: "not all required fields are set" }
   }
 
   const feAccountsData = getFeAccounts(teamId)
@@ -75,7 +75,7 @@ export async function syncBatchGifts(teamId: string, batchId: string) {
   ])
   const defaultCreditAccount = parseInt(team.defaultCreditAccount)
   const defaultDebitAccount = parseInt(team.defaultDebitAccount)
-  console.log('default credit account')
+  console.log("default credit account")
   console.log(defaultCreditAccount)
 
   function lookupAccount(accountId) {
@@ -110,7 +110,7 @@ export async function syncBatchGifts(teamId: string, batchId: string) {
     const mapping = mappings.find((m) => m.virProjectId === projectId)
     console.log(mapping)
     if (!mapping) {
-      console.log('mapping not found -- looking up default credit account')
+      console.log("mapping not found -- looking up default credit account")
       return lookupAccountNumber(defaultCreditAccount)
     }
     return lookupAccountNumber(mapping.feAccountId)
@@ -128,7 +128,7 @@ export async function syncBatchGifts(teamId: string, batchId: string) {
 
   // get batch number
   const batch = await getVirtuousBatch(teamId, batchId)
-  console.log('should have batch no')
+  console.log("should have batch no")
   if (batch) {
     const gifts = batch.gifts
     console.log(gifts)
@@ -155,7 +155,7 @@ export async function syncBatchGifts(teamId: string, batchId: string) {
       batchTotal += gift?.amount || 0
 
       // Create default distribution for gift
-      console.log('initial distributions')
+      console.log("initial distributions")
       console.log(distributions)
       var overflowDistributions = [] as Array<any>
       overflowDistributions.push({
@@ -164,85 +164,84 @@ export async function syncBatchGifts(teamId: string, batchId: string) {
         percent: 100.0,
         amount: gift?.amount || 0,
       })
-      console.log('overflow distributions')
+      console.log("overflow distributions")
       console.log(gift.giftDesignations)
       console.log(typeof gift.giftDesignations)
       if (
         Array.isArray(gift?.giftDesignations) &&
         gift.giftDesignations.length > 0
       ) {
-        gift?.giftDesignations?.forEach(
-          (designation: DesignationType): void => {
-            if (
-              designation &&
-              typeof designation === 'object' &&
-              designation.hasOwnProperty('projectId') &&
-              designation.hasOwnProperty('amountDesignated')
-            ) {
-              var subDistributions = [] as Array<any>
+        gift?.giftDesignations?.forEach((designation: any): void => {
+          if (
+            designation &&
+            typeof designation === "object" &&
+            designation.hasOwnProperty("projectId") &&
+            designation.hasOwnProperty("amountDesignated")
+          ) {
+            var subDistributions = [] as Array<any>
 
-              subDistributions.push({
-                transaction_code_values:
-                  designation &&
-                  designation?.projectId !== undefined &&
-                  designation?.projectId !== null
-                    ? lookupMappingTransCode(designation?.projectId)
-                    : {}, //lookup default transaction codes
-                percent: 100.0,
-                amount:
-                  designation && designation.amountDesignated
-                    ? designation.amountDesignated
-                    : 0,
-              })
+            subDistributions.push({
+              transaction_code_values:
+                designation &&
+                designation?.projectId !== undefined &&
+                designation?.projectId !== null
+                  ? lookupMappingTransCode(designation?.projectId)
+                  : {}, //lookup default transaction codes
+              percent: 100.0,
 
-              totalDesignations += designation?.amountDesignated || 0
-              const accno = lookupMapping(designation?.projectId)
+              amount:
+                designation && designation.amountDesignated
+                  ? designation.amountDesignated
+                  : 0,
+            })
 
-              journalEntries.push({
-                type_code: 'Credit',
-                account_number: accno, //lookup account
-                post_date: '2018-07-02T00:00:00Z',
-                encumbrance: 'Regular',
-                journal: defaultJournal?.journal, //lookup default journal
-                reference: 'DonorSync',
-                amount:
-                  designation && designation.amountDesignated
-                    ? designation.amountDesignated
-                    : 0,
-                notes: 'From DonorSync',
-                class: lookupAccountClassByAcctNo(accno),
-                distributions: subDistributions,
-              })
-            }
+            totalDesignations += designation?.amountDesignated || 0
+            const accno = lookupMapping(designation?.projectId)
+
+            journalEntries.push({
+              type_code: "Credit",
+              account_number: accno, //lookup account
+              post_date: "2018-07-02T00:00:00Z",
+              encumbrance: "Regular",
+              journal: defaultJournal?.journal, //lookup default journal
+              reference: "DonorSync",
+              amount:
+                designation && designation.amountDesignated
+                  ? designation.amountDesignated
+                  : 0,
+              notes: "From DonorSync",
+              class: lookupAccountClassByAcctNo(accno),
+              distributions: subDistributions,
+            })
           }
-        )
+        })
         // if we don't have enough designations to cover the gift, create a default entry for the remainder
         if (gift?.amount && totalDesignations < gift.amount) {
           journalEntries.push({
-            type_code: 'Credit',
+            type_code: "Credit",
             account_number: lookupAccountNumber(defaultCreditAccount), //lookup account
             class: lookupAccountClass(defaultCreditAccount),
-            post_date: '2018-07-02T00:00:00Z',
-            encumbrance: 'Regular',
+            post_date: "2018-07-02T00:00:00Z",
+            encumbrance: "Regular",
             journal: defaultJournal?.journal, //lookup default journal
-            reference: 'DonorSync',
+            reference: "DonorSync",
             amount: gift?.amount - totalDesignations,
-            notes: 'From DonorSync',
+            notes: "From DonorSync",
             distributions: overflowDistributions,
           })
         }
       } else {
         // just push one entry if there are no designations
         journalEntries.push({
-          type_code: 'Credit',
+          type_code: "Credit",
           account_number: lookupAccountNumber(defaultCreditAccount), //lookup account
           class: lookupAccountClass(defaultCreditAccount),
-          post_date: '2018-07-02T00:00:00Z',
-          encumbrance: 'Regular',
+          post_date: "2018-07-02T00:00:00Z",
+          encumbrance: "Regular",
           journal: defaultJournal?.journal, //lookup default journal
-          reference: 'DonorSync',
+          reference: "DonorSync",
           amount: gift?.amount || 0,
-          notes: 'From DonorSync',
+          notes: "From DonorSync",
           distributions: overflowDistributions,
         })
       }
@@ -255,38 +254,38 @@ export async function syncBatchGifts(teamId: string, batchId: string) {
       amount: batchTotal,
     })
     journalEntries.push({
-      type_code: 'Debit',
+      type_code: "Debit",
       account_number: lookupAccountNumber(defaultDebitAccount), //lookup account
       class: lookupAccountClass(defaultDebitAccount),
-      post_date: '2018-07-02T00:00:00Z',
-      encumbrance: 'Regular',
+      post_date: "2018-07-02T00:00:00Z",
+      encumbrance: "Regular",
       journal: defaultJournal?.journal, //lookup default journal
-      reference: 'DonorSync',
+      reference: "DonorSync",
       amount: batchTotal,
-      notes: 'From DonorSync',
+      notes: "From DonorSync",
       distributions: distributions,
     })
     const bodyJson = {
       description: batch.batch_name,
-      batch_status: 'Open',
+      batch_status: "Open",
       create_interfund_sets: true,
       create_bank_account_adjustments: true,
       journal_entries: journalEntries,
     }
     console.log(util.inspect(bodyJson, false, null, true /* enable colors */))
-    console.log('journal entries')
+    console.log("journal entries")
     console.log(journalEntries)
     const res2 = await reFetch(
-      'https://api.sky.blackbaud.com/generalledger/v1/journalentrybatches',
-      'POST',
+      "https://api.sky.blackbaud.com/generalledger/v1/journalentrybatches",
+      "POST",
       team.id,
       bodyJson
     )
-    var status = 'failed'
-    console.log('back from call')
+    var status = "failed"
+    console.log("back from call")
     console.log(res2)
     const data = await res2.json()
-    console.log('this is the data')
+    console.log("this is the data")
     console.log(data)
     if (res2.status === 200) {
       // update batch status and add synced gifts to DB
@@ -295,13 +294,13 @@ export async function syncBatchGifts(teamId: string, batchId: string) {
         insertGifts(gifts, team.id, batch.batch_name),
       ])
 
-      status = 'success'
+      status = "success"
     }
     const end = performance.now()
     const total = end - start
     console.log(Math.trunc(total / 1000))
     createSyncHistory(batchId, status, Math.trunc(total / 1000), team.id)
-    return { status, message: 'sync complete', record_id: data?.record_id }
+    return { status, message: "sync complete", record_id: data?.record_id }
   }
-  return { status: 'failed', message: 'batch does not exist' }
+  return { status: "failed", message: "batch does not exist" }
 }
