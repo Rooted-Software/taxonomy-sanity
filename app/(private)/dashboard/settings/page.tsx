@@ -119,7 +119,8 @@ export default async function SettingsPage() {
                 route="/api/teamSettings"
               />
             </CardContent>
-              </Card> */ }
+            */}
+          </Card>
           <Card className="m-0 p-0">
             <CardHeader className="m-0 p-0">
               <CardTitle className="text-md m-0 p-0 font-normal text-accent-1">
