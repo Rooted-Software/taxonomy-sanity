@@ -290,7 +290,25 @@ export const authOptions: NextAuthOptions = {
       if (userExists) {
         return true //if the email exists in the User collection, email them a magic login link
       } else {
-        return false
+        // Fix the sign up form so that new users are created when
+        const newUser = await db.user.create({
+          data: {
+            email: credentials.email,
+            emailVerified: new Date(),
+            name: user.userName,
+          },
+          select: {
+            id: true,
+            teamId: true,
+            team: true,
+          },
+        })
+        // check to see if there is a team?
+        if (newUser && !newUser.teamId) {
+          const newTeam = await setDefaultNewTeam(newUser)
+        }
+
+
       }
     },
     async session({ token, session }) {
