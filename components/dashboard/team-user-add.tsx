@@ -96,58 +96,39 @@ export function TeamUserAdd({ className, ...props }: TeamUserAddProps) {
             onSubmit={handleSubmit(onSubmit)}
             {...props}
           >
-            <Card>
-              <CardHeader>
-                <CardTitle>Name</CardTitle>
-                <CardDescription>
-                  Please enter the full name or a display name for this user
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-1">
-                  <Label className="sr-only" htmlFor="email">
-                    Name
-                  </Label>
-                  <Input
-                    id="name"
-                    className="w-[400px]"
-                    size={32}
-                    {...register('name')}
-                  />
-                  {errors?.name && (
-                    <p className="px-1 text-xs text-red-600">
-                      {errors.name.message}
-                    </p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Email</CardTitle>
-                <CardDescription>
-                  Please enter an email address for this user
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-1">
-                  <Label className="sr-only" htmlFor="email">
-                    Email
-                  </Label>
-                  <Input
-                    id="email"
-                    className="w-[400px]"
-                    size={32}
-                    {...register('email')}
-                  />
-                  {errors?.email && (
-                    <p className="px-1 text-xs text-red-600">
-                      {errors.email.message}
-                    </p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+            <div className="grid gap-1 mb-5">
+              <Label htmlFor="name" className="py-1">
+                Name
+              </Label>
+              <Input
+                id="name"
+                className="w-[400px]"
+                size={32}
+                {...register('name')}
+              />
+              {errors?.name && (
+                <p className="px-1 text-xs text-red-600">
+                  {errors.name.message}
+                </p>
+              )}
+            </div>
+
+            <div className="grid gap-1 mb-5">
+              <Label htmlFor="email" className="py-1">
+                Email
+              </Label>
+              <Input
+                id="email"
+                className="w-[400px]"
+                size={32}
+                {...register('email')}
+              />
+              {errors?.email && (
+                <p className="px-1 text-xs text-red-600">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
 
             <button
               type="submit"

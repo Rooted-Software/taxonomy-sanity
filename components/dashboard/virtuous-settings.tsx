@@ -1,7 +1,14 @@
 'use client'
 
 import { Icons } from '@/components/icons'
-import { Card, CardHeader, CardContent, CardDescription, CardFooter, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardTitle,
+} from '@/components/ui/card'
 import { toast } from '@/components/ui/use-toast'
 import { cn } from '@/lib/utils'
 import { apiKeySchema } from '@/lib/validations/apiKey'
@@ -44,13 +51,11 @@ export function VirtuousSettingsForm({
   const [label, setLabel] = React.useState<string>('Save')
   const [updatedTeamName, setUpdatedTeamName] = React.useState(teamName || '')
   const [formApiKey, setFormApiKey] = React.useState(apiKey)
-  const responseCallback = (data)=> {
-
+  const responseCallback = (data) => {
     setUpdatedTeamName(data.organizationName)
     setPermissions(data.permissions)
     setTested(true)
-    setLabel('Success: Click to Continue')
-
+    setLabel('Click to Continue')
   }
   async function onSubmit(data: FormData) {
     setIsSaving(true)
@@ -69,7 +74,6 @@ export function VirtuousSettingsForm({
     setIsSaving(false)
 
     if (!response?.ok) {
-
       return toast({
         title: 'Something went wrong.',
         description: 'Your APIKey was not updated. Please try again.',
@@ -93,10 +97,7 @@ export function VirtuousSettingsForm({
     >
       <Card>
         <CardHeader>
-          <CardTitle>Virtuous API Key</CardTitle>
-          <CardDescription>
-            Please enter your virtuous Api Key.
-          </CardDescription>
+          <CardTitle>Enter Virtuous API Key:</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-1">
@@ -105,8 +106,8 @@ export function VirtuousSettingsForm({
             </label>
             <input
               id="apiKey"
-              onChange={(e)=>setFormApiKey( e.target.value || '')}
-              className="mx-auto my-0 mb-2 block h-9 w-[350px] rounded-full border border-slate-300 py-2 px-3 text-sm text-slate-600 placeholder:text-slate-400 hover:border-slate-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-800 focus:ring-offset-1"
+              onChange={(e) => setFormApiKey(e.target.value || '')}
+              className="mx-auto my-0 mb-2 block h-9 w-full rounded-full border border-slate-300 py-2 px-3 text-sm text-slate-600 placeholder:text-slate-400 hover:border-slate-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-800 focus:ring-offset-1"
               value={formApiKey}
             />
             {errors?.apiKey && (
@@ -116,28 +117,56 @@ export function VirtuousSettingsForm({
             )}
           </div>
         </CardContent>
-        <CardFooter className='w-100 grid-1 grid items-center text-center'>
-          {tested ? <><div className='pb-4'>Organization name: {updatedTeamName}  </div>
-          
-          {!permissions ? <div className='text-red-500'>Incorrect Virtuous Permissions.  Please make sure Gifts and Projects have Read permission</div>: <><button
-            type="submit"
-            
-            className={cn(
-              'hover:bg-relative mx-auto inline-flex h-9 w-3/4 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
-              {
-                'cursor-not-allowed opacity-60': isSaving,
-              },
-              className
-            )}
-            disabled={isSaving}
-          >
-            {isSaving ?  (
-              <Icons.spinner className="display-inline float-lef mr-2 h-4 w-4 animate-spin" />
-            ) : 
-            <Icons.chevronRight className=" mr-2 h-4 w-4" /> }{label}
-          </button></>}<p onClick={() =>setTested(false) } className="mt-4 cursor-default px-8 text-center text-sm text-muted-foreground">re-test api key</p></> : <><ApiCallButton apiKey={formApiKey || ''} responseCallback={responseCallback} />
-         </>
-          }
+        <CardFooter className="w-100 grid-1 grid items-center text-center">
+          {tested ? (
+            <>
+            <span className="font-bold text-accent-1 ">Successfully connected to: </span>
+              <h3 className="mb-4 text-lg font-semibold tracking-tight">
+                 {updatedTeamName}
+              </h3>
+
+              {!permissions ? (
+                <div className="text-red-500">
+                  Incorrect Virtuous Permissions. Please make sure Gifts and
+                  Projects have Read permission
+                </div>
+              ) : (
+                <>
+                  <button
+                    type="submit"
+                    className={cn(
+                      'hover:bg-accent-2 justify-center relative mt-3 inline-flex items-center rounded-full border  border-transparent bg-accent-1 px-4 py-1 text-lg font-medium text-dark focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+                      {
+                        'cursor-not-allowed opacity-60': isSaving,
+                      },
+                      className
+                    )}
+                    disabled={isSaving}
+                  >
+                    {isSaving ? (
+                      <Icons.spinner className="display-inline float-lef mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      ''
+                    )}
+                    {label}
+                  </button>
+                </>
+              )}
+              <button
+                onClick={() => setTested(false)}
+                className="mt-4 px-8 text-center font-medium underline underline-offset-4 text-success"
+              >
+                Test API key again?
+              </button>
+            </>
+          ) : (
+            <>
+              <ApiCallButton
+                apiKey={formApiKey || ''}
+                responseCallback={responseCallback}
+              />
+            </>
+          )}
         </CardFooter>
       </Card>
     </form>

@@ -6,14 +6,18 @@ import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 import * as React from 'react'
 
-interface ButtonProps
-  extends React.HTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   className?: string
   responseCallback?: Function
   apiKey?: string
 }
 
-export function ApiCallButton({ className, apiKey, responseCallback, ...props }: ButtonProps) {
+export function ApiCallButton({
+  className,
+  apiKey,
+  responseCallback,
+  ...props
+}: ButtonProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [organizationName, setOrganizationName] = React.useState<string>('')
@@ -29,7 +33,6 @@ export function ApiCallButton({ className, apiKey, responseCallback, ...props }:
       },
       body: JSON.stringify({
         apiKey: apiKey,
-       
       }),
     })
 
@@ -59,7 +62,13 @@ export function ApiCallButton({ className, apiKey, responseCallback, ...props }:
     console.log(data)
     if (data?.organizationName) {
       setOrganizationName(data.organizationName)
-      if (typeof(responseCallback) === 'function') {responseCallback(data)}
+      if (typeof responseCallback === 'function') {
+        responseCallback(data)
+      }
+      toast({
+        description: `Successfully connected to ${data.organizationName}!`,
+        type: 'success',
+      })
       setSuccess(true)
     }
 
@@ -72,44 +81,55 @@ export function ApiCallButton({ className, apiKey, responseCallback, ...props }:
     router.push('/step2')
   }
 
-
   return (
-    <div className='mx-auto'>
-      {!success  ? <><div className='pb-4'>Test your Api Key to verify the organization and continue.</div><button
-        onClick={onClick}
-        className={cn(
-          'hover:bg- relative inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
-          {
-            'cursor-not-allowed opacity-60': isLoading,
-          })}
-        disabled={isLoading}
-        {...props}
-      >
-        {isLoading ? (
-          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-        ) : (
-          <Icons.test className="mr-2 h-4 w-4" />
-        )}
-        Test Virtuous API Call
-      </button></> : <><div className='pb-4'>Organization name: {organizationName}</div><button
-        onClick={ContinueOnClick}
-        className={cn(
-          'hover:bg- relative  inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
-          {
-            'cursor-not-allowed opacity-60': isLoading,
-          })}
-        disabled={isLoading}
-        {...props}
-      >
-        {isLoading ? (
-          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-        ) : (
-          <Icons.chevronRight className="mr-2 h-4 w-4" />
-        )}
-        Success:  Click to Continue
-      </button></>
-      }
-      
+    <div className="mx-auto">
+      {!success ? (
+        <>
+          <div className="pb-4 text-sm">
+            Test your Api Key to verify the organization and continue.
+          </div>
+          <button
+            onClick={onClick}
+            className={cn(
+              'hover:bg-accent-7 bg-background text-white focus:ring-brand-500 relative inline-flex h-9 items-center rounded-full border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2',
+              {
+                'cursor-not-allowed opacity-60': isLoading,
+              }
+            )}
+            disabled={isLoading}
+            {...props}
+          >
+            {isLoading ? (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Icons.test className="mr-2 h-4 w-4" />
+            )}
+            Test Virtuous API Call
+          </button>
+        </>
+      ) : (
+        <>
+          <div className="pb-4">Organization name: {organizationName}</div>
+          <button
+            onClick={ContinueOnClick}
+            className={cn(
+              'hover:bg-accent-2 justify-center relative mt-3 inline-flex items-center rounded-full border  border-transparent bg-accent-1 px-4 py-1 text-lg font-medium text-dark focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+              {
+                'cursor-not-allowed opacity-60': isLoading,
+              }
+            )}
+            disabled={isLoading}
+            {...props}
+          >
+            {isLoading ? (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              ''
+            )}
+            Click to Continue
+          </button>
+        </>
+      )}
     </div>
   )
 }
