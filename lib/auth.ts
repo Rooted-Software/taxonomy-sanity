@@ -279,13 +279,6 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      console.log("in sign in callback")
-      console.log(user)
-      console.log(account)
-      console.log(profile)
-      console.log(credentials)
-      console.log(email)
-
       // this is for both new user registration and signing in
       // middleware will automatically take out deleted users
       const userExists = await db.user.findUnique({
@@ -297,10 +290,8 @@ export const authOptions: NextAuthOptions = {
       //     WHERE email = ${user.email || account?.providerAccountId}
       //   `;
       if (userExists) {
-        console.log("user exists")
         return true //if the email exists in the User collection, email them a magic login link
       } else {
-        console.log("user does not exist")
         // Fix the sign up form so that new users are created when
         const newUser = await db.user.create({
           data: {
