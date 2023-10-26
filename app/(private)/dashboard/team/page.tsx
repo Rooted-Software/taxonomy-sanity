@@ -58,16 +58,16 @@ export default async function TeamPage() {
         <table className="w-full table-auto text-left">
           <thead className="hidden sm:table-header-group">
             <tr>
-              <th className="border-b border-foreground py-4 pt-0 pb-3 text-left font-medium text-muted-foreground ">
+              <th className="border-b border-foreground py-4 pb-3 pt-0 text-left font-medium text-muted-foreground ">
                 Name
               </th>
-              <th className="border-b border-foreground py-4 pt-0 pb-3 text-left font-medium text-muted-foreground ">
+              <th className="border-b border-foreground py-4 pb-3 pt-0 text-left font-medium text-muted-foreground ">
                 Email
               </th>
-              <th className="border-b border-foreground py-4 pt-0 pb-3 text-left font-medium text-muted-foreground ">
+              <th className="border-b border-foreground py-4 pb-3 pt-0 text-left font-medium text-muted-foreground ">
                 Role
               </th>
-              <th className="w-[150px] border-b border-foreground py-4 pt-0 pb-3 text-right font-medium text-muted-foreground ">
+              <th className="w-[150px] border-b border-foreground py-4 pb-3 pt-0 text-right font-medium text-muted-foreground ">
                 Actions
               </th>
             </tr>
@@ -92,7 +92,7 @@ export default async function TeamPage() {
                     {teamuser.role}
                   </Badge>
                 </td>
-                <td className="absolute top-[10px] right-0 sm:relative sm:py-2 sm:text-right">
+                <td className="absolute right-0 top-[10px] sm:relative sm:py-2 sm:text-right">
                   {user.id == teamuser.id ? (
                     <TooltipProvider>
                       <Tooltip>

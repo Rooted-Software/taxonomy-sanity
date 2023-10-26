@@ -96,7 +96,7 @@ export function TeamUserAdd({ className, ...props }: TeamUserAddProps) {
             onSubmit={handleSubmit(onSubmit)}
             {...props}
           >
-            <div className="grid gap-1 mb-5">
+            <div className="mb-5 grid gap-1">
               <Label htmlFor="name" className="py-1">
                 Name
               </Label>
@@ -113,7 +113,7 @@ export function TeamUserAdd({ className, ...props }: TeamUserAddProps) {
               )}
             </div>
 
-            <div className="grid gap-1 mb-5">
+            <div className="mb-5 grid gap-1">
               <Label htmlFor="email" className="py-1">
                 Email
               </Label>

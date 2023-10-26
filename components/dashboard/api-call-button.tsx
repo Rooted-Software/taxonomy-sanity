@@ -91,7 +91,7 @@ export function ApiCallButton({
           <button
             onClick={onClick}
             className={cn(
-              'hover:bg-accent-7 bg-background text-white focus:ring-brand-500 relative inline-flex h-9 items-center rounded-full border border-transparent px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2',
+              'relative inline-flex h-9 items-center rounded-full border border-transparent bg-background px-4 py-2 text-sm font-medium text-white hover:bg-accent-7 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
               {
                 'cursor-not-allowed opacity-60': isLoading,
               }
@@ -113,7 +113,7 @@ export function ApiCallButton({
           <button
             onClick={ContinueOnClick}
             className={cn(
-              'hover:bg-accent-2 justify-center relative mt-3 inline-flex items-center rounded-full border  border-transparent bg-accent-1 px-4 py-1 text-lg font-medium text-dark focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+              'relative mt-3 inline-flex items-center justify-center rounded-full border border-transparent  bg-accent-1 px-4 py-1 text-lg font-medium text-dark hover:bg-accent-2 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
               {
                 'cursor-not-allowed opacity-60': isLoading,
               }

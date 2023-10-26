@@ -59,7 +59,7 @@ export default function RegisterPage() {
         </div>
       </div>
       <div className=" absolute bottom-0 left-0 w-full items-center justify-center bg-background p-8">
-        <div className="relative top-[72px] left-[5%]  m-auto ml-4 w-[90%] bg-[#E8F1FB]">
+        <div className="relative left-[5%] top-[72px]  m-auto ml-4 w-[90%] bg-[#E8F1FB]">
           <div className="advance-step1 w-[10%] rounded-xl border-[20px] border-b border-accent-1 "></div>
         </div>
         <div className="w-100 m-auto ml-8 p-8">

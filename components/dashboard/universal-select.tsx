@@ -216,7 +216,7 @@ export function UniversalSelect({
     <div className="min-w-xl space-y-5 p-5 pt-2">
       <DropdownMenu>
         {!isLoading ? (
-          <DropdownMenuTrigger className="text-md h-10 w-full rounded-full border border-accent-1 bg-accent-1 py-2 px-5 text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+          <DropdownMenuTrigger className="text-md h-10 w-full rounded-full border border-accent-1 bg-accent-1 px-5 py-2 text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
             {selectLabel()}
             <svg
               className="float-right ml-2.5 mt-2 h-2.5 w-2.5"
@@ -235,7 +235,7 @@ export function UniversalSelect({
             </svg>
           </DropdownMenuTrigger>
         ) : (
-          <div className="text-md mx-5 mt-4 mb-0 h-10 w-full overflow-hidden rounded-full  border border-accent-1 bg-accent-1 py-2 px-5  text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+          <div className="text-md mx-5 mb-0 mt-4 h-10 w-full overflow-hidden rounded-full  border border-accent-1 bg-accent-1 px-5 py-2  text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
             <div className="">
               {selectLabel()}
               <svg
@@ -305,7 +305,7 @@ export function UniversalSelect({
       <button
         onClick={saveSelectedData}
         className={cn(
-          "font-large relative inline-flex h-9 items-center rounded-full border border-transparent bg-whiteSmoke  py-1  px-5 text-lg text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2",
+          "font-large relative inline-flex h-9 items-center rounded-full border border-transparent bg-whiteSmoke  px-5  py-1 text-lg text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2",
           {
             "cursor-not-allowed opacity-60": isLoading,
           }

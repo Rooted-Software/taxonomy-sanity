@@ -41,7 +41,7 @@ export default async function CompletePage() {
         </div>
       </div>
       <Link
-        className="font-large  mx-auto inline-flex h-10 rounded-full border border-transparent bg-accent-1  px-5 pt-1  pb-2 text-lg text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
+        className="font-large  mx-auto inline-flex h-10 rounded-full border border-transparent bg-accent-1  px-5 pb-2  pt-1 text-lg text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
         href={`dashboard`}
       >
         Go to Dashboard

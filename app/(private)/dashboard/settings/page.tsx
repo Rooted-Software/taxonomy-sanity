@@ -104,7 +104,7 @@ export default async function SettingsPage() {
         <div className="mt-6">
           <a
             href="/step1"
-            className="hover:bg-cyan-1/90 inline-flex h-10 items-center justify-center rounded-md bg-accent-1 py-2 px-4 text-sm font-medium text-dark ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+            className="hover:bg-cyan-1/90 inline-flex h-10 items-center justify-center rounded-md bg-accent-1 px-4 py-2 text-sm font-medium text-dark ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
           >
             Setup Wizard
           </a>

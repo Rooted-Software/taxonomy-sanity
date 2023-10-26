@@ -45,7 +45,7 @@ export default async function ConnectVirtuousOrg() {
         <a
           href="https://app.virtuoussoftware.com/Generosity/People/ApiKeys"
           target="_blank"
-          className="hover:bg-accent-2 relative mt-3 inline-flex items-center rounded-full border  border-transparent bg-accent-1 px-4 py-1 text-lg font-medium text-dark focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
+          className="relative mt-3 inline-flex items-center rounded-full border border-transparent  bg-accent-1 px-4 py-1 text-lg font-medium text-dark hover:bg-accent-2 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
         >
           Get API Key
         </a>
