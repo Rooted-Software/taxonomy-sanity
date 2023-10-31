@@ -35,6 +35,7 @@ import {
   Users,
   X,
   Lock,
+  LogOut,
   type Icon as LucideIcon,
 } from 'lucide-react'
 
@@ -71,6 +72,7 @@ export const Icons = {
   moon: Moon,
   laptop: Laptop,
   refresh: RefreshCcw,
+  logOut:LogOut,
   test: FlaskConical,
   key: Key,
   listFilter: ({ ...props }: LucideProps) => (

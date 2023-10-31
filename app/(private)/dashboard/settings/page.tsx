@@ -83,15 +83,7 @@ export default async function SettingsPage() {
         heading="Settings"
         text="Manage account and website settings."
       />
-      <div className="rounded-lg border bg-whiteSmoke p-6 text-dark shadow-sm">
-        <div className="flex flex-col space-y-1.5">
-          <h3 className="text-lg font-semibold leading-none tracking-tight">
-            General Settings
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            Use the Setup Wizard to reconfigure defaults
-          </p>
-        </div>
+      <div className="p-2">
         <div className="my-6">
           <AutosaveSwitch
             label="Automatic Sync"
@@ -171,7 +163,6 @@ export default async function SettingsPage() {
                 </div>
               </div>
             </div>
-            <div></div>
           </div>
         ) : null}
         {/* 

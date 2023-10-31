@@ -1,14 +1,14 @@
-import { Icons } from '@/components/icons'
 import { siteConfig } from '@/config/site'
 import { useLockBody } from '@/hooks/use-lock-body'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 import * as React from 'react'
-import { MainNavItem } from 'types'
+import { SidebarNavItem } from 'types'
+import { signOut } from 'next-auth/react'
 
 interface MobileNavProps {
-  items: MainNavItem[]
+  items: SidebarNavItem[]
   children?: React.ReactNode
 }
 
@@ -30,7 +30,7 @@ export function MobileNav({ items, children }: MobileNavProps) {
           {items.map((item, index) => (
             <Link
               key={index}
-              href={item.disabled ? '#' : item.href}
+              href={!item.disabled && item.href ? item.href : '#'}
               className={cn(
                 'flex w-full items-center rounded-md p-2 text-sm font-medium hover:underline',
                 item.disabled && 'cursor-not-allowed opacity-60'
@@ -39,6 +39,22 @@ export function MobileNav({ items, children }: MobileNavProps) {
               {item.title}
             </Link>
           ))}
+        </nav>
+        <nav className="grid grid-flow-row auto-rows-max text-sm">
+          <Link
+            href="#"
+            onClick={(event) => {
+              event.preventDefault()
+              signOut({
+                callbackUrl: `${window.location.origin}/login?from=/dashboard`,
+              })
+            }}
+            className={cn(
+              'flex w-full items-center rounded-md p-2 text-sm font-medium hover:underline'
+            )}
+          >
+            Sign Out
+          </Link>
         </nav>
         {children}
       </div>
