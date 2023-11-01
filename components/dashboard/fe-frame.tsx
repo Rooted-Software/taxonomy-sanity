@@ -1,52 +1,48 @@
 'use client'
 
+import { Checkbox } from '../ui/checkbox'
+import WindowOpenLink from '../ui/window-open-link'
 import styles from './grid.module.css'
 import { UniversalButton } from './universal-button'
-import { useState, Fragment, useEffect } from 'react'
 import { VirtuousGetProjectsButton } from '@/components/dashboard/virtuous-get-projects'
 import { EmptyPlaceholder } from '@/components/empty-placeholder'
 import { Icons } from '@/components/icons'
 import { toast } from '@/components/ui/use-toast'
 import { cn } from '@/lib/utils'
-import * as React from 'react'
-import { CheckCircle } from 'lucide-react'
-import { CheckSquare } from 'lucide-react'
-import { Checkbox } from '../ui/checkbox'
 import { Dialog, Transition } from '@headlessui/react'
 import tr from 'date-fns/esm/locale/tr'
-import { AnyZodObject } from 'zod'
+import { CheckCircle } from 'lucide-react'
+import { CheckSquare } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
+import { useState, Fragment, useEffect } from 'react'
+import * as React from 'react'
+import { AnyZodObject } from 'zod'
 
-interface ReviewProps
-  extends React.HTMLAttributes<HTMLButtonElement> {
-
+interface ReviewProps extends React.HTMLAttributes<HTMLButtonElement> {
   feEnvironment?: string
-
 }
 
-export function FeFrame({
-  feEnvironment,
-  className, 
-  ...props
-}: ReviewProps) {
+export function FeFrame({ feEnvironment, className, ...props }: ReviewProps) {
   const router = useRouter()
-  function advanceStep() { 
-
+  function advanceStep() {
     router.push('/step8')
-  
   }
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [openWindow, setOpenWindow] = React.useState<boolean>(false)
 
   useEffect(() => {
-    if (openWindow === false && window) { 
+    if (openWindow === false && window) {
       setOpenWindow(true)
       console.log(record_id, ' : ', envid)
-      const felink = 'https://host.nxt.blackbaud.com/journalentry/' + record_id + '?envid=' + envid
+      const felink =
+        'https://host.nxt.blackbaud.com/journalentry/' +
+        record_id +
+        '?envid=' +
+        envid
       const popup = window?.open(
         felink,
-         'newFE',
+        'newFE',
         'width=1750,height=500, top=25, left=150'
       )
       console.log(felink)
@@ -55,41 +51,50 @@ export function FeFrame({
         popup?.focus()
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const searchParams = useSearchParams()
   const record_id = searchParams?.get('record_id')
   const envid = searchParams?.get('envid')
 
- 
-
-  return (<><div className="align-self-bottom align-items-bottom m-auto flex h-screen w-full flex-col justify-center space-y-6 bg-dark pt-4 text-center">
-      <h1 className='font-3xl my-0 py-0 text-3xl  text-white xl:my-4 xl:py-4'>Review Results</h1>
-      <div className="m-auto flex flex-col justify-center space-y-3 text-white">
-      <a className='pt-4 underline' href={`javascript:window.open('https://host.nxt.blackbaud.com/journalentry/${record_id}?envid=${feEnvironment}', 'financialEdge', 'width=1750,height=500, top=25, left=150');`}>Click here to open the new Financial Edge batch in a new window.</a> <br/>After reviewing the results, close the window to return here.  
-   
-      <button
-        onClick={advanceStep}
-        className={cn(
-          `relative m-8 inline-flex h-9 max-w-md items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
-          {
-            'cursor-not-allowed opacity-60': isLoading,
-          },
-       
-        )}
-        disabled={isLoading}
-        {...props}
-      >
-        {isLoading ? (
-          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-        ) : (
-          <Icons.arrowRight className="mr-2 h-4 w-4" />
-        )}
-        Continue
-      </button>
-    
-    </div>
-    </div> </>
+  return (
+    <>
+      <div className="align-self-bottom align-items-bottom m-auto flex h-screen w-full flex-col justify-center space-y-6 bg-dark pt-4 text-center">
+        <h1 className="font-3xl my-0 py-0 text-3xl  text-white xl:my-4 xl:py-4">
+          Review Results
+        </h1>
+        <div className="m-auto flex flex-col justify-center space-y-3 text-white">
+          <WindowOpenLink
+            className="pt-4 underline"
+            url={`https://host.nxt.blackbaud.com/journalentry/${record_id}?envid=${feEnvironment}`}
+            target="financialEdge"
+            features="width=1750,height=500, top=25, left=150"
+          >
+            Click here to open the new Financial Edge batch in a new window.
+          </WindowOpenLink>{' '}
+          <br />
+          After reviewing the results, close the window to return here.
+          <button
+            onClick={advanceStep}
+            className={cn(
+              `relative m-8 inline-flex h-9 max-w-md items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
+              {
+                'cursor-not-allowed opacity-60': isLoading,
+              }
+            )}
+            disabled={isLoading}
+            {...props}
+          >
+            {isLoading ? (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Icons.arrowRight className="mr-2 h-4 w-4" />
+            )}
+            Continue
+          </button>
+        </div>
+      </div>{' '}
+    </>
   )
 }

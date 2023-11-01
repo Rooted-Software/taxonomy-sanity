@@ -1,5 +1,6 @@
 'use client'
 
+import WindowOpenLink from '../ui/window-open-link'
 import styles from './grid.module.css'
 import { UniversalButton } from './universal-button'
 import { EmptyPlaceholder } from '@/components/empty-placeholder'
@@ -253,17 +254,18 @@ export function BatchPreview({
                           <div className="w-full flex-col  text-right">
                             {' '}
                             {batch.synced ? (
-                              <a
+                              <WindowOpenLink
                                 className="align-items-right text-xs"
-                                target=""
-                                href={`javascript:window.open('https://host.nxt.blackbaud.com/journalentry/${batch.reBatchNo}?envid=${feEnvironment}', 'financialEdge', 'width=1200,height=750');`}
+                                url={`https://host.nxt.blackbaud.com/journalentry/${batch.reBatchNo}?envid=${feEnvironment}`}
+                                target="financialEdge"
+                                features="width=1200,height=750"
                               >
                                 {' '}
                                 View in FE{' '}
                                 <span className="text-accent-1">
                                   &nbsp; (synced)
                                 </span>
-                              </a>
+                              </WindowOpenLink>
                             ) : (
                               <></>
                             )}
@@ -336,13 +338,14 @@ export function BatchPreview({
                               Batch # {batchName || 'TBD'}
                             </p>
                             {synced ? (
-                              <a
+                              <WindowOpenLink
                                 className="align-items-right text-sm text-accent-1"
-                                target=""
-                                href={`javascript:window.open('https://host.nxt.blackbaud.com/journalentry/${selectedBatch.reBatchNo}?envid=${feEnvironment}', 'financialEdge', 'width=1200,height=750');`}
+                                url={`https://host.nxt.blackbaud.com/journalentry/${selectedBatch.reBatchNo}?envid=${feEnvironment}`}
+                                target="financialEdge"
+                                features="width=1200,height=750"
                               >
                                 View in FE
-                              </a>
+                              </WindowOpenLink>
                             ) : (
                               <></>
                             )}
