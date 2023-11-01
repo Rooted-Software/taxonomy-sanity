@@ -1,6 +1,7 @@
-import supportCategoryType from './supportCategory'
 import { HiOutlineLifebuoy } from 'react-icons/hi2'
 import { defineField, defineType } from 'sanity'
+
+import supportCategoryType from './supportCategory'
 
 /**
  * This file is the schema definition for a article.

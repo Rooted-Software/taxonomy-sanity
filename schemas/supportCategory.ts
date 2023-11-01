@@ -1,7 +1,8 @@
-import authorType from './author'
 import { ComponentIcon } from '@sanity/icons'
 import { format, parseISO } from 'date-fns'
 import { defineField, defineType } from 'sanity'
+
+import authorType from './author'
 
 /**
  * This file is the schema definition for a article.

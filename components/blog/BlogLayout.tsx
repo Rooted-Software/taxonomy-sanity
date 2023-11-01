@@ -1,3 +1,4 @@
+import * as React from 'react'
 import AlertBanner from 'components/AlertBanner'
 
 export default function BlogLayout({

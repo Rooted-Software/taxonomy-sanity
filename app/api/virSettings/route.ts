@@ -1,8 +1,9 @@
+import { getServerSession } from 'next-auth'
+import * as z from 'zod'
+
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { apiKeySchema } from '@/lib/validations/apiKey'
-import { getServerSession } from 'next-auth'
-import * as z from 'zod'
 
 export async function PATCH(req: Request) {
   console.log('APR Route Vir Settings')

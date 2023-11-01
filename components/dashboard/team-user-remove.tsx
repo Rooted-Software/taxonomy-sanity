@@ -1,11 +1,13 @@
 'use client'
 
-import { DialogConfirm } from '../dialog-confirm'
-import { toast } from '@/components/ui/use-toast'
-import { cn } from '@/lib/utils'
-import { User } from '@prisma/client'
-import { useRouter } from 'next/navigation'
 import * as React from 'react'
+import { useRouter } from 'next/navigation'
+import { User } from '@prisma/client'
+
+import { cn } from '@/lib/utils'
+import { toast } from '@/components/ui/use-toast'
+
+import { DialogConfirm } from '../dialog-confirm'
 
 interface UserRemoveButtonProps
   extends React.HTMLAttributes<HTMLButtonElement> {

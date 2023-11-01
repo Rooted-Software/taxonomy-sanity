@@ -1,5 +1,6 @@
-import AuthFormSelector from '@/components/auth-form-selector'
 import Link from 'next/link'
+
+import AuthFormSelector from '@/components/auth-form-selector'
 
 export const metadata = {
   title: 'Create an account',

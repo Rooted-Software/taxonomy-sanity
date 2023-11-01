@@ -1,11 +1,12 @@
-import docCategoryType from './docCategory'
 import { BookIcon } from '@sanity/icons'
 import {
-  orderRankOrdering,
   orderRankField,
+  orderRankOrdering,
 } from '@sanity/orderable-document-list'
 import { format, parseISO } from 'date-fns'
 import { defineField, defineType } from 'sanity'
+
+import docCategoryType from './docCategory'
 
 /**
  * This file is the schema definition for a post.

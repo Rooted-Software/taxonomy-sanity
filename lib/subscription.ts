@@ -1,8 +1,8 @@
 // @ts-nocheck
 // TODO: Fix this when we turn strict mode on.
+import { TeamSubscriptionPlan } from 'types'
 import { freePlan, proPlan } from '@/config/subscriptions'
 import { db } from '@/lib/db'
-import { TeamSubscriptionPlan } from 'types'
 
 export async function getTeamSubscriptionPlan(
   teamId: string

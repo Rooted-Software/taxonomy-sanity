@@ -1,8 +1,9 @@
+import { getServerSession } from 'next-auth'
+import * as z from 'zod'
+
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { upsertFeAccountFromId } from '@/lib/feAccounts'
-import { getServerSession } from 'next-auth'
-import * as z from 'zod'
 
 const userUpdateSchema = z.object({
   selectValue: z.string().optional(),

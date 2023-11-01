@@ -1,10 +1,11 @@
+import { getServerSession } from 'next-auth/next'
+import { z } from 'zod'
+
 import { proPlan } from '@/config/subscriptions'
 import { authOptions } from '@/lib/auth'
 import { stripe } from '@/lib/stripe'
 import { getTeamSubscriptionPlan } from '@/lib/subscription'
 import { absoluteUrl } from '@/lib/utils'
-import { getServerSession } from 'next-auth/next'
-import { z } from 'zod'
 
 const billingUrl = absoluteUrl('/dashboard/billing')
 

@@ -1,8 +1,7 @@
-import styles from '/styles/Shared.module.css'
-import AccordionPortableTextContent from '@/components/accordionPortableTextContent'
-import { getAllSupportCategoryArticles } from 'lib/sanity.client'
-import Link from 'next/link'
 import React from 'react'
+import { getAllSupportCategoryArticles } from 'lib/sanity.client'
+
+import AccordionPortableTextContent from '@/components/accordionPortableTextContent'
 
 export default async function SupportPage({ params, searchParams }: any) {
   console.log('Support Page')

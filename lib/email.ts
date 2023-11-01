@@ -1,11 +1,8 @@
 // This isn't used
-import { siteConfig } from '@/config/site'
 import { User } from '@prisma/client'
-import Mailgun, {
-  MailgunClientOptions,
-  MailgunMessageData,
-  MessagesSendResult,
-} from 'mailgun.js'
+import Mailgun, { MailgunMessageData } from 'mailgun.js'
+
+import { siteConfig } from '@/config/site'
 
 export async function sendUserInvite(user: User) {
   const templateId = process.env.MAILGUN_INVITE_USER_TEMPLATE

@@ -1,9 +1,9 @@
-import { authOptions } from '@/lib/auth'
-import { db } from '@/lib/db'
-import { absoluteUrl } from '@/lib/utils'
-import { virApiFetch } from '@/lib/virApiFetch'
 import { getServerSession } from 'next-auth/next'
 import { z } from 'zod'
+
+import { authOptions } from '@/lib/auth'
+import { db } from '@/lib/db'
+import { virApiFetch } from '@/lib/virApiFetch'
 
 export async function GET(req: Request) {
   try {

@@ -1,18 +1,17 @@
 'use client'
 
-import { Icons } from './icons'
+import React, { MouseEventHandler } from 'react'
+
+import { cn } from '@/lib/utils'
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import React, { MouseEventHandler } from 'react'
+
+import { Icons } from './icons'
 
 type DialogProps = {
   isOpen: boolean

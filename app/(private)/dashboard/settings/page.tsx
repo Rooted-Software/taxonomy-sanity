@@ -1,25 +1,22 @@
-import { AutosaveSwitch } from '@/components/autosave-switch'
-import { RESettingsForm } from '@/components/dashboard/re-settings'
-import { UniversalSelect } from '@/components/dashboard/universal-select'
-import { VirtuousSettingsForm } from '@/components/dashboard/virtuous-settings'
-import { DashboardHeader } from '@/components/header'
-import { DashboardShell } from '@/components/shell'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { UserNameForm } from '@/components/user-name-form'
+import { cache } from 'react'
+import { redirect } from 'next/navigation'
+
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { getFeAccountsFromBlackbaud } from '@/lib/feAccounts'
 import { getCurrentUser } from '@/lib/session'
-import { User } from '@prisma/client'
-import { redirect } from 'next/navigation'
-import { cache } from 'react'
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { AutosaveSwitch } from '@/components/autosave-switch'
+import { RESettingsForm } from '@/components/dashboard/re-settings'
+import { UniversalSelect } from '@/components/dashboard/universal-select'
+import { DashboardHeader } from '@/components/header'
+import { DashboardShell } from '@/components/shell'
 
 const { AuthorizationCode } = require('simple-oauth2')
 

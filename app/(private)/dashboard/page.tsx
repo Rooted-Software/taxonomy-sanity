@@ -1,15 +1,16 @@
-import { EmptyPlaceholder } from '@/components/empty-placeholder'
-import { DashboardHeader } from '@/components/header'
-import { PaginationButtons } from '@/components/pagination-buttons'
-import { DashboardShell } from '@/components/shell'
-import WindowOpenLink from '@/components/ui/window-open-link'
+import Link from 'next/link'
+import { redirect } from 'next/navigation'
+
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { getFeEnvironment } from '@/lib/feEnvironment'
 import { getCurrentUser } from '@/lib/session'
 import { formatDate } from '@/lib/utils'
-import Link from 'next/link'
-import { redirect } from 'next/navigation'
+import WindowOpenLink from '@/components/ui/window-open-link'
+import { EmptyPlaceholder } from '@/components/empty-placeholder'
+import { DashboardHeader } from '@/components/header'
+import { PaginationButtons } from '@/components/pagination-buttons'
+import { DashboardShell } from '@/components/shell'
 
 export const metadata = {
   title: 'Dashboard',

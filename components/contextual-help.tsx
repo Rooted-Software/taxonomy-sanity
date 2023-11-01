@@ -1,9 +1,10 @@
 'use client'
 
-import { Icons } from '@/components/icons'
-import { AvatarProps } from '@radix-ui/react-avatar'
-import { notFound } from 'next/navigation'
 import { useState } from 'react'
+import { notFound } from 'next/navigation'
+import { AvatarProps } from '@radix-ui/react-avatar'
+
+import { Icons } from '@/components/icons'
 
 interface ContextualHelpProps extends AvatarProps {
   articleId: string

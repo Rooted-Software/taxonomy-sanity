@@ -1,6 +1,10 @@
 'use client'
 
-import { Icons } from '@/components/icons'
+import * as React from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { Post } from '@prisma/client'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,10 +23,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { toast } from '@/components/ui/use-toast'
-import { Post } from '@prisma/client'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import * as React from 'react'
+import { Icons } from '@/components/icons'
 
 async function deletePost(postId: string) {
   const response = await fetch(`/api/posts/${postId}`, {

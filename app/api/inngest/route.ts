@@ -1,9 +1,9 @@
+import { Inngest } from 'inngest'
+import { serve } from 'inngest/next'
+
 import { db } from '@/lib/db'
 import { syncBatchGifts } from '@/lib/feGiftBatches'
 import { getVirtuousBatches } from '@/lib/virGifts'
-import { getBatches } from '@/lib/virGifts'
-import { Inngest } from 'inngest'
-import { serve } from 'inngest/next'
 
 // Create a client to send and receive events
 export const inngest = new Inngest({ name: 'DonorSync' })

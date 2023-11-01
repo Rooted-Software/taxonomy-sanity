@@ -1,24 +1,24 @@
 'use client'
 
-import { ApiCallButton } from '@/components/dashboard/api-call-button'
-import { Icons } from '@/components/icons'
+import * as React from 'react'
+import { useRouter } from 'next/navigation'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+
+import { cn } from '@/lib/utils'
+import { apiKeySchema } from '@/lib/validations/apiKey'
 import {
   Card,
-  CardHeader,
   CardContent,
   CardDescription,
   CardFooter,
+  CardHeader,
   CardTitle,
 } from '@/components/ui/card'
 import { toast } from '@/components/ui/use-toast'
-import { cn } from '@/lib/utils'
-import { apiKeySchema } from '@/lib/validations/apiKey'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { User } from '@prisma/client'
-import { useRouter } from 'next/navigation'
-import * as React from 'react'
-import { useForm } from 'react-hook-form'
-import * as z from 'zod'
+import { ApiCallButton } from '@/components/dashboard/api-call-button'
+import { Icons } from '@/components/icons'
 
 interface VirtuousSettingsFormProps
   extends React.HTMLAttributes<HTMLFormElement> {

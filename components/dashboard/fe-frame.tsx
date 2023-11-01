@@ -1,23 +1,13 @@
 'use client'
 
-import { Checkbox } from '../ui/checkbox'
-import WindowOpenLink from '../ui/window-open-link'
-import styles from './grid.module.css'
-import { UniversalButton } from './universal-button'
-import { VirtuousGetProjectsButton } from '@/components/dashboard/virtuous-get-projects'
-import { EmptyPlaceholder } from '@/components/empty-placeholder'
-import { Icons } from '@/components/icons'
-import { toast } from '@/components/ui/use-toast'
-import { cn } from '@/lib/utils'
-import { Dialog, Transition } from '@headlessui/react'
-import tr from 'date-fns/esm/locale/tr'
-import { CheckCircle } from 'lucide-react'
-import { CheckSquare } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { useSearchParams } from 'next/navigation'
-import { useState, Fragment, useEffect } from 'react'
+import { Fragment, useEffect } from 'react'
 import * as React from 'react'
-import { AnyZodObject } from 'zod'
+import { useRouter, useSearchParams } from 'next/navigation'
+
+import { cn } from '@/lib/utils'
+import { Icons } from '@/components/icons'
+
+import WindowOpenLink from '../ui/window-open-link'
 
 interface ReviewProps extends React.HTMLAttributes<HTMLButtonElement> {
   feEnvironment?: string

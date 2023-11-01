@@ -1,7 +1,8 @@
-import { authOptions } from '@/lib/auth'
-import { db } from '@/lib/db'
 import { getServerSession } from 'next-auth'
 import * as z from 'zod'
+
+import { authOptions } from '@/lib/auth'
+import { db } from '@/lib/db'
 
 const routeContextSchema = z.object({
   params: z.object({

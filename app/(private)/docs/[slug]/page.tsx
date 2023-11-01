@@ -1,17 +1,11 @@
-import { BasicImage } from '@/components/BasicImage'
-import styles from '@/components/blog/PostBody.module.css'
-import {
-  LinkableH1Header,
-  LinkableH2Header,
-  LinkableH3Header,
-  LinkableH4Header,
-} from '@/components/docs/customComponents'
-import { DocsPageHeader } from '@/components/docs/page-header'
-import { DocsPager } from '@/components/docs/pager'
 import { getAllDocsSlugs, getDocBySlug } from '@/lib/sanity.client'
+import { BasicImage } from '@/components/BasicImage'
+import { DocsPageHeader } from '@/components/docs/page-header'
+
 import '@/styles/mdx.css'
-import { PortableText } from '@portabletext/react'
+
 import { notFound } from 'next/navigation'
+import { PortableText } from '@portabletext/react'
 
 interface DocPageProps {
   params: {

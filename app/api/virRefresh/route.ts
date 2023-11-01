@@ -1,8 +1,8 @@
-import { authOptions } from '@/lib/auth'
-import { db } from '@/lib/db'
-import { absoluteUrl } from '@/lib/utils'
 import { getServerSession } from 'next-auth/next'
 import { z } from 'zod'
+
+import { authOptions } from '@/lib/auth'
+import { db } from '@/lib/db'
 
 export async function GET(req: Request) {
   try {

@@ -1,12 +1,12 @@
-import { siteConfig } from '@/config/site'
-import { db } from '@/lib/db'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { Prisma } from '@prisma/client'
 import Mailgun from 'mailgun.js'
 import { NextAuthOptions } from 'next-auth'
-import { JWT } from 'next-auth/jwt'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import EmailProvider from 'next-auth/providers/email'
+
+import { siteConfig } from '@/config/site'
+import { db } from '@/lib/db'
 
 type Credentials = {
   email: string
@@ -166,7 +166,6 @@ export const authOptions: NextAuthOptions = {
         if (error !== null && error !== undefined) {
           console.log(error)
           throw new Error(error)
-          return error
         }
         // If no error and we have user data, return it
         if (res.ok && user) {
@@ -210,7 +209,6 @@ export const authOptions: NextAuthOptions = {
             })
             if (!dbUser) {
               throw new Error('No user found')
-              return null
             }
             let accountData: Prisma.AccountUncheckedCreateInput = {
               userId: newUser.id,

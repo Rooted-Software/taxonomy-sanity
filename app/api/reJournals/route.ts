@@ -1,11 +1,9 @@
+import { getServerSession } from 'next-auth/next'
+import { z } from 'zod'
+
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { reFetch } from '@/lib/reFetch'
-import { absoluteUrl } from '@/lib/utils'
-import { User } from '@prisma/client'
-import { getServerSession } from 'next-auth/next'
-import { any } from 'prop-types'
-import { z } from 'zod'
 
 async function upsertJournal(journal, teamId) {
   await db.feJournal.upsert({

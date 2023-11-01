@@ -1,9 +1,10 @@
-import { formatDate } from '@/lib/utils'
+import Image from 'next/image'
+import Link from 'next/link'
 import Avatar from 'components/AuthorAvatar'
 import { urlForImage } from 'lib/sanity.image'
 import type { Post } from 'lib/sanity.queries'
-import Image from 'next/image'
-import Link from 'next/link'
+
+import { formatDate } from '@/lib/utils'
 
 export default function PostPreview({
   title,

@@ -1,12 +1,11 @@
 'use client'
 
-import { Icons } from '@/components/icons'
-import { toast } from '@/components/ui/use-toast'
-import { cn } from '@/lib/utils'
-import { useRouter } from 'next/navigation'
-import { any } from 'prop-types'
 import * as React from 'react'
-import { IconType } from 'react-icons/lib'
+import { useRouter } from 'next/navigation'
+
+import { cn } from '@/lib/utils'
+import { toast } from '@/components/ui/use-toast'
+import { Icons } from '@/components/icons'
 
 interface UniversalButtonProps {
   title: String

@@ -1,8 +1,9 @@
 'use client'
 
-import { toast } from '@/components/ui/use-toast'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useState, useEffect } from 'react'
+
+import { toast } from '@/components/ui/use-toast'
 
 export default function ReCallBackPage(params, searchParams) {
   console.log('params')

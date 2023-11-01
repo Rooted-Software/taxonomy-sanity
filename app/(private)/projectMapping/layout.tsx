@@ -1,8 +1,10 @@
-import { MainNav } from '@/components/main-nav'
-import { UserAccountNav } from '@/components/user-account-nav'
+import * as React from 'react'
+import { notFound } from 'next/navigation'
+
 import { dashboardConfig } from '@/config/dashboard'
 import { getCurrentUser } from '@/lib/session'
-import { notFound } from 'next/navigation'
+import { MainNav } from '@/components/main-nav'
+import { UserAccountNav } from '@/components/user-account-nav'
 
 interface DashboardLayoutProps {
   children?: React.ReactNode

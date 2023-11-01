@@ -1,10 +1,12 @@
 'use client'
 
+import { useState } from 'react'
+
+import { toast } from '@/components/ui/use-toast'
+
 import { Icons } from './icons'
 import { Label } from './ui/label'
 import { Switch } from './ui/switch'
-import { toast } from '@/components/ui/use-toast'
-import { useState } from 'react'
 
 interface AutosaveSwitchProps {
   label: string

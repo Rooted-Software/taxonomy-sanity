@@ -1,12 +1,10 @@
+import * as React from 'react'
+import { getDocsCategoriesWithArticleLinks } from 'lib/sanity.client'
+
+import { dashboardConfig } from '@/config/dashboard'
 import { DocsSidebarNav } from '@/components/docs/sidebar-nav'
 import { MainNav } from '@/components/main-nav'
 import { SiteFooter } from '@/components/site-footer'
-import { UserAccountNav } from '@/components/user-account-nav'
-import { dashboardConfig } from '@/config/dashboard'
-import { getCurrentUser } from '@/lib/session'
-import { getDocsCategoriesWithArticleLinks } from 'lib/sanity.client'
-import { notFound } from 'next/navigation'
-import { redirect } from 'next/navigation'
 
 interface DocsLayoutProps {
   children: React.ReactNode

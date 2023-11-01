@@ -1,9 +1,9 @@
 'use client'
 
-import { Icons } from './icons'
-import { Icon } from '@sanity/icons'
 import Link from 'next/link'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
+
+import { Icons } from './icons'
 
 interface PaginationButtonsProps {
   paramName: string

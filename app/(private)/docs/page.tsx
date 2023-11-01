@@ -1,19 +1,11 @@
+import { getDocBySlug } from '@/lib/sanity.client'
 import styles from '@/components/blog/PostBody.module.css'
-import {
-  LinkableH1Header,
-  LinkableH2Header,
-  LinkableH3Header,
-  LinkableH4Header,
-} from '@/components/docs/customComponents'
 import { DocsPageHeader } from '@/components/docs/page-header'
-import { DocsPager } from '@/components/docs/pager'
-import { DashboardTableOfContents } from '@/components/docs/toc'
-import { parseOutline } from '@/lib/sanity-toc'
-import { getDocBySlug, getAllDocsSlugs } from '@/lib/sanity.client'
-import { getTableOfContents } from '@/lib/toc'
+
 import '@/styles/mdx.css'
-import { PortableText, PortableTextComponents } from '@portabletext/react'
+
 import { notFound } from 'next/navigation'
+import { PortableText } from '@portabletext/react'
 
 var getSlug = require('speakingurl')
 

@@ -1,7 +1,7 @@
-import { BatchPreview } from '@/components/dashboard/batch-preview'
+import { redirect } from 'next/navigation'
+
 import { getFeAccountsFromBlackbaud } from '@/lib/feAccounts'
-import { getFeEnvironment } from '@/lib/feEnvironment'
-import { getFeJournalName } from '@/lib/feEnvironment'
+import { getFeEnvironment, getFeJournalName } from '@/lib/feEnvironment'
 import { getCurrentUser } from '@/lib/session'
 import { dateFilterOptions } from '@/lib/utils'
 import {
@@ -10,7 +10,7 @@ import {
   getVirtuousBatches,
 } from '@/lib/virGifts'
 import { getProjectAccountMappings } from '@/lib/virProjects'
-import { redirect } from 'next/navigation'
+import { BatchPreview } from '@/components/dashboard/batch-preview'
 
 export const metadata = {
   title: 'Review your data',

@@ -1,13 +1,12 @@
-import styles from '/styles/Shared.module.css'
-import Card from '@/components/card'
-import { ContactForm } from '@/components/support/contact-form'
+import React from 'react'
 import {
   getAllSupportCategories,
   getAllSupportCategorySlugs,
-  getSettings,
 } from 'lib/sanity.client'
 import { urlForImage } from 'lib/sanity.image'
-import React from 'react'
+
+import Card from '@/components/card'
+import { ContactForm } from '@/components/support/contact-form'
 
 export async function generateStaticParams() {
   console.log('slugs')

@@ -1,5 +1,5 @@
-import { UniversalSelect } from '@/components/dashboard/universal-select'
 import { getCurrentUser } from '@/lib/session'
+import { UniversalSelect } from '@/components/dashboard/universal-select'
 
 export const metadata = {
   title: 'Create an account',

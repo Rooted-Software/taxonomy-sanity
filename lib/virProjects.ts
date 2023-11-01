@@ -1,6 +1,7 @@
+import { db } from '@/lib/db'
+
 import { virDateOptions } from './utils'
 import { virApiFetch } from './virApiFetch'
-import { db } from '@/lib/db'
 
 export const getProjectAccountMappings = async (teamId) => {
   return await db.projectAccountMapping.findMany({

@@ -1,5 +1,4 @@
 import { db } from '@/lib/db'
-import { Prisma } from '@prisma/client'
 
 export async function virFetch(url, method, id, body) {
   //get reSettings from server

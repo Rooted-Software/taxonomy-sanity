@@ -1,8 +1,6 @@
-import Date from '@/components/blog/PostDate'
-import AuthorAvatar from 'components/AuthorAvatar'
+import Link from 'next/link'
 import CoverImage from 'components/CoverImage'
 import type { Post } from 'lib/sanity.queries'
-import Link from 'next/link'
 
 export default function HeroPost(
   props: Pick<

@@ -1,9 +1,9 @@
-import { authOptions } from '@/lib/auth'
-import { db } from '@/lib/db'
-import { syncBatchGifts } from '@/lib/feGiftBatches'
-import { reFetch } from '@/lib/reFetch'
 import { getServerSession } from 'next-auth/next'
 import { z } from 'zod'
+
+import { authOptions } from '@/lib/auth'
+import { syncBatchGifts } from '@/lib/feGiftBatches'
+import { reFetch } from '@/lib/reFetch'
 
 export type DesignationType = {
   projectId: string

@@ -1,10 +1,14 @@
+import * as React from 'react'
+
+import { siteConfig } from '@/config/site'
+import { cn } from '@/lib/utils'
+import { Toaster } from '@/components/ui/toaster'
 import { Analytics } from '@/components/analytics'
 import { TailwindIndicator } from '@/components/tailwind-indicator'
 import { ThemeProvider } from '@/components/theme-provider'
-import { Toaster } from '@/components/ui/toaster'
-import { siteConfig } from '@/config/site'
-import { absoluteUrl, cn } from '@/lib/utils'
+
 import '@/styles/globals.css'
+
 import { Inter as FontSans } from 'next/font/google'
 import localFont from 'next/font/local'
 

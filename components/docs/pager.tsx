@@ -1,7 +1,8 @@
-import { Icons } from '@/components/icons'
+import Link from 'next/link'
+
 // import { Doc } from "contentlayer/generated"
 import { docsConfig } from '@/config/docs'
-import Link from 'next/link'
+import { Icons } from '@/components/icons'
 
 interface DocsPagerProps {
   doc: any

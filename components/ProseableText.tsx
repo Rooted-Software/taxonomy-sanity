@@ -1,11 +1,11 @@
 'use client'
 
-import { PortableText, PortableTextComponents } from '@portabletext/react'
+import React, { useMemo } from 'react'
+import { PortableText } from '@portabletext/react'
 import { getImageDimensions } from '@sanity/asset-utils'
 import urlBuilder from '@sanity/image-url'
 import { apiVersion, dataset, projectId, useCdn } from 'lib/sanity.api'
-import { type SanityClient, createClient, groq } from 'next-sanity'
-import React, { useMemo } from 'react'
+import { createClient } from 'next-sanity'
 
 /**
  * Use Tailwind CSS's `prose` classes with Portable Text markup (blocks)
@@ -69,7 +69,7 @@ export default function ProseableText({ value = [] }) {
         },
         [[]]
       ),
-    [blocks]
+    [value]
   )
 
   if (!valueGroups?.length) return null

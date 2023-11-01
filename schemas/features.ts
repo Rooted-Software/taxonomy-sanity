@@ -1,7 +1,7 @@
 import { ThListIcon } from '@sanity/icons'
 import {
-  orderRankOrdering,
   orderRankField,
+  orderRankOrdering,
 } from '@sanity/orderable-document-list'
 import { defineField, defineType } from 'sanity'
 

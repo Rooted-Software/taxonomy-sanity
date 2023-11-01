@@ -1,7 +1,8 @@
-import BlogMeta from '@/components/blog/BlogMeta'
 import * as demo from 'lib/demo.data'
 import { getPostBySlug, getSettings } from 'lib/sanity.client'
 import { urlForImage } from 'lib/sanity.image'
+
+import BlogMeta from '@/components/blog/BlogMeta'
 
 export default async function SlugHead({
   params,

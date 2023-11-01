@@ -1,10 +1,7 @@
+import { getServerSession } from 'next-auth/next'
+
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
-import { stripe } from '@/lib/stripe'
-import { getServerSession } from 'next-auth/next'
-import { headers } from 'next/headers'
-import Stripe from 'stripe'
-import * as z from 'zod'
 
 export async function POST(req: Request) {
   const body = await req.json()

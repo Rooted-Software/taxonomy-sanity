@@ -1,22 +1,18 @@
 'use client'
 
-import { Icons } from '@/components/icons'
+import * as React from 'react'
+import { useRouter } from 'next/navigation'
+import { FeSetting, User } from '@prisma/client'
+
+import { cn } from '@/lib/utils'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { User } from '@prisma/client'
-import { FeSetting } from '@prisma/client'
-import { useRouter } from 'next/navigation'
-import * as React from 'react'
-import { useForm } from 'react-hook-form'
-import * as z from 'zod'
+import { Icons } from '@/components/icons'
 
 interface REFormProps extends React.HTMLAttributes<HTMLFormElement> {
   user: Pick<User, 'id' | 'name'>

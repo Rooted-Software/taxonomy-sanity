@@ -1,17 +1,14 @@
 'use client'
 
 import { BasicImage } from '@/components/BasicImage'
+
 import '@/styles/mdx.css'
+
+import type { FC } from 'react'
+import Link from 'next/link'
 import { Disclosure } from '@headlessui/react'
 import { PortableText } from '@portabletext/react'
-import { getImageDimensions } from '@sanity/asset-utils'
-import urlBuilder from '@sanity/image-url'
-import { type SanityClient, createClient, groq } from 'next-sanity'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
-import type { FC } from 'react'
-import { HiChevronDown } from 'react-icons/hi2'
-import { HiArrowLeft } from 'react-icons/hi2'
+import { HiArrowLeft, HiChevronDown } from 'react-icons/hi2'
 
 const components = {
   types: {

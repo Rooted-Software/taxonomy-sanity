@@ -1,6 +1,7 @@
-import { authOptions } from '@/lib/auth'
 import Mailgun from 'mailgun.js'
 import { getServerSession } from 'next-auth/next'
+
+import { authOptions } from '@/lib/auth'
 
 const FormData = require('form-data')
 

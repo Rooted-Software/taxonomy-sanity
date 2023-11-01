@@ -1,16 +1,17 @@
 'use client'
 
-import { Icons } from '@/components/icons'
-import { toast } from '@/components/ui/use-toast'
-import { cn } from '@/lib/utils'
-import { virtuousAuthSchema } from '@/lib/validations/auth'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { getCsrfToken, signIn } from 'next-auth/react'
-import { useSearchParams } from 'next/navigation'
 import * as React from 'react'
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { getCsrfToken, signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
+
+import { cn } from '@/lib/utils'
+import { virtuousAuthSchema } from '@/lib/validations/auth'
+import { toast } from '@/components/ui/use-toast'
+import { Icons } from '@/components/icons'
 
 interface UserVirtuousAuthFormProps
   extends React.HTMLAttributes<HTMLDivElement> {

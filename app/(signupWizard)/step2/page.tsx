@@ -1,13 +1,14 @@
-import { ContextualHelp } from '@/components/contextual-help'
-import { RESetupForm } from '@/components/dashboard/re-setup'
-import { db } from '@/lib/db'
-import { getCurrentUser } from '@/lib/session'
-import { User } from '@prisma/client'
 import crypto from 'crypto'
+import { cache } from 'react'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
-import { cache } from 'react'
+import { User } from '@prisma/client'
 import { AuthorizationCode } from 'simple-oauth2'
+
+import { db } from '@/lib/db'
+import { getCurrentUser } from '@/lib/session'
+import { ContextualHelp } from '@/components/contextual-help'
+import { RESetupForm } from '@/components/dashboard/re-setup'
 
 const reSettingsForUser = cache(async (teamId: string) => {
   if (!teamId) return null
