@@ -2,6 +2,7 @@ import { EmptyPlaceholder } from '@/components/empty-placeholder'
 import { DashboardHeader } from '@/components/header'
 import { PaginationButtons } from '@/components/pagination-buttons'
 import { DashboardShell } from '@/components/shell'
+import WindowOpenLink from '@/components/ui/window-open-link'
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { getFeEnvironment } from '@/lib/feEnvironment'
@@ -137,15 +138,16 @@ export default async function DashboardPage({ searchParams }) {
                       log.syncType.slice(1)}{' '}
                     Sync
                     <div className="float-right">
-                      <a
+                      <WindowOpenLink
                         className="align-items-right text-xs"
-                        target=""
-                        href={`javascript:window.open('https://host.nxt.blackbaud.com/journalentry/${log.giftBatch?.reBatchNo}?envid=${feEnvironment?.environment_id}', 'financialEdge', 'width=1200,height=750');`}
+                        url={`https://host.nxt.blackbaud.com/journalentry/${log.giftBatch?.reBatchNo}?envid=${feEnvironment?.environment_id}`}
+                        target="financialEdge"
+                        features="width=1200,height=750"
                       >
                         {' '}
                         FE Batch# {log.giftBatch?.reBatchNo}{' '}
                         <span className="text-accent-1">&nbsp; (synced)</span>
-                      </a>{' '}
+                      </WindowOpenLink>{' '}
                     </div>
                   </div>
 
