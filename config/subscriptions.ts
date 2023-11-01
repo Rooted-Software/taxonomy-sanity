@@ -9,6 +9,7 @@ export const freePlan: SubscriptionPlan = {
 
 export const proPlan: SubscriptionPlan = {
   name: 'PRO',
-  description: 'The PRO plan will have advanced automation and syncing features.',
+  description:
+    'The PRO plan will have advanced automation and syncing features.',
   stripePriceId: process.env.STRIPE_PRO_MONTHLY_PLAN_ID || '',
 }

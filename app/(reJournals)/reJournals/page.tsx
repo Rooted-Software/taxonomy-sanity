@@ -12,10 +12,8 @@ import { redirect } from 'next/navigation'
 import { cache } from 'react'
 import * as React from 'react'
 
-
 export default async function ReJournalsPage() {
   const user = await getCurrentUser()
-
 
   if (!user && authOptions?.pages?.signIn) {
     redirect(authOptions.pages.signIn)
@@ -29,7 +27,12 @@ export default async function ReJournalsPage() {
       ></DashboardHeader>
       <div className="">
         Get RE Journals
-        <UniversalButton title="Get Journals" route={process.env.NEXT_PUBLIC_APP_URL +'/api/reJournals'} method="GET" fields={['journal_code_id', 'code', 'journal']} />
+        <UniversalButton
+          title="Get Journals"
+          route={process.env.NEXT_PUBLIC_APP_URL + '/api/reJournals'}
+          method="GET"
+          fields={['journal_code_id', 'code', 'journal']}
+        />
       </div>
     </DashboardShell>
   )

@@ -9,9 +9,7 @@ export default function DashboardLoading() {
       <DashboardHeader
         heading="Dashboard"
         text="Virtuous to Financial Edge Sync made simple"
-      >
-       
-      </DashboardHeader>
+      ></DashboardHeader>
       <div className=" rounded-md">
         <PostItem.Skeleton />
         <PostItem.Skeleton />

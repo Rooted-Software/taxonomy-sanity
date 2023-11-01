@@ -6,7 +6,7 @@ import { z } from 'zod'
 
 const routeContextSchema = z.object({
   params: z.object({
-    userId: z.string()
+    userId: z.string(),
   }),
 })
 
@@ -61,7 +61,7 @@ export async function DELETE(
     const userToDelete = await db.user.findUniqueOrThrow({
       select: {
         id: true,
-        teamId: true
+        teamId: true,
       },
       where: {
         id: params.userId,
@@ -78,7 +78,7 @@ export async function DELETE(
     await db.user.delete({
       where: {
         id: userToDelete.id,
-      }
+      },
     })
 
     return new Response(null, { status: 200 })
@@ -90,4 +90,3 @@ export async function DELETE(
     return new Response(null, { status: 500 })
   }
 }
-

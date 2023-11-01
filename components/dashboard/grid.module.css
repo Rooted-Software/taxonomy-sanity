@@ -1,19 +1,15 @@
 .wrapper {
-    border-style: solid;
-  
- 
-    grid-template-columns: repeat(9, 1fr);
- 
+  border-style: solid;
 
-  }
+  grid-template-columns: repeat(9, 1fr);
+}
 
-.wrapper>div:nth-child(14n+1),
-.wrapper>div:nth-child(14n+2),
-.wrapper>div:nth-child(14n+3),
-.wrapper>div:nth-child(14n+4),
-.wrapper>div:nth-child(14n+5),
-.wrapper>div:nth-child(14n+6),
-.wrapper>div:nth-child(14n+7)
-{
+.wrapper > div:nth-child(14n + 1),
+.wrapper > div:nth-child(14n + 2),
+.wrapper > div:nth-child(14n + 3),
+.wrapper > div:nth-child(14n + 4),
+.wrapper > div:nth-child(14n + 5),
+.wrapper > div:nth-child(14n + 6),
+.wrapper > div:nth-child(14n + 7) {
   background: #ddd;
-  }
+}

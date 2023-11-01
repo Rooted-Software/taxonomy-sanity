@@ -89,16 +89,16 @@ export default async function TeamPage() {
                 </TooltipProvider>
               ) : teamuser.role == 'admin' ? (
                 <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Icons.lock className="mr-2 h-4 w-4" />
-                  </TooltipTrigger>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Icons.lock className="mr-2 h-4 w-4" />
+                    </TooltipTrigger>
 
-                  <TooltipContent sideOffset={4}>
-                    You cannot remove admins
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+                    <TooltipContent sideOffset={4}>
+                      You cannot remove admins
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               ) : (
                 <TeamUserRemove user={teamuser} />
               )}

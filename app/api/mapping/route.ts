@@ -43,7 +43,7 @@ async function upsertMapping(
     where: {
       virProjectId_teamId: {
         virProjectId,
-        teamId
+        teamId,
       },
     },
     update: {
@@ -53,7 +53,7 @@ async function upsertMapping(
       virProjectId,
       virProjectName,
       feAccountId: parseInt(feAccountID),
-      teamId
+      teamId,
     },
   })
 }

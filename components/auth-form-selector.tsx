@@ -21,7 +21,9 @@ export default function AuthFormSelector() {
   if (typeof window !== 'undefined') {
     localStorage.getItem('authMethod')
   }
-  const [selectedMethod, setSelectedMethod] = React.useState<string | null>(authMethod)
+  const [selectedMethod, setSelectedMethod] = React.useState<string | null>(
+    authMethod
+  )
   React.useEffect(() => {
     if (selectedMethod && typeof window !== 'undefined') {
       localStorage.setItem('authMethod', selectedMethod)

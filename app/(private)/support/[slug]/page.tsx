@@ -24,16 +24,19 @@ export default async function SupportPage({ params, searchParams }: any) {
   console.log(ca)
   return (
     <div className="container mt-4 grid grid-cols-1 gap-4 pt-4 lg:grid-cols-2">
-    <div
-      className="mt-4 p-4 lg:col-span-2"
-      style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.4' }}
-    >
-      {ca?.length > 0 ? (
-        <AccordionPortableTextContent items={ca} title={searchParams?.title} />
-      ) : (
-        <div>Sorry, articles are not available. Please refresh.</div>
-      )}
-    </div>
+      <div
+        className="mt-4 p-4 lg:col-span-2"
+        style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.4' }}
+      >
+        {ca?.length > 0 ? (
+          <AccordionPortableTextContent
+            items={ca}
+            title={searchParams?.title}
+          />
+        ) : (
+          <div>Sorry, articles are not available. Please refresh.</div>
+        )}
+      </div>
     </div>
   )
 }

@@ -66,7 +66,7 @@ export const upsertFeAccountFromId = async (accountId, teamId) => {
     throw new Error('Unable to get account')
   } else {
     const data = await res.json()
-    await upsertFeAccount(data, teamId);
+    await upsertFeAccount(data, teamId)
   }
 }
 

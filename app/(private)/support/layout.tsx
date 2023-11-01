@@ -20,11 +20,7 @@ export default function SupportLayout({
         </div>
       </header>
       <main className="flex-1">
-        <div className="mt-4 pt-4">
-          
-            {children}
-     
-        </div>
+        <div className="mt-4 pt-4">{children}</div>
       </main>
       <SiteFooter />
     </div>

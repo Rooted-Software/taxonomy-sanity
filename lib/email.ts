@@ -1,16 +1,19 @@
-
 // This isn't used
 import { siteConfig } from '@/config/site'
 import { User } from '@prisma/client'
-import Mailgun, { MailgunClientOptions, MailgunMessageData, MessagesSendResult } from 'mailgun.js'
+import Mailgun, {
+  MailgunClientOptions,
+  MailgunMessageData,
+  MessagesSendResult,
+} from 'mailgun.js'
 
 export async function sendUserInvite(user: User) {
   const templateId = process.env.MAILGUN_INVITE_USER_TEMPLATE
   if (!templateId) {
     throw new Error('Missing template id')
   }
-  if (!user || !user.email){
-    throw new Error('Missing user email');
+  if (!user || !user.email) {
+    throw new Error('Missing user email')
   }
 
   const mailgun = new Mailgun(FormData)

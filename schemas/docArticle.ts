@@ -1,11 +1,12 @@
 import docCategoryType from './docCategory'
 import { BookIcon } from '@sanity/icons'
-import { format, parseISO } from 'date-fns'
-import { defineField, defineType } from 'sanity'
 import {
   orderRankOrdering,
   orderRankField,
 } from '@sanity/orderable-document-list'
+import { format, parseISO } from 'date-fns'
+import { defineField, defineType } from 'sanity'
+
 /**
  * This file is the schema definition for a post.
  *
@@ -61,7 +62,7 @@ export default defineType({
       name: 'content',
       title: 'Content',
       type: 'array',
-      of: [{ type: 'block' }, {type: 'image'}],
+      of: [{ type: 'block' }, { type: 'image' }],
     }),
     defineField({
       name: 'coverImage',

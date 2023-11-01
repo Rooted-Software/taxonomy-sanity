@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client'
 import { applySoftDeleteMiddleware } from './prisma-middlewares/soft-delete'
+import { PrismaClient } from '@prisma/client'
 
 declare global {
   // eslint-disable-next-line no-var

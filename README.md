@@ -2,8 +2,6 @@
 
 An open source application built using the new router, server components and everything new in Next.js 13. Forked from shadcn to use Sanity.io / PortableText rather than MDX and Contentlayer (Contentlayer doesn't yet support Sanity)
 
-
-
 Things Broken: Styling on the Docs page text and the Docs Toc (It actually works with the custome headings components, but for some reason they aren't passing linting/typechecks)
 
 ## Demo
@@ -19,7 +17,6 @@ This project as an experiment to see how a modern app (with features like authen
 A few people have asked me to turn this into a starter. I think we could do that once the new features are out of beta.
 
 ## Note on Performance
-
 
 ## Features
 

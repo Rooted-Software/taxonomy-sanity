@@ -7,15 +7,14 @@ import {
 } from '@/components/docs/customComponents'
 import { DocsPageHeader } from '@/components/docs/page-header'
 import { DocsPager } from '@/components/docs/pager'
-
 import { getAllDocsSlugs, getDocBySlug } from '@/lib/sanity.client'
 import '@/styles/mdx.css'
 import { PortableText, PortableTextComponents } from '@portabletext/react'
-import { notFound } from 'next/navigation'
+import { getImageDimensions } from '@sanity/asset-utils'
 import urlBuilder from '@sanity/image-url'
-import {getImageDimensions} from '@sanity/asset-utils'
-import { type SanityClient, createClient, groq } from 'next-sanity'
 import { apiVersion, dataset, projectId, useCdn } from 'lib/sanity.api'
+import { type SanityClient, createClient, groq } from 'next-sanity'
+import { notFound } from 'next/navigation'
 
 interface DocPageProps {
   params: {
@@ -41,10 +40,8 @@ const TableOfContents = (props) => (
   </ol>
 )
 
-
-
-const SampleImageComponent = ({value, isInline}) => {
-  const {width, height} = getImageDimensions(value)
+const SampleImageComponent = ({ value, isInline }) => {
+  const { width, height } = getImageDimensions(value)
   const client = createClient({ projectId, dataset, apiVersion, useCdn })
   return (
     <img
@@ -80,7 +77,6 @@ export async function generateStaticParams() {
 }
 
 export default async function DocPage({ params }: DocPageProps) {
-  
   const slug = params?.slug || ''
   /* load docs from slug */
   const doc = await getDocBySlug(slug)
@@ -102,7 +98,6 @@ export default async function DocPage({ params }: DocPageProps) {
       <div className="hidden text-sm xl:block">
         <div className="sticky top-16 -mt-10 max-h-[calc(var(--vh)-4rem)] overflow-y-auto pt-10">
           {/* <DashboardTableOfContents toc={toc} /> */}
-
         </div>
       </div>
     </main>

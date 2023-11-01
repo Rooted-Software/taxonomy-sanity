@@ -39,7 +39,6 @@ export async function DELETE(
   }
 }
 
-
 async function verifyCurrentUserHasAccessToMapping(mappingId: string) {
   const session = await getServerSession(authOptions)
   console.log(session?.user.team.id)
@@ -56,5 +55,5 @@ async function verifyCurrentUserHasAccessToMapping(mappingId: string) {
 }
 
 const mappingSchema = z.object({
-  mappingId: z.string()
+  mappingId: z.string(),
 })

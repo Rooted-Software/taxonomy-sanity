@@ -14,7 +14,6 @@ export async function POST(req: Request) {
       return new Response(null, { status: 403 })
     }
 
-
     // // Get the request body and validate it.
     const body = await req.json()
     const payload = teamUserSchema.parse(body)
@@ -37,7 +36,7 @@ export async function POST(req: Request) {
       update: {
         deleted: false,
         teamId: session.user.teamId,
-        name: payload.name
+        name: payload.name,
       },
       create: {
         name: payload.name,

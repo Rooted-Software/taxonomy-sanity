@@ -1,19 +1,19 @@
 'use client'
-import React, {useMemo} from 'react'
+
 import { PortableText, PortableTextComponents } from '@portabletext/react'
+import { getImageDimensions } from '@sanity/asset-utils'
 import urlBuilder from '@sanity/image-url'
-import {getImageDimensions} from '@sanity/asset-utils'
-import { type SanityClient, createClient, groq } from 'next-sanity'
 import { apiVersion, dataset, projectId, useCdn } from 'lib/sanity.api'
+import { type SanityClient, createClient, groq } from 'next-sanity'
+import React, { useMemo } from 'react'
+
 /**
  * Use Tailwind CSS's `prose` classes with Portable Text markup (blocks)
  * Without inheriting styles for custom components (types)
  */
 
-
-
-const SampleImageComponent = ({value, isInline}) => {
-  const {width, height} = getImageDimensions(value)
+const SampleImageComponent = ({ value, isInline }) => {
+  const { width, height } = getImageDimensions(value)
   const client = createClient({ projectId, dataset, apiVersion, useCdn })
   return (
     <img
@@ -44,8 +44,7 @@ const components = {
   },
 }
 
-
-export default function ProseableText({value = []}) {
+export default function ProseableText({ value = [] }) {
   // Group together standard `_type === "block"`  blocks
   // eg <p>, <li>, etc – and separate out everyone else
   const valueGroups = useMemo(

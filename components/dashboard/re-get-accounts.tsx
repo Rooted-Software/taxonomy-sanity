@@ -76,7 +76,7 @@ export function ReGetAccountsButton({
       </button>
       {accounts && accounts.length > 0 ? (
         <div>
-          {accounts?.map((account :any, index) => (
+          {accounts?.map((account: any, index) => (
             <div key={index} className="mt-2">
               {account.description} : {account.value}
             </div>

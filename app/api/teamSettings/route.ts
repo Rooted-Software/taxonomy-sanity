@@ -1,8 +1,8 @@
-import { authOptions } from "@/lib/auth"
-import { db } from "@/lib/db"
-import { getServerSession } from "next-auth/next"
+import { authOptions } from '@/lib/auth'
+import { db } from '@/lib/db'
+import { getServerSession } from 'next-auth/next'
 
-const allowedKeys = ["automation", "passProjectID"]
+const allowedKeys = ['automation', 'passProjectID']
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions)

@@ -50,8 +50,9 @@ export default async function BillingPage() {
           <Icons.warning />
           <AlertTitle>This is a beta app.</AlertTitle>
           <AlertDescription>
-            The Virtuous - Financial Edge sync tool is still in beta.  We will give notice before we start charging for the service.  You can cancel at any time.
-            
+            The Virtuous - Financial Edge sync tool is still in beta. We will
+            give notice before we start charging for the service. You can cancel
+            at any time.
           </AlertDescription>
         </Alert>
         <BillingForm

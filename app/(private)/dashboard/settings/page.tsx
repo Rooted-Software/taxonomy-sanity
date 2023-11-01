@@ -1,9 +1,9 @@
-import { AutosaveSwitch } from "@/components/autosave-switch"
-import { RESettingsForm } from "@/components/dashboard/re-settings"
-import { UniversalSelect } from "@/components/dashboard/universal-select"
-import { VirtuousSettingsForm } from "@/components/dashboard/virtuous-settings"
-import { DashboardHeader } from "@/components/header"
-import { DashboardShell } from "@/components/shell"
+import { AutosaveSwitch } from '@/components/autosave-switch'
+import { RESettingsForm } from '@/components/dashboard/re-settings'
+import { UniversalSelect } from '@/components/dashboard/universal-select'
+import { VirtuousSettingsForm } from '@/components/dashboard/virtuous-settings'
+import { DashboardHeader } from '@/components/header'
+import { DashboardShell } from '@/components/shell'
 import {
   Card,
   CardContent,
@@ -11,17 +11,17 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { UserNameForm } from "@/components/user-name-form"
-import { authOptions } from "@/lib/auth"
-import { db } from "@/lib/db"
-import { getFeAccountsFromBlackbaud } from "@/lib/feAccounts"
-import { getCurrentUser } from "@/lib/session"
-import { User } from "@prisma/client"
-import { redirect } from "next/navigation"
-import { cache } from "react"
+} from '@/components/ui/card'
+import { UserNameForm } from '@/components/user-name-form'
+import { authOptions } from '@/lib/auth'
+import { db } from '@/lib/db'
+import { getFeAccountsFromBlackbaud } from '@/lib/feAccounts'
+import { getCurrentUser } from '@/lib/session'
+import { User } from '@prisma/client'
+import { redirect } from 'next/navigation'
+import { cache } from 'react'
 
-const { AuthorizationCode } = require("simple-oauth2")
+const { AuthorizationCode } = require('simple-oauth2')
 
 const feSettingsForUser = cache(async (teamId) => {
   return await db.feSetting.findFirst({
@@ -44,18 +44,18 @@ const config = {
     secret: process.env.AUTH_CLIENT_SECRET,
   },
   auth: {
-    tokenHost: "https://app.blackbaud.com/oauth/authorize",
+    tokenHost: 'https://app.blackbaud.com/oauth/authorize',
   },
 }
 var crypto
-crypto = require("crypto")
+crypto = require('crypto')
 const client = new AuthorizationCode(config)
-const stateID = crypto.randomBytes(48).toString("hex")
+const stateID = crypto.randomBytes(48).toString('hex')
 const reAuthorizeURL = client.authorizeURL({
   redirect_uri: process.env.AUTH_REDIRECT_URI,
   state: stateID,
 })
-console.log("here goes")
+console.log('here goes')
 console.log(reAuthorizeURL)
 const getApiKey = cache(async (teamId) => {
   return await db.apiSetting.findFirst({
@@ -70,15 +70,15 @@ const getApiKey = cache(async (teamId) => {
 })
 
 export const metadata = {
-  title: "Settings",
-  description: "Manage account and website settings.",
+  title: 'Settings',
+  description: 'Manage account and website settings.',
 }
 
 export default async function SettingsPage() {
   const user = await getCurrentUser()
 
   if (!user || user === undefined) {
-    redirect(authOptions?.pages?.signIn || "/login")
+    redirect(authOptions?.pages?.signIn || '/login')
   }
   const apiKey = await getApiKey(user.team.id)
   const feSettings = await feSettingsForUser(user.team.id)
@@ -158,7 +158,7 @@ export default async function SettingsPage() {
                     title="Save"
                     route="/api/reJournals"
                     method="GET"
-                    fields={["journal_code_id", "code", "journal"]}
+                    fields={['journal_code_id', 'code', 'journal']}
                     selected={user?.defaultJournal}
                     redirect="/dashboard/settings"
                   />
@@ -166,7 +166,7 @@ export default async function SettingsPage() {
               </div>
 
               <div className="mr-4 flex flex-col space-y-2 text-left ">
-                <span className="text-accent-1">Default Debit Account</span>{" "}
+                <span className="text-accent-1">Default Debit Account</span>{' '}
                 Select your default debit account from Financial Edge.
                 <div className="justify-left  mr-4 flex flex-col justify-center space-y-2 p-2 text-center text-white">
                   <UniversalSelect
@@ -175,10 +175,10 @@ export default async function SettingsPage() {
                     method="GET"
                     subType="debit"
                     fields={[
-                      "account_id",
-                      "account_number",
-                      "description",
-                      "class",
+                      'account_id',
+                      'account_number',
+                      'description',
+                      'class',
                     ]}
                     selected={user?.defaultDebitAccount}
                     redirect="/dashboard/settings"
@@ -187,7 +187,7 @@ export default async function SettingsPage() {
                 </div>
               </div>
               <div className="mr-4 flex flex-col space-y-2 text-left ">
-                <span className="text-accent-1">Default Credit Account</span>{" "}
+                <span className="text-accent-1">Default Credit Account</span>{' '}
                 Select your default credit account from Financial Edge.
                 <div className="justify-left  mr-4 justify-center p-2 text-center text-white ">
                   <UniversalSelect
@@ -195,10 +195,10 @@ export default async function SettingsPage() {
                     route="/api/feAccounts"
                     method="GET"
                     fields={[
-                      "account_id",
-                      "account_number",
-                      "description",
-                      "class",
+                      'account_id',
+                      'account_number',
+                      'description',
+                      'class',
                     ]}
                     subType="credit"
                     selected={user?.defaultCreditAccount}

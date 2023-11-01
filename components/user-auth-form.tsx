@@ -52,8 +52,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     if (signInResult.error) {
       return toast({
         title: 'Email address not found',
-        description:
-          "Are you sure you're using the right email?",
+        description: "Are you sure you're using the right email?",
         variant: 'destructive',
       })
     }
