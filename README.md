@@ -1,5 +1,22 @@
 # Donorsync
 
+## Dev Getting Started
+
+```sh
+npm install
+```
+
+You will need to create a `.env` file at the root that contains the contents of the `local .env` item in LastPass. Reach out to your POC if you don't have access to the `Shared-Donorsync` folder in LastPass.
+
+This project used ESLint and Prettier to enforce programming rules and styling. Ensure you have plugins for both enabled in your IDE. We recommend turning on `Format on Save` as well for this project, to ensure styles don't drift.
+
+
+----
+
+**Everything below is the default README from taxonomy**
+
+----
+
 An open source application built using the new router, server components and everything new in Next.js 13. Forked from shadcn to use Sanity.io / PortableText rather than MDX and Contentlayer (Contentlayer doesn't yet support Sanity)
 
 Things Broken: Styling on the Docs page text and the Docs Toc (It actually works with the custome headings components, but for some reason they aren't passing linting/typechecks)
