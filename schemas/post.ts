@@ -1,8 +1,5 @@
 import { BookIcon } from '@sanity/icons'
-import {
-  orderRankField,
-  orderRankOrdering,
-} from '@sanity/orderable-document-list'
+import { orderRankField } from '@sanity/orderable-document-list'
 import { format, parseISO } from 'date-fns'
 import { defineField, defineType } from 'sanity'
 

@@ -1,4 +1,3 @@
-import React from 'react'
 import { getAllSupportCategoryArticles } from 'lib/sanity.client'
 
 import AccordionPortableTextContent from '@/components/accordionPortableTextContent'

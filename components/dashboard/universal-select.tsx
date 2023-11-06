@@ -12,8 +12,8 @@ import { Icons } from '@/components/icons'
 
 import '@/styles/globals.css'
 
-import { Fragment } from 'react'
 import * as React from 'react'
+import { Fragment } from 'react'
 import { useRouter } from 'next/navigation'
 
 interface UniversalButtonProps {

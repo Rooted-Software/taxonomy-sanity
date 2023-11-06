@@ -5,7 +5,6 @@ import {
   dashboardTool,
   projectInfoWidget,
   projectUsersWidget,
-  sanityTutorialsWidget,
 } from '@sanity/dashboard'
 import { visionTool } from '@sanity/vision'
 import { apiVersion, dataset, previewSecretId, projectId } from 'lib/sanity.api'

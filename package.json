@@ -134,7 +134,6 @@
     "eslint-config-next": "^13.4.3",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-tailwindcss": "^3.11.0",
-    "eslint-plugin-unused-imports": "^3.0.0",
     "husky": "^8.0.3",
     "mdast-util-toc": "^6.1.1",
     "postcss": "^8.4.23",

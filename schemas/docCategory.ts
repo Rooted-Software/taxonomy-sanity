@@ -1,12 +1,6 @@
 import { ComponentIcon } from '@sanity/icons'
-import {
-  orderRankField,
-  orderRankOrdering,
-} from '@sanity/orderable-document-list'
-import { format, parseISO } from 'date-fns'
+import { orderRankField } from '@sanity/orderable-document-list'
 import { defineField, defineType } from 'sanity'
-
-import authorType from './author'
 
 /**
  * This file is the schema definition for a article.
