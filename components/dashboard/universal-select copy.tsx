@@ -1,51 +1,50 @@
-"use client"
-import { Fragment } from 'react'
-import { Icons } from '@/components/icons'
-import { toast } from '@/components/ui/use-toast'
-import { cn } from '@/lib/utils'
-import { useRouter } from 'next/navigation'
-import { any } from 'prop-types'
-import * as React from 'react'
-import { set } from 'date-fns'
+'use client'
 
+import * as React from 'react'
+import { Fragment } from 'react'
+import { useRouter } from 'next/navigation'
+
+import { cn } from '@/lib/utils'
+import { toast } from '@/components/ui/use-toast'
+import { Icons } from '@/components/icons'
 
 interface UniversalButtonProps {
-    title: String,
-    route: RequestInfo,
-    method: String,
-    fields: string[],
-    redirect: string,
-    selected: any,
-    subType?: string,
-  }
+  title: String
+  route: RequestInfo
+  method: String
+  fields: string[]
+  redirect: string
+  selected: any
+  subType?: string
+}
 
 export function UniversalSelect({
-  title, 
-  route, 
+  title,
+  route,
   method,
   fields,
   selected,
   subType,
-  redirect, 
+  redirect,
   ...props
 }: UniversalButtonProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
-  const [returnedData , setReturnedData] = React.useState(Array<{any}>)
+  const [returnedData, setReturnedData] = React.useState(Array<{ any }>)
   const [selectValue, setSelectValue] = React.useState(selected)
   console.log(selected)
 
-
   async function getInitialData() {
     console.log('getInitialData')
-    if (isLoading) {return}
+    if (isLoading) {
+      return
+    }
     setIsLoading(true)
     setReturnedData([])
     const response = await fetch(route, {
       method: 'GET',
     })
 
-    
     console.log(response)
     if (!response?.ok) {
       if (response.status === 429) {
@@ -71,36 +70,36 @@ export function UniversalSelect({
     if (data?.length > 0) {
       setReturnedData(data)
       if (selected === undefined || selected === null || selected === '') {
-      setSelectValue( (data[0][fields[0]])?.toString()  ) } 
+        setSelectValue(data[0][fields[0]]?.toString())
+      }
     }
     console.log(data[0][fields[0]])
     setIsLoading(false)
     // This forces a cache invalidation.
-  
   }
 
   async function saveSelectedData() {
     console.log('getInitialData')
-    if (isLoading) {return}
+    if (isLoading) {
+      return
+    }
     setIsLoading(true)
 
     const bodyJson = JSON.stringify({
-        route: route,
-        selectValue: selectValue,
-        subType: subType,
-      })
-      console.log(bodyJson)
+      route: route,
+      selectValue: selectValue,
+      subType: subType,
+    })
+    console.log(bodyJson)
 
     const response = await fetch(route, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: bodyJson, 
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: bodyJson,
     })
 
-   
-   
     if (!response?.ok) {
       if (response.status === 429) {
         console.log(response)
@@ -119,46 +118,69 @@ export function UniversalSelect({
         variant: 'destructive',
       })
     }
-     router.push(redirect)
+    router.push(redirect)
   }
 
-  if (!isLoading && returnedData?.length < 1) { 
-        const user =  getInitialData()
+  if (!isLoading && returnedData?.length < 1) {
+    const user = getInitialData()
   }
   return (
-    <div className='w-100'>
-      
-    
-        <div className='w-100'>
-            <label htmlFor="journals" className="sr-only">Select an option</label>
-<select id="journals" onChange={(e)=> {setSelectValue(e.target.value); console.log(e.target.value)}} value={selectValue}  className="text-md m-5   w-full rounded-full border border-accent-1 bg-accent-1 py-2 px-5 text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
-{returnedData?.map((item :any, index) => (
-            <option key={'option' + index} value={item[fields[0]]} className="mt-2">
-              {fields?.map((field :any, index) =>  {if (index >0) { return <Fragment key={item[field] + index + '-key'} > {item[field]} </Fragment>} else  {return <Fragment key={item[field] + index + '-key'} ></Fragment>} }  )}
+    <div className="w-100">
+      <div className="w-100">
+        <label htmlFor="journals" className="sr-only">
+          Select an option
+        </label>
+        <select
+          id="journals"
+          onChange={(e) => {
+            setSelectValue(e.target.value)
+            console.log(e.target.value)
+          }}
+          value={selectValue}
+          className="text-md m-5   w-full rounded-full border border-accent-1 bg-accent-1 py-2 px-5 text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+        >
+          {returnedData?.map((item: any, index) => (
+            <option
+              key={'option' + index}
+              value={item[fields[0]]}
+              className="mt-2"
+            >
+              {fields?.map((field: any, index) => {
+                if (index > 0) {
+                  return (
+                    <Fragment key={item[field] + index + '-key'}>
+                      {' '}
+                      {item[field]}{' '}
+                    </Fragment>
+                  )
+                } else {
+                  return (
+                    <Fragment key={item[field] + index + '-key'}></Fragment>
+                  )
+                }
+              })}
             </option>
           ))}
-</select>
-            
-<button
-        onClick={saveSelectedData}
-        className={cn(
-          'font-large relative inline-flex h-9 items-center rounded-full border border-transparent bg-whiteSmoke  py-1  px-5 text-lg text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
-          {
-            'cursor-not-allowed opacity-60': isLoading,
-          }
-        )}
-        disabled={isLoading}
-        {...props}
-      >
-        {isLoading ? (
-          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-        ) : (
-         <>{ title }</> 
-        )}
-       
-      </button>
-        </div>
+        </select>
 
+        <button
+          onClick={saveSelectedData}
+          className={cn(
+            'font-large relative inline-flex h-9 items-center rounded-full border border-transparent bg-whiteSmoke  py-1  px-5 text-lg text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+            {
+              'cursor-not-allowed opacity-60': isLoading,
+            }
+          )}
+          disabled={isLoading}
+          {...props}
+        >
+          {isLoading ? (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <>{title}</>
+          )}
+        </button>
+      </div>
     </div>
   )
 }

@@ -1,18 +1,14 @@
 'use client'
 
-import { Disclosure } from '@headlessui/react'
-import Link from 'next/link'
-import type { FC } from 'react'
-import { HiChevronDown } from 'react-icons/hi2'
-import { HiArrowLeft } from 'react-icons/hi2'
-import '@/styles/mdx.css'
-import { PortableText} from '@portabletext/react'
-import { notFound } from 'next/navigation'
-import urlBuilder from '@sanity/image-url'
-import {getImageDimensions} from '@sanity/asset-utils'
-import { type SanityClient, createClient, groq } from 'next-sanity'
-
 import { BasicImage } from '@/components/BasicImage'
+
+import '@/styles/mdx.css'
+
+import type { FC } from 'react'
+import Link from 'next/link'
+import { Disclosure } from '@headlessui/react'
+import { PortableText } from '@portabletext/react'
+import { HiArrowLeft, HiChevronDown } from 'react-icons/hi2'
 
 const components = {
   types: {
@@ -67,9 +63,14 @@ const Accordion: FC<AccordionProps> = ({ title, items }) => (
                       </span>
                     </Disclosure.Button>
                   </dt>
-                  <Disclosure.Panel as="dd" className="prose mt-2 pr-12 text-base text-gray-500">
-                  
-                    <PortableText value={item.content} components={components} />
+                  <Disclosure.Panel
+                    as="dd"
+                    className="prose mt-2 pr-12 text-base text-gray-500"
+                  >
+                    <PortableText
+                      value={item.content}
+                      components={components}
+                    />
                   </Disclosure.Panel>
                 </>
               )}

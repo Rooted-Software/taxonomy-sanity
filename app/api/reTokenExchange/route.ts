@@ -1,14 +1,7 @@
+import { getServerSession } from 'next-auth/next'
 
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
-
-import { stripe } from '@/lib/stripe'
-import { headers } from 'next/headers'
-import Stripe from 'stripe'
-
-
-import { getServerSession } from 'next-auth/next'
-import * as z from 'zod'
 
 export async function POST(req: Request) {
   const body = await req.json()
@@ -21,11 +14,12 @@ export async function POST(req: Request) {
   console.log('api FE Token Exchange ')
   console.log(user)
 
-
   const authStuff = `Basic ${Buffer.from(
     process.env.AUTH_CLIENT_ID + ':' + process.env.AUTH_CLIENT_SECRET
   ).toString('base64')}`
-  const bodyStuff = `grant_type=authorization_code&redirect_uri=${encodeURI(process.env.AUTH_REDIRECT_URI || '')}&code=${body?.code}`
+  const bodyStuff = `grant_type=authorization_code&redirect_uri=${encodeURI(
+    process.env.AUTH_REDIRECT_URI || ''
+  )}&code=${body?.code}`
   console.log(authStuff)
   console.log(bodyStuff)
   const res2 = await fetch('https://oauth2.sky.blackbaud.com/token', {
@@ -100,8 +94,5 @@ export async function POST(req: Request) {
     return new Response(null, { status: 403 })
   }
 
-
-
   return new Response(null, { status: 200 })
 }
-

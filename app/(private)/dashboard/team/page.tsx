@@ -1,19 +1,20 @@
+import { redirect } from 'next/navigation'
+
+import { authOptions } from '@/lib/auth'
+import { db } from '@/lib/db'
+import { getCurrentUser } from '@/lib/session'
+import { Badge } from '@/components/ui/badge'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { TeamUserAdd } from '@/components/dashboard/team-user-add'
 import { TeamUserRemove } from '@/components/dashboard/team-user-remove'
 import { DashboardHeader } from '@/components/header'
 import { Icons } from '@/components/icons'
 import { DashboardShell } from '@/components/shell'
-import { Badge } from '@/components/ui/badge'
-import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-  TooltipProvider,
-} from '@/components/ui/tooltip'
-import { authOptions } from '@/lib/auth'
-import { db } from '@/lib/db'
-import { getCurrentUser } from '@/lib/session'
-import { redirect } from 'next/navigation'
 
 // import us from 'next/server'
 
@@ -89,16 +90,16 @@ export default async function TeamPage() {
                 </TooltipProvider>
               ) : teamuser.role == 'admin' ? (
                 <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Icons.lock className="mr-2 h-4 w-4" />
-                  </TooltipTrigger>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Icons.lock className="mr-2 h-4 w-4" />
+                    </TooltipTrigger>
 
-                  <TooltipContent sideOffset={4}>
-                    You cannot remove admins
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+                    <TooltipContent sideOffset={4}>
+                      You cannot remove admins
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               ) : (
                 <TeamUserRemove user={teamuser} />
               )}

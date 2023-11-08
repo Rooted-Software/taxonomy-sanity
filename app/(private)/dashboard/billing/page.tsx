@@ -1,20 +1,14 @@
-import { BillingForm } from '@/components/billing-form'
-import { DashboardHeader } from '@/components/header'
-import { Icons } from '@/components/icons'
-import { DashboardShell } from '@/components/shell'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { redirect } from 'next/navigation'
+
 import { authOptions } from '@/lib/auth'
 import { getCurrentUser } from '@/lib/session'
 import { stripe } from '@/lib/stripe'
 import { getTeamSubscriptionPlan } from '@/lib/subscription'
-import { redirect } from 'next/navigation'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { BillingForm } from '@/components/billing-form'
+import { DashboardHeader } from '@/components/header'
+import { Icons } from '@/components/icons'
+import { DashboardShell } from '@/components/shell'
 
 export const metadata = {
   title: 'Billing',
@@ -50,8 +44,9 @@ export default async function BillingPage() {
           <Icons.warning />
           <AlertTitle>This is a beta app.</AlertTitle>
           <AlertDescription>
-            The Virtuous - Financial Edge sync tool is still in beta.  We will give notice before we start charging for the service.  You can cancel at any time.
-            
+            The Virtuous - Financial Edge sync tool is still in beta. We will
+            give notice before we start charging for the service. You can cancel
+            at any time.
           </AlertDescription>
         </Alert>
         <BillingForm

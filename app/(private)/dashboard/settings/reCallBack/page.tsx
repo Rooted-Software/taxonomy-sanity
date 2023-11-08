@@ -1,8 +1,9 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+
 import { toast } from '@/components/ui/use-toast'
-import {  useRouter } from 'next/navigation'
-import { useState, useEffect } from 'react'
 
 export default function ReCallBackPage(params, searchParams) {
   console.log('params')
@@ -50,7 +51,7 @@ export default function ReCallBackPage(params, searchParams) {
     }
   }
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       setIsLoading(true)
       if (params?.searchParams?.code) {
         const response = await fetch('/api/reTokenExchange', {
@@ -87,7 +88,6 @@ export default function ReCallBackPage(params, searchParams) {
           })
         }
 
-  
         window.opener.location = '/step3'
         window.close()
       }

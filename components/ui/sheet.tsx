@@ -1,10 +1,11 @@
 'use client'
 
-import { cn } from '@/lib/utils'
-import * as SheetPrimitive from '@radix-ui/react-dialog'
-import { VariantProps, cva } from 'class-variance-authority'
-import { X } from 'lucide-react'
 import * as React from 'react'
+import * as SheetPrimitive from '@radix-ui/react-dialog'
+import { cva, VariantProps } from 'class-variance-authority'
+import { X } from 'lucide-react'
+
+import { cn } from '@/lib/utils'
 
 const Sheet = SheetPrimitive.Root
 
@@ -220,10 +221,10 @@ SheetDescription.displayName = SheetPrimitive.Description.displayName
 
 export {
   Sheet,
-  SheetTrigger,
   SheetContent,
-  SheetHeader,
-  SheetFooter,
-  SheetTitle,
   SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
 }

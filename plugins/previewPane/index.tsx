@@ -3,13 +3,14 @@
 // and have access to content in the form in real-time.
 // It's part of the Studio's “Structure Builder API” and is documented here:
 // https://www.sanity.io/docs/structure-builder-reference
-import AuthorAvatarPreviewPane from './AuthorAvatarPreviewPane'
-import FeaturesPreviewPane from './FeaturesPreviewPane'
-import PostPreviewPane from './PostPreviewPane'
 import { DefaultDocumentNodeResolver } from 'sanity/desk'
 import authorType from 'schemas/author'
 import featuresType from 'schemas/features'
 import postType from 'schemas/post'
+
+import AuthorAvatarPreviewPane from './AuthorAvatarPreviewPane'
+import FeaturesPreviewPane from './FeaturesPreviewPane'
+import PostPreviewPane from './PostPreviewPane'
 
 export const previewDocumentNode = ({
   apiVersion,

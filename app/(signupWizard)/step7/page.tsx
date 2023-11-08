@@ -1,7 +1,8 @@
-import { FeFrame } from '@/components/dashboard/fe-frame'
+import { redirect } from 'next/navigation'
+
 import { getFeEnvironment } from '@/lib/feEnvironment'
 import { getCurrentUser } from '@/lib/session'
-import { redirect } from 'next/navigation'
+import { FeFrame } from '@/components/dashboard/fe-frame'
 
 export const metadata = {
   title: 'Sync First Batch',

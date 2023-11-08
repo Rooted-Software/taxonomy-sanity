@@ -1,6 +1,5 @@
-import { BatchPreview } from '@/components/dashboard/batch-preview'
-import { MainNav } from '@/components/main-nav'
-import { UserAccountNav } from '@/components/user-account-nav'
+import { redirect } from 'next/navigation'
+
 import { dashboardConfig } from '@/config/dashboard'
 import { db } from '@/lib/db'
 import { getFeAccountsFromBlackbaud } from '@/lib/feAccounts'
@@ -12,7 +11,9 @@ import {
   getVirtuousBatches,
 } from '@/lib/virGifts'
 import { getProjectAccountMappings } from '@/lib/virProjects'
-import { redirect } from 'next/navigation'
+import { BatchPreview } from '@/components/dashboard/batch-preview'
+import { MainNav } from '@/components/main-nav'
+import { UserAccountNav } from '@/components/user-account-nav'
 
 // TODO: show sync date and view in FE in gift panel
 // TODO: add note that any changes since sync date are not carried over

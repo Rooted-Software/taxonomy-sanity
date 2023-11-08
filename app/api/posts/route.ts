@@ -1,9 +1,10 @@
+import { getServerSession } from 'next-auth/next'
+import * as z from 'zod'
+
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { RequiresProPlanError } from '@/lib/exceptions'
 import { getTeamSubscriptionPlan } from '@/lib/subscription'
-import { getServerSession } from 'next-auth/next'
-import * as z from 'zod'
 
 const postCreateSchema = z.object({
   title: z.string(),

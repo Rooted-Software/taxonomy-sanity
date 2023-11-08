@@ -1,8 +1,8 @@
+import { cache, use, useMemo } from 'react'
 import { Card } from '@sanity/ui'
 import { height, OpenGraphImage, width } from 'components/OpenGraphImage'
 import { createIntlSegmenterPolyfill } from 'intl-segmenter-polyfill'
 import type { Settings } from 'lib/sanity.queries'
-import React, { cache, use, useMemo } from 'react'
 import _satori, { type SatoriOptions } from 'satori'
 import styled from 'styled-components'
 

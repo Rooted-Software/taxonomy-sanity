@@ -1,17 +1,17 @@
-"use client"
+'use client'
 
-import { Icons } from '@/components/icons'
-import { toast } from '@/components/ui/use-toast'
-import { cn } from '@/lib/utils'
-import { virtuousAuthSchema } from '@/lib/validations/auth'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { getCsrfToken, signIn } from 'next-auth/react'
-import { useSearchParams } from 'next/navigation'
 import * as React from 'react'
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { getCsrfToken, signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
+import { cn } from '@/lib/utils'
+import { virtuousAuthSchema } from '@/lib/validations/auth'
+import { toast } from '@/components/ui/use-toast'
+import { Icons } from '@/components/icons'
 
 interface UserVirtuousAuthFormProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -50,13 +50,13 @@ export function UserVirtuousAuthForm({
     })
     console.log(signInResult)
     setIsLoading(false)
- 
+
     if (!signInResult?.ok) {
       let title = 'Something went wrong.'
-    if (signInResult?.error === 'invalid_grant') {
+      if (signInResult?.error === 'invalid_grant') {
         title = 'Invalid email or password.'
       }
-    if (signInResult?.error === 'user_lockout') {
+      if (signInResult?.error === 'user_lockout') {
         title = 'User is locked out. Check with your admin or wait.'
       }
       if (signInResult?.error === 'awaiting_verification') {
@@ -69,7 +69,7 @@ export function UserVirtuousAuthForm({
         variant: 'error',
       })
     }
-    console.log(signInResult); 
+    console.log(signInResult)
     window.location.href = signInResult.url || '/dashboard'
     return toast({
       title: 'Success!',
@@ -82,7 +82,7 @@ export function UserVirtuousAuthForm({
     <div className={cn('grid gap-6', className)} {...props}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="center-items xs:grid-cols-2  grid w-full gap-5 md:grid-cols-4">
-        <div className="col-span-2 md:col-span-1"> &nbsp;</div>
+          <div className="col-span-2 md:col-span-1"> &nbsp;</div>
           <div className="col-span-2 grid md:col-span-1 ">
             <label className="my-2 text-xs" htmlFor="email">
               Email
@@ -123,25 +123,29 @@ export function UserVirtuousAuthForm({
                 {errors.password.message}
               </p>
             )}
-          </div>{twoFactorForm && (<>
-            <div className="w-100 grid md:mt-8 md:pt-4"></div>
-           <div></div>
-          <div className="col-span-2 grid"> <label className="my-2 text-xs" htmlFor="twoFactor">
-              Two Factor
-            </label>
-         
-            <input
-              id="twoFactor"  
-              placeholder="123456"
-              className="my-0 mb-2 block h-9 w-full rounded-full border border-slate-300 py-2 px-3 text-sm text-slate-500 placeholder:text-slate-500 hover:border-slate-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-800 focus:ring-offset-1"
-              type="text"
-              autoCapitalize="none"
-              autoCorrect="off" 
-              disabled={isLoading}
-              {...register('twoFactor')}
-            /></div>
-             </>
-        )}
+          </div>
+          {twoFactorForm && (
+            <>
+              <div className="w-100 grid md:mt-8 md:pt-4"></div>
+              <div></div>
+              <div className="col-span-2 grid">
+                {' '}
+                <label className="my-2 text-xs" htmlFor="twoFactor">
+                  Two Factor
+                </label>
+                <input
+                  id="twoFactor"
+                  placeholder="123456"
+                  className="my-0 mb-2 block h-9 w-full rounded-full border border-slate-300 py-2 px-3 text-sm text-slate-500 placeholder:text-slate-500 hover:border-slate-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-800 focus:ring-offset-1"
+                  type="text"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  disabled={isLoading}
+                  {...register('twoFactor')}
+                />
+              </div>
+            </>
+          )}
 
           <div className="w-100 grid md:mt-8 md:pt-4"></div>
           <div className="grid "></div>
@@ -150,9 +154,11 @@ export function UserVirtuousAuthForm({
             className="col-span-2 mx-auto inline-flex items-center justify-center justify-self-center rounded-full bg-accent-1 px-5 py-2.5 text-center text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-4 focus:ring-[#24292F]/50 disabled:opacity-50 dark:hover:bg-[#050708]/30 dark:focus:ring-slate-500 md:mt-1 "
             disabled={isLoading}
           >
-            {isLoading ?
+            {isLoading ? (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            : <Icons.key className="mr-2 h-4 w-4 " />}
+            ) : (
+              <Icons.key className="mr-2 h-4 w-4 " />
+            )}
             Sign In with Virtuous
           </button>
         </div>

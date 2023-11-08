@@ -1,10 +1,8 @@
-
-import { authOptions } from '@/lib/auth'
-import { absoluteUrl } from '@/lib/utils'
-import { db } from '@/lib/db'
 import { getServerSession } from 'next-auth/next'
 import { z } from 'zod'
 
+import { authOptions } from '@/lib/auth'
+import { db } from '@/lib/db'
 
 export async function GET(req: Request) {
   try {
@@ -64,7 +62,7 @@ export async function GET(req: Request) {
         },
       })
 
-      return new Response(JSON.stringify(data));
+      return new Response(JSON.stringify(data))
     } catch (error) {
       return error
     }

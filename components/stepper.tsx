@@ -1,8 +1,8 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
 import * as React from 'react'
 import { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 
 interface StepperProps extends React.HTMLAttributes<HTMLDivElement> {}
 

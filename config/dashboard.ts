@@ -26,7 +26,7 @@ export const dashboardConfig: DashboardConfig = {
     {
       title: 'Team',
       href: '/dashboard/team',
-      icon: 'users'
+      icon: 'users',
     },
     {
       title: 'Settings',
@@ -36,7 +36,7 @@ export const dashboardConfig: DashboardConfig = {
     {
       title: 'Support',
       href: '/support',
-      icon: 'lifeRing'
+      icon: 'lifeRing',
     },
   ],
 }

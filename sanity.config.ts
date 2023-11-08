@@ -1,12 +1,10 @@
 /**
  * This config is used to set up Sanity Studio that's mounted on the `/pages/studio/[[...index]].tsx` route
  */
-import { enhancedNavbar } from '@/components/studio/enhancedNavbar'
 import {
   dashboardTool,
-  sanityTutorialsWidget,
-  projectUsersWidget,
   projectInfoWidget,
+  projectUsersWidget,
 } from '@sanity/dashboard'
 import { visionTool } from '@sanity/vision'
 import { apiVersion, dataset, previewSecretId, projectId } from 'lib/sanity.api'
@@ -26,6 +24,8 @@ import postType from 'schemas/post'
 import settingsType from 'schemas/settings'
 import supportType from 'schemas/support'
 import supportCategoryType from 'schemas/supportCategory'
+
+import { enhancedNavbar } from '@/components/studio/enhancedNavbar'
 
 const title = process.env.NEXT_PUBLIC_SANITY_PROJECT_TITLE || 'Rooted Template'
 

@@ -1,6 +1,6 @@
+import { getCurrentUser } from '@/lib/session'
 import { ContextualHelp } from '@/components/contextual-help'
 import { UniversalSelect } from '@/components/dashboard/universal-select'
-import { getCurrentUser } from '@/lib/session'
 
 export const metadata = {
   title: 'Create an account',

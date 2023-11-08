@@ -1,6 +1,7 @@
-import { AutosaveSwitch } from '@/components/autosave-switch'
-import { getCurrentUser } from '@/lib/session'
 import Link from 'next/link'
+
+import { getCurrentUser } from '@/lib/session'
+import { AutosaveSwitch } from '@/components/autosave-switch'
 
 export const metadata = {
   title: 'Configuration Complete',

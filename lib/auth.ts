@@ -1,12 +1,12 @@
-import { siteConfig } from "@/config/site"
-import { db } from "@/lib/db"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { Prisma } from "@prisma/client"
-import Mailgun from "mailgun.js"
-import { NextAuthOptions } from "next-auth"
-import { JWT } from "next-auth/jwt"
-import CredentialsProvider from "next-auth/providers/credentials"
-import EmailProvider from "next-auth/providers/email"
+import { PrismaAdapter } from '@next-auth/prisma-adapter'
+import { Prisma } from '@prisma/client'
+import Mailgun from 'mailgun.js'
+import { NextAuthOptions } from 'next-auth'
+import CredentialsProvider from 'next-auth/providers/credentials'
+import EmailProvider from 'next-auth/providers/email'
+
+import { siteConfig } from '@/config/site'
+import { db } from '@/lib/db'
 
 type Credentials = {
   email: string
@@ -14,11 +14,11 @@ type Credentials = {
   twoFactor: string
 }
 
-const FormData = require("form-data")
+const FormData = require('form-data')
 
 const setDefaultNewTeam = async (user: any) => {
-  const stripe = require("stripe")(process.env.STRIPE_API_KEY || "")
-  console.log("Creating new default team")
+  const stripe = require('stripe')(process.env.STRIPE_API_KEY || '')
+  console.log('Creating new default team')
   // create a team
   const newTeam = await db.team.create({
     data: {
@@ -38,7 +38,7 @@ const setDefaultNewTeam = async (user: any) => {
       id: user.id,
     },
     data: {
-      role: "admin",
+      role: 'admin',
     },
   })
   // return newTeam // this is here because strip secret key is failing on localhost
@@ -63,10 +63,10 @@ export const authOptions: NextAuthOptions = {
   // @see https://github.com/prisma/prisma/issues/16117
   adapter: PrismaAdapter(db),
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
   },
   pages: {
-    signIn: "/login?from=/dashboard",
+    signIn: '/login?from=/dashboard',
   },
   providers: [
     EmailProvider({
@@ -83,7 +83,7 @@ export const authOptions: NextAuthOptions = {
         })
 
         if (user?.deleted) {
-          console.log("this is a deleted user...")
+          console.log('this is a deleted user...')
           return
         }
 
@@ -91,73 +91,73 @@ export const authOptions: NextAuthOptions = {
           ? process.env.MAILGUN_SIGN_IN_TEMPLATE
           : process.env.MAILGUN_ACTIVATION_TEMPLATE
         if (!templateId) {
-          throw new Error("Missing template id")
+          throw new Error('Missing template id')
         }
 
         const mailgun = new Mailgun(FormData)
         const mg = mailgun.client({
-          username: "api",
-          key: process.env.MAILGUN_API_KEY || "key-yourkeyhere",
+          username: 'api',
+          key: process.env.MAILGUN_API_KEY || 'key-yourkeyhere',
         })
 
         const mailgunData = {
           from: process.env.INFO_EMAIL_ADDRESS,
           to: identifier,
           template: templateId,
-          "h:X-Mailgun-Variables": JSON.stringify({
+          'h:X-Mailgun-Variables': JSON.stringify({
             action_url: url,
             product_name: siteConfig.name,
           }),
         }
-        const result = await mg.messages.create("donorsync.org", mailgunData)
+        const result = await mg.messages.create('donorsync.org', mailgunData)
       },
     }),
     CredentialsProvider({
-      id: "virtuous",
+      id: 'virtuous',
       // The name to display on the sign in form (e.g. 'Sign in with...')
-      name: "Virtuous CMS",
+      name: 'Virtuous CMS',
       // The credentials is used to generate a suitable form on the sign in page.
       // You can specify whatever fields you are expecting to be submitted.
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
         email: {
-          label: "email",
-          type: "email",
-          placeholder: "jsmith@example.com",
+          label: 'email',
+          type: 'email',
+          placeholder: 'jsmith@example.com',
         },
-        password: { label: "Password", type: "password" },
-        twoFactor: { label: "2FA", type: "text" },
+        password: { label: 'Password', type: 'password' },
+        twoFactor: { label: '2FA', type: 'text' },
       },
       async authorize(credentials: Credentials, req) {
         const form = new FormData()
-        form.append("email", credentials.email)
-        form.append("password", credentials.password)
-        form.append("twoFactor", credentials.twoFactor || "")
+        form.append('email', credentials.email)
+        form.append('password', credentials.password)
+        form.append('twoFactor', credentials.twoFactor || '')
 
         let credBody =
-          credentials.twoFactor !== "" &&
+          credentials.twoFactor !== '' &&
           credentials.twoFactor !== undefined &&
-          credentials.twoFactor !== "undefined"
-            ? "grant_type=password&username=" +
+          credentials.twoFactor !== 'undefined'
+            ? 'grant_type=password&username=' +
               credentials.email +
-              "&password=" +
+              '&password=' +
               credentials.password +
-              "&otp=" +
+              '&otp=' +
               credentials.twoFactor +
-              ""
-            : "grant_type=password&username=" +
+              ''
+            : 'grant_type=password&username=' +
               encodeURI(credentials.email) +
-              "&password=" +
+              '&password=' +
               credentials.password
 
-        const res = await fetch("https://api.virtuoussoftware.com/Token", {
-          method: "POST",
+        const res = await fetch('https://api.virtuoussoftware.com/Token', {
+          method: 'POST',
           body: credBody,
-          mode: "no-cors",
-          cache: "no-cache",
+          mode: 'no-cors',
+          cache: 'no-cache',
           headers: {
-            "Content-Type": "form-data",
+            'Content-Type': 'form-data',
           },
         })
 
@@ -166,7 +166,6 @@ export const authOptions: NextAuthOptions = {
         if (error !== null && error !== undefined) {
           console.log(error)
           throw new Error(error)
-          return error
         }
         // If no error and we have user data, return it
         if (res.ok && user) {
@@ -181,7 +180,7 @@ export const authOptions: NextAuthOptions = {
           })
 
           if (!dbUser) {
-            console.log("no user found")
+            console.log('no user found')
             // create new user and account (with tokens)
 
             const newUser = await db.user.create({
@@ -209,18 +208,17 @@ export const authOptions: NextAuthOptions = {
               },
             })
             if (!dbUser) {
-              throw new Error("No user found")
-              return null
+              throw new Error('No user found')
             }
             let accountData: Prisma.AccountUncheckedCreateInput = {
               userId: newUser.id,
-              type: "oauth",
-              provider: "virtuous",
+              type: 'oauth',
+              provider: 'virtuous',
               providerAccountId: user.userName,
               refresh_token: user.refresh_token,
               access_token: user.access_token,
               expires_at: user.expires_in,
-              token_type: "bearer",
+              token_type: 'bearer',
             }
 
             const newAccount = await db.account.create({
@@ -234,18 +232,18 @@ export const authOptions: NextAuthOptions = {
             const updatedAccount = await db.account.updateMany({
               where: {
                 userId: dbUser.id,
-                type: "oauth",
-                provider: "virtuous",
+                type: 'oauth',
+                provider: 'virtuous',
               },
               data: {
                 access_token: user.access_token,
                 refresh_token: user.refresh_token,
                 expires_at: user.expires_in,
-                token_type: "bearer",
+                token_type: 'bearer',
               },
             })
           }
-          console.log("finishing login ")
+          console.log('finishing login ')
           if (!dbUser.teamId) {
             const newTeam = await setDefaultNewTeam(dbUser)
             dbUser.teamId = newTeam.id
@@ -260,7 +258,7 @@ export const authOptions: NextAuthOptions = {
           }
 
           if (!dbUser || !dbUser?.teamId) {
-            console.log("failed to find user or team")
+            console.log('failed to find user or team')
             // failed to fund user or team, which should not happen at this stage
             return null
           }
@@ -312,7 +310,7 @@ export const authOptions: NextAuthOptions = {
       }
     },
     async session({ token, session }) {
-      console.log("SESSION ", token, session)
+      console.log('SESSION ', token, session)
       if (!token.teamId) {
         return session
       }
@@ -327,7 +325,7 @@ export const authOptions: NextAuthOptions = {
       return session
     },
     async jwt({ token, user, account, profile }) {
-      console.log("JWT  ")
+      console.log('JWT  ')
       let newTeam
       const dbUser = await db.user.findUniqueOrThrow({
         where: {
@@ -340,8 +338,8 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         // This is the first time the JWT was created
         if (!dbUser || !account?.providerAccountId) {
-          console.log("no db user ", user)
-          throw "missing db user"
+          console.log('no db user ', user)
+          throw 'missing db user'
         }
         if (!dbUser.team) {
           newTeam = await setDefaultNewTeam(dbUser)

@@ -1,10 +1,9 @@
 'use client'
 
-import { Disclosure } from '@headlessui/react'
-import Link from 'next/link'
 import type { FC } from 'react'
-import { HiChevronDown } from 'react-icons/hi2'
-import { HiArrowLeft } from 'react-icons/hi2'
+import Link from 'next/link'
+import { Disclosure } from '@headlessui/react'
+import { HiArrowLeft, HiChevronDown } from 'react-icons/hi2'
 
 interface AccordionProps {
   title: string

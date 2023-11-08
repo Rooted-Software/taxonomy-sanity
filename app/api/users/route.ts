@@ -1,10 +1,11 @@
+import { Prisma } from '@prisma/client'
+import { getServerSession } from 'next-auth/next'
+import { z } from 'zod'
+
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { FriendlyError } from '@/lib/errors'
 import { teamUserSchema } from '@/lib/validations/teamUser'
-import { Prisma } from '@prisma/client'
-import { getServerSession } from 'next-auth/next'
-import { z } from 'zod'
 
 export async function POST(req: Request) {
   try {
@@ -13,7 +14,6 @@ export async function POST(req: Request) {
     if (!session?.user) {
       return new Response(null, { status: 403 })
     }
-
 
     // // Get the request body and validate it.
     const body = await req.json()
@@ -37,7 +37,7 @@ export async function POST(req: Request) {
       update: {
         deleted: false,
         teamId: session.user.teamId,
-        name: payload.name
+        name: payload.name,
       },
       create: {
         name: payload.name,

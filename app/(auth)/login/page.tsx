@@ -1,8 +1,9 @@
-import AuthFormSelector from '@/components/auth-form-selector'
-import { MainNav } from '@/components/main-nav'
 import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+
+import AuthFormSelector from '@/components/auth-form-selector'
+import { MainNav } from '@/components/main-nav'
 
 export const metadata: Metadata = {
   title: 'Login',

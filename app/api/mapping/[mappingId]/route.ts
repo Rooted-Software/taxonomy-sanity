@@ -1,7 +1,8 @@
-import { authOptions } from '@/lib/auth'
-import { db } from '@/lib/db'
 import { getServerSession } from 'next-auth'
 import * as z from 'zod'
+
+import { authOptions } from '@/lib/auth'
+import { db } from '@/lib/db'
 
 const routeContextSchema = z.object({
   params: z.object({
@@ -39,7 +40,6 @@ export async function DELETE(
   }
 }
 
-
 async function verifyCurrentUserHasAccessToMapping(mappingId: string) {
   const session = await getServerSession(authOptions)
   console.log(session?.user.team.id)
@@ -56,5 +56,5 @@ async function verifyCurrentUserHasAccessToMapping(mappingId: string) {
 }
 
 const mappingSchema = z.object({
-  mappingId: z.string()
+  mappingId: z.string(),
 })

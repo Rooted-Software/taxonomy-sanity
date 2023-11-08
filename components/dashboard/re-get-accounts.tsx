@@ -1,10 +1,11 @@
 'use client'
 
-import { Icons } from '@/components/icons'
-import { toast } from '@/components/ui/use-toast'
-import { cn } from '@/lib/utils'
-import { useRouter } from 'next/navigation'
 import * as React from 'react'
+import { useRouter } from 'next/navigation'
+
+import { cn } from '@/lib/utils'
+import { toast } from '@/components/ui/use-toast'
+import { Icons } from '@/components/icons'
 
 interface ReGetAccountsButtonProps
   extends React.HTMLAttributes<HTMLButtonElement> {}
@@ -76,7 +77,7 @@ export function ReGetAccountsButton({
       </button>
       {accounts && accounts.length > 0 ? (
         <div>
-          {accounts?.map((account :any, index) => (
+          {accounts?.map((account: any, index) => (
             <div key={index} className="mt-2">
               {account.description} : {account.value}
             </div>

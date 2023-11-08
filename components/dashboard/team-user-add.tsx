@@ -1,12 +1,18 @@
 'use client'
 
-import { Icons } from '@/components/icons'
+import * as React from 'react'
+import { useRouter } from 'next/navigation'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+
+import { cn } from '@/lib/utils'
+import { teamUserSchema } from '@/lib/validations/teamUser'
 import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
@@ -19,15 +25,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from '@/components/ui/use-toast'
-import { cn } from '@/lib/utils'
-import { teamUserSchema } from '@/lib/validations/teamUser'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { User } from '@prisma/client'
-import { useRouter } from 'next/navigation'
-import * as React from 'react'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import * as z from 'zod'
+import { Icons } from '@/components/icons'
 
 interface TeamUserAddProps extends React.HTMLAttributes<HTMLFormElement> {}
 

@@ -1,14 +1,15 @@
-"use client"
+'use client'
 
-import { EmptyPlaceholder } from "@/components/empty-placeholder"
-import { Icons } from "@/components/icons"
-import { toast } from "@/components/ui/use-toast"
-import { cn } from "@/lib/utils"
-import { Dialog, Transition } from "@headlessui/react"
-import Link from "next/link"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { Fragment, useEffect, useState } from "react"
-import * as React from "react"
+import * as React from 'react'
+import { Fragment, useEffect, useState } from 'react'
+import Link from 'next/link'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { Dialog, Transition } from '@headlessui/react'
+
+import { cn } from '@/lib/utils'
+import { toast } from '@/components/ui/use-toast'
+import { EmptyPlaceholder } from '@/components/empty-placeholder'
+import { Icons } from '@/components/icons'
 
 interface MappingCreateButtonProps
   extends React.HTMLAttributes<HTMLButtonElement> {
@@ -32,10 +33,10 @@ export function MappingCreateButton({
   const pathname = usePathname()
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [virProjects, setVirProjects] = React.useState<any[]>([])
-  const [feAccountID, setFeAccountID] = React.useState("")
+  const [feAccountID, setFeAccountID] = React.useState('')
   const [feAccountObj, setFeAccountObj] = React.useState<any>({})
-  const [textFilter, setTextFilter] = React.useState("")
-  const [textFeFilter, setTextFeFilter] = React.useState("")
+  const [textFilter, setTextFilter] = React.useState('')
+  const [textFeFilter, setTextFeFilter] = React.useState('')
   const [filteredProjects, setFilteredProjects] =
     React.useState<any[]>(projects)
   const [filteredAccounts, setFilteredAccounts] =
@@ -67,10 +68,10 @@ export function MappingCreateButton({
   const [filterFeCase, setFilterFeCase] = React.useState<boolean>(false)
 
   function advanceStep() {
-    if (pathname === "/projectMapping") {
-      router.push("/dashboard")
+    if (pathname === '/projectMapping') {
+      router.push('/dashboard')
     } else {
-      router.push("/step6")
+      router.push('/step6')
     }
   }
 
@@ -106,7 +107,7 @@ export function MappingCreateButton({
       value = value.toLowerCase()
     }
     if (
-      value === "" ||
+      value === '' ||
       value.length === 0 ||
       value === null ||
       value === undefined
@@ -152,7 +153,7 @@ export function MappingCreateButton({
               return false
             }
           }
-          let wholeString = ""
+          let wholeString = ''
           if (filterProjectName) {
             wholeString = wholeString + project.name
           }
@@ -187,7 +188,7 @@ export function MappingCreateButton({
       value = value.toLowerCase()
     }
     if (
-      value === "" ||
+      value === '' ||
       value.length === 0 ||
       value === null ||
       value === undefined
@@ -196,7 +197,7 @@ export function MappingCreateButton({
     } else {
       setFilteredAccounts(
         feAccounts.filter((account) => {
-          let wholeString = ""
+          let wholeString = ''
           if (filterAccountId) {
             wholeString = wholeString + account.account_id
           }
@@ -222,11 +223,11 @@ export function MappingCreateButton({
       return
     }
     setIsLoading(true)
-    console.log("client side mapping")
-    const response = await fetch("/api/mapping", {
-      method: "POST",
+    console.log('client side mapping')
+    const response = await fetch('/api/mapping', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         virProjects,
@@ -237,31 +238,31 @@ export function MappingCreateButton({
     if (!response?.ok) {
       if (response.status === 402) {
         return toast({
-          title: "Something Went Wrong 3.",
-          description: "Your Mapping was not created.",
-          variant: "destructive",
+          title: 'Something Went Wrong 3.',
+          description: 'Your Mapping was not created.',
+          variant: 'destructive',
         })
       }
 
       return toast({
-        title: "Something went wrong4.",
-        description: "Your mapping was not created. Please try again.",
-        variant: "destructive",
+        title: 'Something went wrong4.',
+        description: 'Your mapping was not created. Please try again.',
+        variant: 'destructive',
       })
     }
 
-    console.log("invalidating cache")
+    console.log('invalidating cache')
     setVirProjects([])
     // This forces a cache invalidation.  Had to set a delay to get the new item. :)
     setTimeout(function () {
-      console.log("Executed after 1 second")
+      console.log('Executed after 1 second')
       setIsLoading(false)
       router.refresh()
     }, 400)
   }
 
   async function onDeleteMapping(mappingId) {
-    console.log("deleting mapping: " + mappingId)
+    console.log('deleting mapping: ' + mappingId)
     if (isLoading) {
       return
     }
@@ -269,11 +270,11 @@ export function MappingCreateButton({
 
     console.log(virProjects)
     console.log(feAccountID)
-    console.log("client side deleting")
-    const response = await fetch("/api/mapping/" + mappingId, {
-      method: "DELETE",
+    console.log('client side deleting')
+    const response = await fetch('/api/mapping/' + mappingId, {
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     })
 
@@ -282,25 +283,25 @@ export function MappingCreateButton({
     if (!response?.ok) {
       if (response.status === 402) {
         return toast({
-          title: "Something went wrong1.",
-          description: "Mapping was not removed.",
-          variant: "destructive",
+          title: 'Something went wrong1.',
+          description: 'Mapping was not removed.',
+          variant: 'destructive',
         })
       }
 
       return toast({
-        title: "Something went wrong2.",
-        description: "Your mapping was not removed.",
-        variant: "destructive",
+        title: 'Something went wrong2.',
+        description: 'Your mapping was not removed.',
+        variant: 'destructive',
       })
     }
     toast({
-      title: "Mapping Removed.",
-      description: "Your Mapping was removed",
-      variant: "destructive",
+      title: 'Mapping Removed.',
+      description: 'Your Mapping was removed',
+      variant: 'destructive',
     })
 
-    console.log("invalidating cache")
+    console.log('invalidating cache')
 
     // This forces a cache invalidation.
     router.refresh()
@@ -311,7 +312,7 @@ export function MappingCreateButton({
     const params = new URLSearchParams(
       searchParams ? Array.from(searchParams.entries()) : undefined
     )
-    params.set("projectDays", nextProjectDays.toString())
+    params.set('projectDays', nextProjectDays.toString())
     return `${pathname}?${params.toString()}`
   }
 
@@ -321,12 +322,12 @@ export function MappingCreateButton({
     setIsLoadingMoreProjects(false)
   }, [projectsDaysLoaded])
 
-  const newLocal = "text-accent-1 font-bold"
+  const newLocal = 'text-accent-1 font-bold'
   return (
     <div className="grid min-w-full  grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       <div className="h-full bg-dark p-8">
         <h1 className="font-3xl py-4 text-3xl font-bold text-white">
-          {" "}
+          {' '}
           Master Data Map
         </h1>
         <div className="m-auto flex flex-col justify-center space-y-6 ">
@@ -367,7 +368,7 @@ export function MappingCreateButton({
             {filteredProjects?.length ? (
               <div
                 className="justify-left col-span-6 min-w-[600px] overflow-scroll bg-whiteSmoke p-4 text-left text-dark"
-                style={{ height: "45vh" }}
+                style={{ height: '45vh' }}
               >
                 {filteredProjects &&
                   filteredProjects.map((project) => (
@@ -390,12 +391,12 @@ export function MappingCreateButton({
                           htmlFor={`checked-checkbox-${project.id}`}
                           className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          {project.name}{" "}
+                          {project.name}{' '}
                         </label>
                       </div>
                       {project.onlineDisplayName ? (
                         <div className="ml-8 pl-3 text-xs font-bold text-brand-400">
-                          {" "}
+                          {' '}
                           {project.onlineDisplayName}
                         </div>
                       ) : null}
@@ -403,12 +404,12 @@ export function MappingCreateButton({
                         id: {project.id} | Project code: {project.projectCode}
                       </div>
                       <div className="text-wrap ml-8 pl-3 text-xs text-brand-400">
-                        {project.externalAccountingCode !== "none" ? (
+                        {project.externalAccountingCode !== 'none' ? (
                           <span>
-                            {" "}
+                            {' '}
                             Accounting Code: {project.externalAccountingCode}
                           </span>
-                        ) : null}{" "}
+                        ) : null}{' '}
                         {project.description ? (
                           <span>| desc: {project.description}</span>
                         ) : null}
@@ -416,10 +417,10 @@ export function MappingCreateButton({
                       <div className="ml-8 pl-3 text-xs text-brand-400">
                         {project.isPublic ? (
                           <span className="text-success">Public</span>
-                        ) : null}{" "}
+                        ) : null}{' '}
                         {project.isActive ? (
                           <span className="text-red">Active</span>
-                        ) : null}{" "}
+                        ) : null}{' '}
                         {project.isTaxDeductible ? (
                           <span className="text-green">Tax Deductible</span>
                         ) : null}
@@ -443,7 +444,7 @@ export function MappingCreateButton({
 
         {virProjects.length === 0 ? null : (
           <>
-            {" "}
+            {' '}
             <div className="mt-4 bg-tightWhite p-4 text-dark">
               {virProjects.map((project) => (
                 <span key={`list-${project.id}`}>
@@ -471,7 +472,7 @@ export function MappingCreateButton({
             className={cn(
               `relative mt-2 inline-flex items-center rounded-full bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
               {
-                "cursor-not-allowed opacity-60": isLoadingMoreProjects,
+                'cursor-not-allowed opacity-60': isLoadingMoreProjects,
               }
             )}
             onClick={() => setIsLoadingMoreProjects(true)}
@@ -524,7 +525,7 @@ export function MappingCreateButton({
               {filteredAccounts?.length ? (
                 <div
                   className="justify-left col-span-6 w-full overflow-scroll bg-whiteSmoke p-4 text-left text-dark"
-                  style={{ height: "45vh" }}
+                  style={{ height: '45vh' }}
                 >
                   {filteredAccounts.map((feAccount) => (
                     <div className="p-1" key={feAccount?.account_id}>
@@ -553,36 +554,36 @@ export function MappingCreateButton({
                         >
                           {feAccount?.description ? (
                             <span className="mx-4">
-                              {" "}
+                              {' '}
                               {feAccount?.description}
                             </span>
                           ) : (
                             <span className="mx-4"> Undefined </span>
-                          )}{" "}
+                          )}{' '}
                         </label>
                       </div>
                       <div className="ml-8 pl-3 text-xs text-brand-400">
-                        id: {feAccount.account_id} | number:{" "}
+                        id: {feAccount.account_id} | number:{' '}
                         {feAccount.account_number}
                       </div>
                       <div className="ml-8 pl-3 text-xs text-brand-400">
-                        {feAccount.class !== "none" ? (
+                        {feAccount.class !== 'none' ? (
                           <span> Class: {feAccount.class}</span>
-                        ) : null}{" "}
+                        ) : null}{' '}
                       </div>
                       <div className="ml-8 pl-3 text-xs text-brand-400">
                         {feAccount.cashflow ? (
                           <span className="text-success">
                             {feAccount.cashflow}
                           </span>
-                        ) : null}{" "}
+                        ) : null}{' '}
                       </div>
                       <div className="ml-8 pl-3 text-xs text-brand-400">
                         {feAccount.working_capital ? (
                           <span className="text-success">
                             {feAccount.working_capital}
                           </span>
-                        ) : null}{" "}
+                        ) : null}{' '}
                       </div>
                     </div>
                   ))}
@@ -608,7 +609,7 @@ export function MappingCreateButton({
               className={cn(
                 `relative float-right m-4 inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
                 {
-                  "cursor-not-allowed opacity-60": isLoading,
+                  'cursor-not-allowed opacity-60': isLoading,
                 }
               )}
               disabled={isLoading}
@@ -628,18 +629,18 @@ export function MappingCreateButton({
           {feAccountID && feAccountObj?.account_id ? (
             <div className="">
               {feAccountObj?.description ? feAccountObj?.description : null}
-              <br />{" "}
-              <span className="text-sm text-dark">Transaction Codes:</span>{" "}
+              <br />{' '}
+              <span className="text-sm text-dark">Transaction Codes:</span>{' '}
               <br />
               {feAccountObj?.default_transaction_codes?.map((tc) => {
                 return (
-                  <span key={"tc" + tc?.name} className="text-sm">
-                    {tc?.name}:{" "}
-                    {tc?.value && tc?.value !== "None" ? tc?.value : "None"}{" "}
+                  <span key={'tc' + tc?.name} className="text-sm">
+                    {tc?.name}:{' '}
+                    {tc?.value && tc?.value !== 'None' ? tc?.value : 'None'}{' '}
                     <br />
                   </span>
                 )
-              })}{" "}
+              })}{' '}
             </div>
           ) : null}
         </div>
@@ -650,18 +651,18 @@ export function MappingCreateButton({
         {mappings?.length ? (
           <div
             className="justify-left m-8 overflow-scroll bg-whiteSmoke p-2 text-left text-dark"
-            style={{ height: "50vh" }}
+            style={{ height: '50vh' }}
           >
             {mappings.map((mapping) => (
               <div className="p-1" key={mapping.id}>
                 <div className="flex items-center">
-                  {" "}
+                  {' '}
                   <Icons.trash
                     className="mr-2 h-4 w-4 text-red-500"
                     onClick={() => onDeleteMapping(mapping.id)}
-                  />{" "}
-                  {mapping.virProjectName}{" "}
-                  <Icons.arrowRight className="mr-2 h-4 w-4" />{" "}
+                  />{' '}
+                  {mapping.virProjectName}{' '}
+                  <Icons.arrowRight className="mr-2 h-4 w-4" />{' '}
                   {lookupAccount(mapping.feAccountId)}
                 </div>
               </div>
@@ -682,7 +683,7 @@ export function MappingCreateButton({
             className={cn(
               `relative m-8 inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
               {
-                "cursor-not-allowed opacity-60": isLoading,
+                'cursor-not-allowed opacity-60': isLoading,
               }
             )}
             disabled={isLoading}
@@ -693,9 +694,9 @@ export function MappingCreateButton({
             ) : (
               <Icons.arrowRight className="mr-2 h-4 w-4" />
             )}
-            {pathname === "/projectMapping"
-              ? "Return to dashboard"
-              : "Continue (Data Review)"}
+            {pathname === '/projectMapping'
+              ? 'Return to dashboard'
+              : 'Continue (Data Review)'}
           </button>
         ) : null}
       </div>
@@ -757,7 +758,7 @@ export function MappingCreateButton({
                           htmlFor={`checkbox-filterProjectName`}
                           className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Filter Project Name{" "}
+                          Filter Project Name{' '}
                         </label>
                         <br />
                         <input
@@ -778,7 +779,7 @@ export function MappingCreateButton({
                           htmlFor={`checkbox-filterProjectCode`}
                           className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Filter External Accounting Code{" "}
+                          Filter External Accounting Code{' '}
                         </label>
                         <br />
                         <input
@@ -799,7 +800,7 @@ export function MappingCreateButton({
                           htmlFor={`checkbox-filterExternalAccountingCode`}
                           className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Filter Project Code{" "}
+                          Filter Project Code{' '}
                         </label>
                         <br />
                         <input
@@ -820,7 +821,7 @@ export function MappingCreateButton({
                           htmlFor={`checkbox-filterOnlineDisplayName`}
                           className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Filter Online Display Name{" "}
+                          Filter Online Display Name{' '}
                         </label>
                         <br />
                         <input
@@ -841,7 +842,7 @@ export function MappingCreateButton({
                           htmlFor={`checkbox-filterDescription`}
                           className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Filter Description{" "}
+                          Filter Description{' '}
                         </label>
                         <br />
                         <input
@@ -984,7 +985,7 @@ export function MappingCreateButton({
                           htmlFor={`checkbox-filterAccountId`}
                           className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Filter Account Id{" "}
+                          Filter Account Id{' '}
                         </label>
                         <br />
                         <input
@@ -1005,7 +1006,7 @@ export function MappingCreateButton({
                           htmlFor={`checkbox-filterAccountNumber`}
                           className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Filter Account Number{" "}
+                          Filter Account Number{' '}
                         </label>
                         <br />
                         <input
@@ -1026,7 +1027,7 @@ export function MappingCreateButton({
                           htmlFor={`checkbox-filterAccountDescription`}
                           className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
-                          Filter Account Description{" "}
+                          Filter Account Description{' '}
                         </label>
                         <br />
                         <input

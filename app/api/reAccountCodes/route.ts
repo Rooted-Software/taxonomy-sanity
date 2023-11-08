@@ -1,37 +1,35 @@
-
-import { authOptions } from '@/lib/auth'
-import { absoluteUrl } from '@/lib/utils'
-import { db } from '@/lib/db'
 import { getServerSession } from 'next-auth/next'
 import { z } from 'zod'
+
+import { authOptions } from '@/lib/auth'
+import { db } from '@/lib/db'
 import { reFetch } from '@/lib/reFetch'
 
 async function upsertAccount(account, userId) {
   await db.feAccountCode.upsert({
     where: {
-      userId_account_code_id: { 
+      userId_account_code_id: {
         account_code_id: account.account_code_id,
-        userId: userId
+        userId: userId,
       },
     },
     update: {
       value: account.value,
       category: account.category,
-      class:  account.class,
+      class: account.class,
       is_contra: account.is_contra,
-      is_control: account.is_control, 
-      description: account.description
-     
+      is_control: account.is_control,
+      description: account.description,
     },
     create: {
       account_code_id: account.account_code_id,
       value: account.value,
       category: account.category,
-      class:  account.class,
+      class: account.class,
       is_contra: account.is_contra,
-      is_control: account.is_control, 
+      is_control: account.is_control,
       description: account.description,
-      userId: userId
+      userId: userId,
     },
   })
 }
@@ -46,20 +44,23 @@ export async function GET(req: Request) {
     const { user } = session
     console.log('RE Accounts')
     try {
-      const res2 = await reFetch('https://api.sky.blackbaud.com/generalledger/v1/accounts/codes','GET', user.team.id
+      const res2 = await reFetch(
+        'https://api.sky.blackbaud.com/generalledger/v1/accounts/codes',
+        'GET',
+        user.team.id
       )
       console.log('after form')
       console.log(res2.status)
       if (res2.status !== 200) {
         console.log('returning status')
-        return res2;
+        return res2
       }
       console.log('returning something else')
       const data = await res2.json()
       data?.value.forEach((account) => {
         upsertAccount(account, session.user.id)
       })
-      return new Response(JSON.stringify(data.value));
+      return new Response(JSON.stringify(data.value))
     } catch (error) {
       return error
     }
@@ -71,11 +72,3 @@ export async function GET(req: Request) {
     return new Response(null, { status: 500 })
   }
 }
-
-
-
-
-
-
-
-

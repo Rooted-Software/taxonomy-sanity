@@ -1,5 +1,8 @@
 'use client'
 
+import Link from 'next/link'
+import { signOut } from 'next-auth/react'
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,25 +11,16 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { UserAvatar } from '@/components/user-avatar'
-import { User } from 'next-auth'
-import { signOut } from 'next-auth/react'
-import Link from 'next/link'
-
-
 
 export function UserAccountNavSkel() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <UserAvatar
-          user={{ name: null, image: null }}
-          className="h-8 w-8"
-        />
+        <UserAvatar user={{ name: null, image: null }} className="h-8 w-8" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <div className="flex items-center justify-start gap-2 p-2">
-          <div className="flex flex-col space-y-1 leading-none">
-          </div>
+          <div className="flex flex-col space-y-1 leading-none"></div>
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>

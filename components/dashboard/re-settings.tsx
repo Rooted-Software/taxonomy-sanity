@@ -1,29 +1,25 @@
-"use client"
+'use client'
 
-import { Icons } from "@/components/icons"
+import * as React from 'react'
+import { useRouter } from 'next/navigation'
+import { FeSetting, User } from '@prisma/client'
+
+import { cn } from '@/lib/utils'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { cn } from "@/lib/utils"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { User } from "@prisma/client"
-import { FeSetting } from "@prisma/client"
-import { useRouter } from "next/navigation"
-import * as React from "react"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
+} from '@/components/ui/card'
+import { Icons } from '@/components/icons'
 
 interface REFormProps extends React.HTMLAttributes<HTMLFormElement> {
-  user: Pick<User, "id" | "name">
+  user: Pick<User, 'id' | 'name'>
   reAuthorizeURL: string
   reData: Pick<
     FeSetting,
-    "id" | "environment_name" | "legal_entity_id" | "email" | "expires_in"
+    'id' | 'environment_name' | 'legal_entity_id' | 'email' | 'expires_in'
   >
 }
 
@@ -36,7 +32,7 @@ export function RESettingsForm({
 }: REFormProps) {
   const router = useRouter()
   const [isSaving, setIsSaving] = React.useState<boolean>(false)
-  console.log("in RE FORm")
+  console.log('in RE FORm')
   console.log(reData)
   const [reDataFromProps, setReDataFromProps] = React.useState(reData)
 
@@ -50,8 +46,8 @@ export function RESettingsForm({
     if (!reData?.id) {
       const popup = window.open(
         reAuthorizeURL,
-        "login",
-        "height=450,width=600, top=10, left=100"
+        'login',
+        'height=450,width=600, top=10, left=100'
       )
       if (window.focus) {
         popup.focus()
@@ -71,15 +67,15 @@ export function RESettingsForm({
       router.refresh()
     } else {
       const response = await fetch(`/api/reSettings`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          apiKey: "delete",
+          apiKey: 'delete',
         }),
       })
-      console.log("response status: ", response.status)
+      console.log('response status: ', response.status)
       console.log(response)
       if (response.ok) {
         setIsSaving(false)
@@ -113,9 +109,9 @@ export function RESettingsForm({
             <button
               type="submit"
               className={cn(
-                "relative inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2",
+                'relative inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
                 {
-                  "cursor-not-allowed opacity-60": isSaving,
+                  'cursor-not-allowed opacity-60': isSaving,
                 },
                 className
               )}
@@ -130,9 +126,9 @@ export function RESettingsForm({
             <button
               type="submit"
               className={cn(
-                "relative inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2",
+                'relative inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
                 {
-                  "cursor-not-allowed opacity-60": isSaving,
+                  'cursor-not-allowed opacity-60': isSaving,
                 },
                 className
               )}

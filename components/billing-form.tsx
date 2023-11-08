@@ -1,6 +1,9 @@
 'use client'
 
-import { Icons } from '@/components/icons'
+import * as React from 'react'
+
+import { TeamSubscriptionPlan } from 'types'
+import { cn, formatDate } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import {
   Card,
@@ -11,9 +14,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { toast } from '@/components/ui/use-toast'
-import { cn, formatDate } from '@/lib/utils'
-import * as React from 'react'
-import { TeamSubscriptionPlan } from 'types'
+import { Icons } from '@/components/icons'
 
 interface BillingFormProps extends React.HTMLAttributes<HTMLFormElement> {
   subscriptionPlan: TeamSubscriptionPlan & {

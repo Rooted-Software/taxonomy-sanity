@@ -1,18 +1,17 @@
 'use client'
 
-import WindowOpenLink from '../ui/window-open-link'
-import styles from './grid.module.css'
-import { UniversalButton } from './universal-button'
+import * as React from 'react'
+import { useEffect } from 'react'
+import Link from 'next/link'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+
+import { cn } from '@/lib/utils'
+import { toast } from '@/components/ui/use-toast'
 import { EmptyPlaceholder } from '@/components/empty-placeholder'
 import { Icons } from '@/components/icons'
-import { toast } from '@/components/ui/use-toast'
-import { cn } from '@/lib/utils'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { usePathname } from 'next/navigation'
-import { useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
-import * as React from 'react'
+
+import WindowOpenLink from '../ui/window-open-link'
+import styles from './grid.module.css'
 
 interface BatchPreviewProps extends React.HTMLAttributes<HTMLButtonElement> {
   projects: any[]

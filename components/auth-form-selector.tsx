@@ -1,27 +1,22 @@
 'use client'
 
+import * as React from 'react'
+
+import { cn } from '@/lib/utils'
+import { buttonVariants } from '@/components/ui/button'
+import { Icons } from '@/components/icons'
+
 import { UserAuthForm } from './user-auth-form'
 import { UserVirtuousAuthForm } from './user-virtuous-auth-form'
-import { Icons } from '@/components/icons'
-import { buttonVariants } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { toast } from '@/components/ui/use-toast'
-import { cn } from '@/lib/utils'
-import { userAuthSchema } from '@/lib/validations/auth'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { signIn } from 'next-auth/react'
-import { useSearchParams } from 'next/navigation'
-import * as React from 'react'
-import { useForm } from 'react-hook-form'
-import * as z from 'zod'
 
 export default function AuthFormSelector() {
   let authMethod = ''
   if (typeof window !== 'undefined') {
     localStorage.getItem('authMethod')
   }
-  const [selectedMethod, setSelectedMethod] = React.useState<string | null>(authMethod)
+  const [selectedMethod, setSelectedMethod] = React.useState<string | null>(
+    authMethod
+  )
   React.useEffect(() => {
     if (selectedMethod && typeof window !== 'undefined') {
       localStorage.setItem('authMethod', selectedMethod)

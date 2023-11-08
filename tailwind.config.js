@@ -34,11 +34,11 @@ module.exports = {
           900: '#080808',
           DEFAULT: '#111111',
         },
-        'dark': '#1B2637',
-        'whiteSmoke': '#F5F5F5',
-        'tightWhite': '#E8F1FB',
-        'eggshell': '#E9E9E9',
-        'accent': '#6BE4BC',
+        dark: '#1B2637',
+        whiteSmoke: '#F5F5F5',
+        tightWhite: '#E8F1FB',
+        eggshell: '#E9E9E9',
+        accent: '#6BE4BC',
         'accent-1': '#6BE4BC',
         'accent-2': '#EAEAEA',
         'accent-7': '#333',
@@ -105,7 +105,7 @@ module.exports = {
         md: `calc(var(--radius) - 2px)`,
         sm: 'calc(var(--radius) - 4px)',
       },
- 
+
       keyframes: {
         'accordion-down': {
           from: { height: 0 },

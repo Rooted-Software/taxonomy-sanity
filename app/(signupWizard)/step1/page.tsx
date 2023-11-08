@@ -1,10 +1,10 @@
-import { ContextualHelp } from '@/components/contextual-help'
-import { UniversalSelect } from '@/components/dashboard/universal-select'
-import { VirtuousSettingsForm } from '@/components/dashboard/virtuous-settings'
+import { cache } from 'react'
+import { User } from '@prisma/client'
+
 import { db } from '@/lib/db'
 import { getCurrentUser } from '@/lib/session'
-import { User } from '@prisma/client'
-import { cache } from 'react'
+import { ContextualHelp } from '@/components/contextual-help'
+import { VirtuousSettingsForm } from '@/components/dashboard/virtuous-settings'
 
 export const metadata = {
   title: 'Create an account',

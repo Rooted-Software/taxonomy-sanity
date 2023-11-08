@@ -1,13 +1,13 @@
-import { MappingCreateButton } from "@/components/dashboard/mapping-create-button"
-import { db } from "@/lib/db"
-import { getFeAccountsFromBlackbaud, upsertFeAccount } from "@/lib/feAccounts"
-import { getCurrentUser } from "@/lib/session"
-import { dateFilterOptions } from "@/lib/utils"
-import { getVirtuousProjects } from "@/lib/virProjects"
+import { db } from '@/lib/db'
+import { getFeAccountsFromBlackbaud } from '@/lib/feAccounts'
+import { getCurrentUser } from '@/lib/session'
+import { dateFilterOptions } from '@/lib/utils'
+import { getVirtuousProjects } from '@/lib/virProjects'
+import { MappingCreateButton } from '@/components/dashboard/mapping-create-button'
 
 export const metadata = {
-  title: "Map your data",
-  description: "Select which projects should map to which accounts.",
+  title: 'Map your data',
+  description: 'Select which projects should map to which accounts.',
 }
 
 const getFeProjects = async (teamId) => {
@@ -28,7 +28,7 @@ const getFeProjects = async (teamId) => {
       teamId: teamId,
     },
     orderBy: {
-      description: "asc",
+      description: 'asc',
     },
   })
 }
@@ -69,8 +69,8 @@ export default async function DataMapPage({ searchParams }) {
     feAccountsData,
     mappingData,
   ])
-  console.log("accounts length: ", feAccounts.length)
-  console.log("projects length: ", projects.length)
+  console.log('accounts length: ', feAccounts.length)
+  console.log('projects length: ', projects.length)
 
   return (
     <>

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+
 import { applySoftDeleteMiddleware } from './prisma-middlewares/soft-delete'
 
 declare global {

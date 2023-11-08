@@ -1,7 +1,8 @@
+import Image from 'next/image'
+
+import { dashboardConfig } from '@/config/dashboard'
 import { MainNav } from '@/components/main-nav'
 import { UserAccountNavSkel } from '@/components/user-account-nav-skel'
-import { dashboardConfig } from '@/config/dashboard'
-import Image from 'next/image'
 
 export default function DashboardLoading() {
   return (

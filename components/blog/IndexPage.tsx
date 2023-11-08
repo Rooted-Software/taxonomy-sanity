@@ -1,13 +1,11 @@
-import Container from '@/components/GeneralContainer'
-import BlogHeader from '@/components/blog/BlogHeader'
+import Link from 'next/link'
+import * as demo from 'lib/demo.data'
+import type { Post, Settings } from 'lib/sanity.queries'
+
 import Layout from '@/components/blog/BlogLayout'
 import HeroPost from '@/components/blog/HeroPost'
 import MoreStories from '@/components/blog/MoreStories'
-import { compareDesc } from 'date-fns'
-import * as demo from 'lib/demo.data'
-import type { Post, Settings } from 'lib/sanity.queries'
-import Link from 'next/link'
-import { SP } from 'next/dist/shared/lib/utils'
+import Container from '@/components/GeneralContainer'
 
 export default function IndexPage(props: {
   preview?: boolean
@@ -26,10 +24,13 @@ export default function IndexPage(props: {
           <div className="flex flex-col items-start gap-4 md:flex-row md:justify-between md:gap-8">
             <div className="flex-1 space-y-4">
               <h1 className="text-34xl inline-block font-extrabold tracking-tight text-slate-100 lg:text-3xl">
-                <span className='text-accent-1'>DonorSync: <br/> </span>Virtuous to Financial Edge Sync Made Easy
+                <span className="text-accent-1">
+                  DonorSync: <br />{' '}
+                </span>
+                Virtuous to Financial Edge Sync Made Easy
               </h1>
               <p className="text-xl text-slate-300">
-               Get started for free during DonorSync&apos;s beta period!
+                Get started for free during DonorSync&apos;s beta period!
               </p>
             </div>
             <Link

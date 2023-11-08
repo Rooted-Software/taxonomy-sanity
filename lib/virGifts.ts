@@ -1,7 +1,8 @@
+import { db } from '@/lib/db'
+
 import { virDateOptions } from './utils'
 import { virApiFetch } from './virApiFetch'
 import { getVirtuousProjects } from './virProjects'
-import { db } from '@/lib/db'
 
 export const getBatches = async (teamId, dateFilter) => {
   return await db.giftBatch.findMany({
