@@ -14,6 +14,7 @@ const getProjectAccountMappings = async (teamId) => {
   return await db.projectAccountMapping.findMany({
     select: {
       id: true,
+      virProjectName: true,
       virProjectId: true,
       feAccountId: true,
     },
