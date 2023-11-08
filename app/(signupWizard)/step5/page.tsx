@@ -10,29 +10,6 @@ export const metadata = {
   description: 'Select which projects should map to which accounts.',
 }
 
-const getFeProjects = async (teamId) => {
-  return await db.feProject.findMany({
-    select: {
-      id: true,
-      project_id: true,
-      ui_project_id: true,
-      description: true,
-      location: true,
-      division: true,
-      department: true,
-      status: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-    where: {
-      teamId: teamId,
-    },
-    orderBy: {
-      description: 'asc',
-    },
-  })
-}
-
 const getProjectAccountMappings = async (teamId) => {
   return await db.projectAccountMapping.findMany({
     select: {

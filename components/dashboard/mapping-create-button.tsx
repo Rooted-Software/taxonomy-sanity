@@ -656,14 +656,17 @@ export function MappingCreateButton({
             {mappings.map((mapping) => (
               <div className="p-1" key={mapping.id}>
                 <div className="flex items-center">
-                  {' '}
                   <Icons.trash
                     className="mr-2 h-4 w-4 text-red-500"
                     onClick={() => onDeleteMapping(mapping.id)}
-                  />{' '}
-                  {mapping.virProjectName}{' '}
-                  <Icons.arrowRight className="mr-2 h-4 w-4" />{' '}
-                  {lookupAccount(mapping.feAccountId)}
+                  />
+                  <span className="flex-1 text-right">
+                    {mapping.virProjectName}
+                  </span>
+                  <Icons.arrowRight className="mx-2 h-4 w-4" />{' '}
+                  <span className="flex-1">
+                    {lookupAccount(mapping.feAccountId)}
+                  </span>
                 </div>
               </div>
             ))}
