@@ -139,9 +139,7 @@ export function Stepper({ className, ...props }: StepperProps) {
             </li>
             <li className="flex items-center">
               <span className="flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-full bg-white text-white drop-shadow-lg dark:bg-blue-800 lg:h-[60px] lg:w-[60px]">
-                <span className="flex h-[50px] w-[50px] shrink-0 items-center justify-center rounded-full bg-accent-1 dark:bg-blue-800 lg:h-[50px] lg:w-[50px]">
-                  {percent}%
-                </span>
+                <span className="flex h-[50px] w-[50px] shrink-0 items-center justify-center rounded-full bg-accent-1 dark:bg-blue-800 lg:h-[50px] lg:w-[50px]"></span>
               </span>
             </li>
           </ol>
