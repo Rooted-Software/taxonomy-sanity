@@ -1,17 +1,16 @@
-import { cache } from 'react'
-import { User } from '@prisma/client'
-
-import { db } from '@/lib/db'
-import { getCurrentUser } from '@/lib/session'
-import { ContextualHelp } from '@/components/contextual-help'
-import { VirtuousSettingsForm } from '@/components/dashboard/virtuous-settings'
+import { ContextualHelp } from "@/components/contextual-help"
+import { VirtuousSettingsForm } from "@/components/dashboard/virtuous-settings"
+import { db } from "@/lib/db"
+import { getCurrentUser } from "@/lib/session"
+import { User } from "@prisma/client"
+import { cache } from "react"
 
 export const metadata = {
-  title: 'Create an account',
-  description: 'Create an account to get started.',
+  title: "Create an account",
+  description: "Create an account to get started.",
 }
 
-const getApiKey = cache(async (teamId: User['teamId']) => {
+const getApiKey = cache(async (teamId: User["teamId"]) => {
   if (!teamId) return null
   return await db.apiSetting.findFirst({
     where: {
@@ -55,8 +54,8 @@ export default async function ConnectVirtuousOrg() {
         <div className="flex flex-col space-y-2 text-center ">
           {/* https://app.virtuoussoftware.com/Generosity/People/ApiKeys */}
           <VirtuousSettingsForm
-            apiKey={data?.virtuousAPI || ''}
-            teamName={data?.team.name || ''}
+            apiKey={data?.virtuousAPI || ""}
+            teamName={data?.team.name || ""}
           />
         </div>
       </div>
