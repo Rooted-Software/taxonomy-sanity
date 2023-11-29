@@ -18,6 +18,8 @@ import {
   LifeBuoy,
   Loader2,
   Lock,
+  LogOut,
+  type Icon as LucideIcon,
   LucideProps,
   Mail,
   Map,
@@ -34,8 +36,7 @@ import {
   Users,
   Wallet,
   X,
-  type Icon as LucideIcon,
-} from 'lucide-react'
+} from "lucide-react"
 
 export type Icon = LucideIcon
 
@@ -70,6 +71,7 @@ export const Icons = {
   moon: Moon,
   laptop: Laptop,
   refresh: RefreshCcw,
+  logOut: LogOut,
   test: FlaskConical,
   key: Key,
   listFilter: ({ ...props }: LucideProps) => (

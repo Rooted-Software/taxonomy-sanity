@@ -349,7 +349,7 @@ export function MappingCreateButton({
                 className="w-full rounded-lg border border-gray-400 p-2 text-brand-400"
               />
             </div>
-            <div className="align-right items-right my-auto mx-2 basis-1/3">
+            <div className="align-right items-right mx-2 my-auto basis-1/3">
               <button
                 onClick={(e) => {
                   e.preventDefault()
@@ -506,7 +506,7 @@ export function MappingCreateButton({
                   className="w-full rounded-lg border border-gray-400 p-2 text-brand-400"
                 />
               </div>
-              <div className="align-right items-right my-auto mx-2 basis-1/3">
+              <div className="align-right items-right mx-2 my-auto basis-1/3">
                 <button
                   onClick={(e) => {
                     e.preventDefault()

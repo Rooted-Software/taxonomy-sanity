@@ -1,42 +1,36 @@
-import { DashboardConfig } from 'types'
+import { DashboardConfig } from "types"
 
 export const dashboardConfig: DashboardConfig = {
-  mainNav: [],
-  sidebarNav: [
+  navigation: [
     {
-      title: 'Dashboard',
-      href: '/dashboard',
-      icon: 'clipboard',
+      title: "Dashboard",
+      href: "/dashboard",
+      icon: "clipboard",
     },
     {
-      title: 'Batch Management',
-      href: '/batchManagement',
-      icon: 'wallet',
+      title: "Batch Management",
+      href: "/batchManagement",
+      icon: "wallet",
     },
     {
-      title: 'Project Mapping',
-      href: '/projectMapping',
-      icon: 'map',
+      title: "Project Mapping",
+      href: "/projectMapping",
+      icon: "map",
     },
     {
-      title: 'Billing',
-      href: '/dashboard/billing',
-      icon: 'billing',
+      title: "Billing",
+      href: "/dashboard/billing",
+      icon: "billing",
     },
     {
-      title: 'Team',
-      href: '/dashboard/team',
-      icon: 'users',
+      title: "Team",
+      href: "/dashboard/team",
+      icon: "users",
     },
     {
-      title: 'Settings',
-      href: '/dashboard/settings',
-      icon: 'settings',
-    },
-    {
-      title: 'Support',
-      href: '/support',
-      icon: 'lifeRing',
+      title: "Settings",
+      href: "/dashboard/settings",
+      icon: "settings",
     },
   ],
 }

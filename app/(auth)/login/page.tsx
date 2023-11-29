@@ -13,11 +13,7 @@ export const metadata: Metadata = {
 export default function LoginPage() {
   return (
     <div className="container flex h-screen w-screen flex-col items-center justify-center">
-      <div className="absolute left-4 top-4 md:left-8 md:top-8">
-        <MainNav />
-      </div>
-      <div className="bg-dark text-white lg:p-8 ">
-        <div className="m-auto flex w-full flex-col justify-center space-y-6 ">
+     <div className="m-auto flex w-full flex-col justify-center space-y-6 ">
           <div className="flex flex-col space-y-2 text-center  ">
             <Image
               width={50}
@@ -43,7 +39,6 @@ export default function LoginPage() {
             </Link>
           </p>
         </div>
-      </div>
     </div>
   )
 }

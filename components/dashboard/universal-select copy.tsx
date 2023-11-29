@@ -1,12 +1,11 @@
-'use client'
+"use client"
 
-import * as React from 'react'
-import { Fragment } from 'react'
-import { useRouter } from 'next/navigation'
-
-import { cn } from '@/lib/utils'
-import { toast } from '@/components/ui/use-toast'
-import { Icons } from '@/components/icons'
+import { Icons } from "@/components/icons"
+import { toast } from "@/components/ui/use-toast"
+import { cn } from "@/lib/utils"
+import { useRouter } from "next/navigation"
+import * as React from "react"
+import { Fragment } from "react"
 
 interface UniversalButtonProps {
   title: String
@@ -35,14 +34,14 @@ export function UniversalSelect({
   console.log(selected)
 
   async function getInitialData() {
-    console.log('getInitialData')
+    console.log("getInitialData")
     if (isLoading) {
       return
     }
     setIsLoading(true)
     setReturnedData([])
     const response = await fetch(route, {
-      method: 'GET',
+      method: "GET",
     })
 
     console.log(response)
@@ -52,16 +51,16 @@ export function UniversalSelect({
         const data = await response.json()
         console.log(data)
         return toast({
-          title: 'API rate limit exceeded',
+          title: "API rate limit exceeded",
           description: data.message,
-          variant: 'destructive',
+          variant: "destructive",
         })
       }
 
       return toast({
-        title: 'Something went wrong.',
-        description: 'Your post was not created. Please try again.',
-        variant: 'destructive',
+        title: "Something went wrong.",
+        description: "Your post was not created. Please try again.",
+        variant: "destructive",
       })
     }
 
@@ -69,7 +68,7 @@ export function UniversalSelect({
     console.log(data)
     if (data?.length > 0) {
       setReturnedData(data)
-      if (selected === undefined || selected === null || selected === '') {
+      if (selected === undefined || selected === null || selected === "") {
         setSelectValue(data[0][fields[0]]?.toString())
       }
     }
@@ -79,7 +78,7 @@ export function UniversalSelect({
   }
 
   async function saveSelectedData() {
-    console.log('getInitialData')
+    console.log("getInitialData")
     if (isLoading) {
       return
     }
@@ -93,9 +92,9 @@ export function UniversalSelect({
     console.log(bodyJson)
 
     const response = await fetch(route, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: bodyJson,
     })
@@ -106,16 +105,16 @@ export function UniversalSelect({
         const data = await response.json()
         console.log(data)
         return toast({
-          title: 'API rate limit exceeded',
+          title: "API rate limit exceeded",
           description: data.message,
-          variant: 'destructive',
+          variant: "destructive",
         })
       }
       setIsLoading(false)
       return toast({
-        title: 'Something went wrong.',
-        description: 'Your post was not created. Please try again.',
-        variant: 'destructive',
+        title: "Something went wrong.",
+        description: "Your post was not created. Please try again.",
+        variant: "destructive",
       })
     }
     router.push(redirect)
@@ -137,25 +136,25 @@ export function UniversalSelect({
             console.log(e.target.value)
           }}
           value={selectValue}
-          className="text-md m-5   w-full rounded-full border border-accent-1 bg-accent-1 py-2 px-5 text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+          className="text-md m-5   w-full rounded-full border border-accent-1 bg-accent-1 px-5 py-2 text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
         >
           {returnedData?.map((item: any, index) => (
             <option
-              key={'option' + index}
+              key={"option" + index}
               value={item[fields[0]]}
               className="mt-2"
             >
               {fields?.map((field: any, index) => {
                 if (index > 0) {
                   return (
-                    <Fragment key={item[field] + index + '-key'}>
-                      {' '}
-                      {item[field]}{' '}
+                    <Fragment key={item[field] + index + "-key"}>
+                      {" "}
+                      {item[field]}{" "}
                     </Fragment>
                   )
                 } else {
                   return (
-                    <Fragment key={item[field] + index + '-key'}></Fragment>
+                    <Fragment key={item[field] + index + "-key"}></Fragment>
                   )
                 }
               })}
@@ -166,9 +165,9 @@ export function UniversalSelect({
         <button
           onClick={saveSelectedData}
           className={cn(
-            'font-large relative inline-flex h-9 items-center rounded-full border border-transparent bg-whiteSmoke  py-1  px-5 text-lg text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+            "font-large relative inline-flex h-9 items-center rounded-full border border-transparent bg-whiteSmoke  px-5  py-1 text-lg text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2",
             {
-              'cursor-not-allowed opacity-60': isLoading,
+              "cursor-not-allowed opacity-60": isLoading,
             }
           )}
           disabled={isLoading}

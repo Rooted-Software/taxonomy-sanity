@@ -47,9 +47,7 @@ export type MarketingConfig = {
 }
 
 export type DashboardConfig = {
-  mainNav: MainNavItem[]
-  sidebarNav: SidebarNavItem[]
-}
+  navigation: SidebarNavItem[]}
 
 export type SubscriptionPlan = {
   name: string

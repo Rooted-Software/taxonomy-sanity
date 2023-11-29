@@ -1,24 +1,22 @@
-'use client'
+"use client"
 
-import * as React from 'react'
-import { useRouter } from 'next/navigation'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import * as z from 'zod'
-
-import { cn } from '@/lib/utils'
-import { apiKeySchema } from '@/lib/validations/apiKey'
+import { ApiCallButton } from "@/components/dashboard/api-call-button"
+import { Icons } from "@/components/icons"
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { toast } from '@/components/ui/use-toast'
-import { ApiCallButton } from '@/components/dashboard/api-call-button'
-import { Icons } from '@/components/icons'
+} from "@/components/ui/card"
+import { toast } from "@/components/ui/use-toast"
+import { cn } from "@/lib/utils"
+import { apiKeySchema } from "@/lib/validations/apiKey"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "next/navigation"
+import * as React from "react"
+import { useForm } from "react-hook-form"
+import * as z from "zod"
 
 interface VirtuousSettingsFormProps
   extends React.HTMLAttributes<HTMLFormElement> {
@@ -48,22 +46,22 @@ export function VirtuousSettingsForm({
   const [tested, setTested] = React.useState<boolean>(false)
   const [permissions, setPermissions] = React.useState<boolean>(false)
   const [isSaving, setIsSaving] = React.useState<boolean>(false)
-  const [label, setLabel] = React.useState<string>('Save')
-  const [updatedTeamName, setUpdatedTeamName] = React.useState(teamName || '')
+  const [label, setLabel] = React.useState<string>("Save")
+  const [updatedTeamName, setUpdatedTeamName] = React.useState(teamName || "")
   const [formApiKey, setFormApiKey] = React.useState(apiKey)
   const responseCallback = (data) => {
     setUpdatedTeamName(data.organizationName)
     setPermissions(data.permissions)
     setTested(true)
-    setLabel('Success: Click to Continue')
+    setLabel("Click to Continue")
   }
   async function onSubmit(data: FormData) {
     setIsSaving(true)
 
     const response = await fetch(`/api/virSettings`, {
-      method: 'PATCH',
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         apiKey: formApiKey,
@@ -75,18 +73,18 @@ export function VirtuousSettingsForm({
 
     if (!response?.ok) {
       return toast({
-        title: 'Something went wrong.',
-        description: 'Your APIKey was not updated. Please try again.',
-        variant: 'destructive',
+        title: "Something went wrong.",
+        description: "Your APIKey was not updated. Please try again.",
+        variant: "destructive",
       })
     }
 
     toast({
-      description: 'Your apiKey has been updated.',
-      type: 'success',
+      description: "Your apiKey has been updated.",
+      type: "success",
     })
 
-    router.push('/step2')
+    router.push("/step2")
   }
 
   return (
@@ -97,8 +95,7 @@ export function VirtuousSettingsForm({
     >
       <Card>
         <CardHeader>
-          <CardTitle>Virtuous API Key</CardTitle>
-          <CardDescription>Please enter your virtuous Api Key.</CardDescription>
+          <CardTitle>Enter Virtuous API Key:</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-1">
@@ -107,8 +104,8 @@ export function VirtuousSettingsForm({
             </label>
             <input
               id="apiKey"
-              onChange={(e) => setFormApiKey(e.target.value || '')}
-              className="mx-auto my-0 mb-2 block h-9 w-[350px] rounded-full border border-slate-300 py-2 px-3 text-sm text-slate-600 placeholder:text-slate-400 hover:border-slate-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-800 focus:ring-offset-1"
+              onChange={(e) => setFormApiKey(e.target.value || "")}
+              className="mx-auto my-0 mb-2 block h-9 w-full rounded-full border border-slate-300 px-3 py-2 text-sm text-slate-600 placeholder:text-slate-400 hover:border-slate-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-800 focus:ring-offset-1"
               value={formApiKey}
             />
             {errors?.apiKey && (
@@ -121,7 +118,12 @@ export function VirtuousSettingsForm({
         <CardFooter className="w-100 grid-1 grid items-center text-center">
           {tested ? (
             <>
-              <div className="pb-4">Organization name: {updatedTeamName} </div>
+              <span className="font-bold text-accent-1 ">
+                Successfully connected to:{" "}
+              </span>
+              <h3 className="mb-4 text-lg font-semibold tracking-tight">
+                {updatedTeamName}
+              </h3>
 
               {!permissions ? (
                 <div className="text-red-500">
@@ -133,9 +135,9 @@ export function VirtuousSettingsForm({
                   <button
                     type="submit"
                     className={cn(
-                      'hover:bg-relative mx-auto inline-flex h-9 w-3/4 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+                      "relative mt-3 inline-flex items-center justify-center rounded-full border border-transparent  bg-accent-1 px-4 py-1 text-lg font-medium text-dark hover:bg-accent-2 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2",
                       {
-                        'cursor-not-allowed opacity-60': isSaving,
+                        "cursor-not-allowed opacity-60": isSaving,
                       },
                       className
                     )}
@@ -144,23 +146,23 @@ export function VirtuousSettingsForm({
                     {isSaving ? (
                       <Icons.spinner className="display-inline float-lef mr-2 h-4 w-4 animate-spin" />
                     ) : (
-                      <Icons.chevronRight className=" mr-2 h-4 w-4" />
+                      ""
                     )}
                     {label}
                   </button>
                 </>
               )}
-              <p
+              <button
                 onClick={() => setTested(false)}
-                className="mt-4 cursor-default px-8 text-center text-sm text-muted-foreground"
+                className="mt-4 px-8 text-center font-medium text-success underline underline-offset-4"
               >
-                re-test api key
-              </p>
+                Test API key again?
+              </button>
             </>
           ) : (
             <>
               <ApiCallButton
-                apiKey={formApiKey || ''}
+                apiKey={formApiKey || ""}
                 responseCallback={responseCallback}
               />
             </>
