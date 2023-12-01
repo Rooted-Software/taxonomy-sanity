@@ -19,7 +19,6 @@ export default async function ConnectFEDebitAccount() {
         <UniversalSelect
           title="Save and Continue"
           route={process.env.NEXT_PUBLIC_APP_URL + '/api/feAccounts'}
-          method="GET"
           subType="debit"
           fields={['account_id', 'account_number', 'description', 'class']}
           selected={user?.team?.defaultDebitAccount}

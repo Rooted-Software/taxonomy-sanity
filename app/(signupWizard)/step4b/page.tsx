@@ -19,7 +19,6 @@ export default async function ConnectFECreditAccount() {
       <UniversalSelect
         title="Save and Continue"
         route={process.env.NEXT_PUBLIC_APP_URL + '/api/feAccounts'}
-        method="GET"
         fields={['account_id', 'account_number', 'description', 'class']}
         subType="credit"
         selected={user?.team?.defaultCreditAccount}
