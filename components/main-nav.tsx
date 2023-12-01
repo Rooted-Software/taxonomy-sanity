@@ -1,9 +1,12 @@
-"use client"
+'use client'
 
-import Image from "next/image"
-import { useSelectedLayoutSegment } from "next/navigation"
-import * as React from "react"
-import { SidebarNavItem } from "types"
+import * as React from 'react'
+import Image from 'next/image'
+
+import { SidebarNavItem } from 'types'
+
+import { Icons } from './icons'
+import { MobileNav } from './mobile-nav'
 
 interface MainNavProps {
   items?: SidebarNavItem[]
@@ -11,7 +14,6 @@ interface MainNavProps {
 }
 
 export function MainNav({ items, children }: MainNavProps) {
-  const segment = useSelectedLayoutSegment()
   const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false)
 
   return (

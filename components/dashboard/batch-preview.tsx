@@ -227,7 +227,7 @@ export function BatchPreview({
                 <span className="font-bold text-accent-1">Batches</span>
               </p>
             </div>
-            <div className="flex w-full flex-row justify-stretch">
+            <div className="justify-stretch flex w-full flex-row">
               {batches?.length ? (
                 <div
                   className={`justify-left col-span-6 w-full overflow-scroll bg-whiteSmoke p-4 text-left text-dark`}
