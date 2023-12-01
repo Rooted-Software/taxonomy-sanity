@@ -1,20 +1,9 @@
-import { DashboardHeader } from '@/components/header'
-import { DashboardShell } from '@/components/shell'
+import SupportCategoryPage from '../../support/page'
 
 export const metadata = {
   title: 'Support',
 }
 
-export default async function SupportPage() {
+export { generateStaticParams } from '../../support/page'
 
-  // Need to make support page into a component so it can be added here
-
-  return (
-    <DashboardShell>
-      <DashboardHeader heading="Support" />
-      <div className="p-2">
-       {/* will load support component here */}
-      </div>
-    </DashboardShell>
-  )
-}
+export default SupportCategoryPage
