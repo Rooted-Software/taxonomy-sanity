@@ -5,9 +5,7 @@ import { DashboardShell } from '@/components/shell'
 export default function DashboarSupportLoading() {
   return (
     <DashboardShell>
-      <DashboardHeader
-        heading="Support"
-      />
+      <DashboardHeader heading="Support" />
       <div className="grid gap-10">
         <CardSkeleton />
       </div>
