@@ -272,24 +272,6 @@ export function BatchPreview({
                         </Link>
                       </div>
                     ))}
-                  {batchDaysLoaded < 730 && (
-                    <Link
-                      href={createMoreBatchesHref()}
-                      scroll={false}
-                      className={cn(
-                        `relative mt-2 inline-flex items-center rounded-full bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
-                        {
-                          'cursor-not-allowed opacity-60': isLoadingMoreBatches,
-                        }
-                      )}
-                      onClick={() => setIsLoadingMoreBatches(true)}
-                    >
-                      {isLoadingMoreBatches && (
-                        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                      )}
-                      Load more batches
-                    </Link>
-                  )}
                 </div>
               ) : (
                 <EmptyPlaceholder>
@@ -314,6 +296,24 @@ export function BatchPreview({
               <p>Showing batches from the past {batchDaysLoaded} days</p>
             )}
           </div>
+          {batchDaysLoaded < 730 && (
+            <Link
+              href={createMoreBatchesHref()}
+              scroll={false}
+              className={cn(
+                `relative mt-2 inline-flex items-center rounded-full bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
+                {
+                  'cursor-not-allowed opacity-60': isLoadingMoreBatches,
+                }
+              )}
+              onClick={() => setIsLoadingMoreBatches(true)}
+            >
+              {isLoadingMoreBatches && (
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Load more batches
+            </Link>
+          )}
         </div>
         <div className="h-full bg-dark p-4 md:col-span-2 xl:p-8">
           <div className="m-auto flex flex-col justify-center space-y-3 xl:space-y-6 ">
