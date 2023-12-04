@@ -1,3 +1,4 @@
+import { Team } from '@prisma/client'
 import { User } from 'next-auth'
 
 import 'next-auth/jwt'
