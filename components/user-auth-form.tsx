@@ -69,13 +69,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       className={cn('mx-auto grid w-full items-center gap-6 px-0', className)}
       {...props}
     >
-      <div className="relative ">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
-        </div>
-      </div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid gap-2">
+        <div className="grid gap-5">
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="email">
               Email
@@ -101,8 +96,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             className={cn(buttonVariants(), 'rounded-full')}
             disabled={isLoading}
           >
-            {isLoading && (
+            {isLoading ? (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Icons.email className="mr-2 h-4 w-4 " />
             )}
             Sign In with Email
           </button>

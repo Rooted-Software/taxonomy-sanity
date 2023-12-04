@@ -17,10 +17,6 @@ export default function RegisterPage() {
         <p className="mb-8 pb-8 text-lg text-white">
           (Don&apos;t worry, if you run into any issues, we are here to help.)
         </p>
-        <p className="justify-left text-lg text-white">
-          Log in with your Virtuous account or email address to begin the
-          process.
-        </p>
       </div>
 
       <AuthFormSelector />

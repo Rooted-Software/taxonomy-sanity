@@ -310,7 +310,6 @@ export const authOptions: NextAuthOptions = {
       }
     },
     async session({ token, session }) {
-      console.log('SESSION ', token, session)
       if (!token.teamId) {
         return session
       }
@@ -325,7 +324,6 @@ export const authOptions: NextAuthOptions = {
       return session
     },
     async jwt({ token, user, account, profile }) {
-      console.log('JWT  ')
       let newTeam
       const dbUser = await db.user.findUniqueOrThrow({
         where: {
