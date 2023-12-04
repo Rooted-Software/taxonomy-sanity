@@ -9,37 +9,48 @@ import '@/styles/globals.css'
 import * as React from 'react'
 import { useRouter } from 'next/navigation'
 
-import Combobox from '../ui/combobox'
+import Combobox from './ui/combobox'
 
-interface UniversalButtonProps {
-  title: String
-  route: RequestInfo
-  fields: string[]
-  redirect?: string
-  selected: any
-  subType?: string
-  initialData?: Array<any>
-  align?: 'left' | 'center'
-}
+export const giftTypes = [
+  'Check',
+  'Credit',
+  'Cryptocoin',
+  'Electronic Funds Transfer',
+  'Non-cash',
+  'Reversing Transaction',
+  'Stock',
+  'Qualified Charitable Distribution',
+  'Other',
+]
 
-export function UniversalSelect({
+export function DebitAccountSelector({
   title,
-  route,
-  fields,
-  selected,
-  subType,
   redirect,
-  initialData,
   align = 'center',
-  ...props
-}: UniversalButtonProps) {
+  initialValue,
+  initialMapping,
+  initialData,
+}: {
+  title: String
+  redirect?: string
+  align?: 'left' | 'center'
+  initialValue?: string
+  initialMapping?: Record<string, string>
+  initialData?: Array<any>
+}) {
   const router = useRouter()
   const [isLoading, setIsLoading] = React.useState<boolean>(true)
   const [isSaving, setIsSaving] = React.useState<boolean>(false)
-  const [returnedData, setReturnedData] = React.useState(initialData)
-  const [selectValue, setSelectValue] = React.useState(
-    selected ?? initialData?.[0][fields[0]]?.toString()
+  const [returnedData, setReturnedData] = React.useState(initialData ?? [])
+  const [map, setMap] = React.useState(initialMapping ?? {})
+  const [enableMapping, setEnableMapping] = React.useState(
+    initialMapping && Object.keys(initialMapping).length > 0
   )
+  const [selectValue, setSelectValue] = React.useState<string>(
+    initialValue ?? ''
+  )
+  const route = process.env.NEXT_PUBLIC_APP_URL + '/api/feAccounts'
+  const fields = ['account_id', 'account_number', 'description', 'class']
 
   React.useEffect(() => {
     ;(async () => {
@@ -68,9 +79,9 @@ export function UniversalSelect({
         const data = await response.json()
         if (data?.length > 0) {
           setReturnedData(data)
-
-          if (selected === undefined || selected === null || selected === '') {
-            setSelectValue(data[0][fields[0]]?.toString())
+          const firstAccountId = data[0][fields[0]]?.toString()
+          if (!initialValue) {
+            setSelectValue(firstAccountId)
           }
         }
       } finally {
@@ -92,8 +103,9 @@ export function UniversalSelect({
       },
       body: JSON.stringify({
         route: route,
-        selectValue: selectValue.toString(),
-        subType: subType,
+        selectValue,
+        map: enableMapping ? map : undefined,
+        subType: 'debit',
       }),
     })
 
@@ -115,12 +127,22 @@ export function UniversalSelect({
       })
     }
 
-    if (redirect) router.push(redirect)
+    if (redirect) {
+      router.push(redirect)
+    }
   }
+
+  const options = returnedData?.map((item: any) => ({
+    value: item[fields[0]],
+    label: fields
+      .slice(1)
+      .map((f) => item[f])
+      .join(' '),
+  }))
 
   return (
     <div
-      className={`min-w-xl flex flex-col space-y-5 py-5 pt-2 ${
+      className={`flex flex-col space-y-5 py-5 pt-2 ${
         align === 'center' ? 'items-center' : 'items-start'
       }`}
     >
@@ -129,14 +151,51 @@ export function UniversalSelect({
         onChange={setSelectValue}
         isLoading={isLoading}
         disabled={isLoading || isSaving}
-        options={returnedData?.map((item: any) => ({
-          value: item[fields[0]].toString(),
-          label: fields
-            .slice(1)
-            .map((f) => item[f])
-            .join(' '),
-        }))}
+        options={options}
       />
+      <div className="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          id="gift-type-mapping"
+          checked={enableMapping}
+          onClick={() => setEnableMapping(!enableMapping)}
+        />
+        <label
+          htmlFor="gift-type-mapping"
+          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
+          Use a different default debit account for each Virtuous gift type
+        </label>
+      </div>
+      {enableMapping && (
+        <div
+          className={`flex flex-col gap-3 ${
+            align === 'center' ? 'items-center' : 'items-start'
+          }`}
+        >
+          {giftTypes.map((giftType) => (
+            <div
+              className={`flex flex-col ${
+                align === 'center' ? 'items-center' : 'items-start'
+              }`}
+            >
+              <p className="mb-1 font-bold">{giftType}</p>
+              <Combobox
+                value={map[giftType]}
+                onChange={(val) =>
+                  setMap({
+                    ...map,
+                    [giftType]: val,
+                  })
+                }
+                isLoading={isLoading}
+                disabled={isLoading || isSaving}
+                options={options}
+              />
+            </div>
+          ))}
+        </div>
+      )}
 
       <button
         onClick={saveSelectedData}
@@ -147,7 +206,6 @@ export function UniversalSelect({
           }
         )}
         disabled={isLoading || isSaving}
-        {...props}
       >
         {isSaving && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
         {title}

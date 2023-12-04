@@ -56,6 +56,7 @@ model Team {
   defaultJournal         String?
   defaultCreditAccount   String?
   defaultDebitAccount    String?
+  defaultDebitAccountForGiftType Json?
   setupStep              String?
   ProjectAccountMapping  ProjectAccountMapping[]
   automation             Boolean?                @default(false)

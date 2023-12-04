@@ -11,6 +11,7 @@ import {
 const userUpdateSchema = z.object({
   selectValue: z.string().optional(),
   subType: z.string().optional(),
+  map: z.record(z.string(), z.number()).optional(),
 })
 
 export async function GET(req: Request) {
@@ -57,9 +58,14 @@ export async function POST(req: Request) {
     if (body.selectValue) {
       upsertFeAccountFromId(body.selectValue, user.team.id)
     }
+    if (body.map) {
+      Object.values(body.map).forEach((value) =>
+        upsertFeAccountFromId(value, user.team.id)
+      )
+    }
 
     if (body.subType === 'credit') {
-      const userSettings = await db.team.update({
+      await db.team.update({
         where: {
           id: user.team.id,
         },
@@ -71,12 +77,13 @@ export async function POST(req: Request) {
         },
       })
     } else {
-      const userSettings = await db.team.update({
+      await db.team.update({
         where: {
           id: user.team.id,
         },
         data: {
           defaultDebitAccount: body.selectValue,
+          defaultDebitAccountForGiftType: body.map ?? {},
         },
         select: {
           id: true,
@@ -90,6 +97,7 @@ export async function POST(req: Request) {
       return new Response(JSON.stringify(error.issues), { status: 422 })
     }
 
+    console.error(error)
     return new Response(null, { status: 500 })
   }
 }

@@ -8,6 +8,7 @@ import { getCurrentUser } from '@/lib/session'
 import { AutosaveSwitch } from '@/components/autosave-switch'
 import { RESettingsForm } from '@/components/dashboard/re-settings'
 import { UniversalSelect } from '@/components/dashboard/universal-select'
+import { DebitAccountSelector } from '@/components/DebitAccountSelector'
 import { DashboardHeader } from '@/components/header'
 import { DashboardShell } from '@/components/shell'
 
@@ -115,7 +116,6 @@ export default async function SettingsPage() {
                     route="/api/reJournals"
                     fields={['journal_code_id', 'code', 'journal']}
                     selected={user?.team?.defaultJournal}
-                    redirect="/dashboard/settings"
                     align="left"
                   />
                 </div>
@@ -125,18 +125,10 @@ export default async function SettingsPage() {
                 <span className="text-accent-1">Default Debit Account</span>{' '}
                 Select your default debit account from Financial Edge.
                 <div className="justify-left mr-4 flex flex-col justify-center space-y-2 text-center text-white">
-                  <UniversalSelect
+                  <DebitAccountSelector
                     title="Save"
-                    route="/api/feAccounts"
-                    subType="debit"
-                    fields={[
-                      'account_id',
-                      'account_number',
-                      'description',
-                      'class',
-                    ]}
-                    selected={user?.team?.defaultDebitAccount}
-                    redirect="/dashboard/settings"
+                    initialValue={user?.team?.defaultDebitAccount}
+                    initialMapping={user?.team?.defaultDebitAccountForGiftType}
                     initialData={feAccounts}
                     align="left"
                   />
@@ -157,7 +149,6 @@ export default async function SettingsPage() {
                     ]}
                     subType="credit"
                     selected={user?.team?.defaultCreditAccount}
-                    redirect="/dashboard/settings"
                     initialData={feAccounts}
                     align="left"
                   />
