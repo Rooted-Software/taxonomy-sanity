@@ -22,7 +22,6 @@ export default async function ConnectVirtuousOrg() {
           <UniversalSelect
             title="Save and Continue"
             route={process.env.NEXT_PUBLIC_APP_URL + '/api/virOrg'}
-            method="GET"
             fields={[
               'organizationUserId',
               'organizationName',

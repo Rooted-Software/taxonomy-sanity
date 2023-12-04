@@ -18,7 +18,6 @@ export default async function ConnectFEPage() {
       <UniversalSelect
         title="Save and Continue"
         route={process.env.NEXT_PUBLIC_APP_URL + '/api/reJournals'}
-        method="GET"
         fields={['journal_code_id', 'code', 'journal']}
         selected={user?.team?.defaultJournal}
         redirect="/step4"

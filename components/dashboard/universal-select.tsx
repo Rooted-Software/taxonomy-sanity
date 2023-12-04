@@ -1,316 +1,208 @@
-"use client"
+'use client'
 
-import { Icons } from "@/components/icons"
+import { cn } from '@/lib/utils'
+import { toast } from '@/components/ui/use-toast'
+import { Icons } from '@/components/icons'
+
+import '@/styles/globals.css'
+
+import * as React from 'react'
+import { useRouter } from 'next/navigation'
+import { ChevronsUpDown } from 'lucide-react'
+
+import { Button } from '../ui/button'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { toast } from "@/components/ui/use-toast"
-import { cn } from "@/lib/utils"
-import "@/styles/globals.css"
-import { useRouter } from "next/navigation"
-import * as React from "react"
-import { Fragment } from "react"
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from '../ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 
 interface UniversalButtonProps {
   title: String
   route: RequestInfo
-  method: String
   fields: string[]
   redirect: string
   selected: any
   subType?: string
   initialData?: Array<any>
+  align?: 'left' | 'center'
 }
 
 export function UniversalSelect({
   title,
   route,
-  method,
   fields,
   selected,
   subType,
   redirect,
   initialData,
+  align = 'center',
   ...props
 }: UniversalButtonProps) {
   const router = useRouter()
-  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const [isLoading, setIsLoading] = React.useState<boolean>(true)
+  const [isSaving, setIsSaving] = React.useState<boolean>(false)
   const [returnedData, setReturnedData] = React.useState(initialData)
   const [selectValue, setSelectValue] = React.useState(
     selected ?? initialData?.[0][fields[0]]?.toString()
   )
-  const [selectTitle, setSelecTitle] = React.useState(selected)
-  const [filterValue, setFilterValue] = React.useState("")
-  const [filteredObjects, setFilteredObjects] = React.useState(initialData)
-  console.log(selected)
-
-  async function getInitialData() {
-    console.log("getInitialData")
-    if (isLoading && route) {
-      return
-    }
-    setIsLoading(true)
-    setReturnedData([])
-    setFilterValue("")
-    console.log(route)
-
-    const response = await fetch(route, {
-      method: "GET",
-    })
-
-    console.log(response)
-    if (!response?.ok) {
-      if (response.status === 429) {
-        console.log(response)
-        const data = await response.json()
-        console.log(data)
-        return toast({
-          title: "API rate limit exceeded",
-          description: data.message,
-          variant: "destructive",
-        })
-      }
-
-      return toast({
-        title: "Something went wrong.",
-        description: "Your post was not created. Please try again.",
-        variant: "destructive",
-      })
-    }
-
-    const data = await response.json()
-    console.log(data)
-    if (data?.length > 0) {
-      setReturnedData(data)
-      setFilteredObjects(data)
-
-      if (selected === undefined || selected === null || selected === "") {
-        setSelectValue(data[0][fields[0]]?.toString())
-      }
-    }
-    console.log(data[0][fields[0]])
-    setIsLoading(false)
-    // This forces a cache invalidation.
-  }
-
-  function selectLabel() {
-    if (
-      selectValue === undefined ||
-      selectValue === null ||
-      selectValue === ""
-    ) {
-      return <>Loading...</>
-    }
-    if (!returnedData || returnedData.length === 0) {
-      return <>Loading...</>
-    }
-    console.log("Selected Value")
-    console.log(selectValue)
-    const aLabel = returnedData.find((item, indexA) => {
-      console.log(item[fields[0]].toString() === selectValue.toString())
-      return item[fields[0]].toString() === selectValue.toString()
-    })
-    console.log("Selected Label")
-    console.log(aLabel)
-    if (aLabel === undefined) {
-      return <>Loading...</>
-    }
-    let item = aLabel
-    return (
-      <>
-        {fields?.map((field: any, index) => {
-          if (index > 0) {
-            return (
-              <Fragment key={item[field] + index + "-key"}>
-                {" "}
-                {item[field]}{" "}
-              </Fragment>
-            )
-          } else {
-            return <Fragment key={item[field] + index + "-key"}></Fragment>
-          }
-        })}
-      </>
-    )
-  }
-
-  function updateFilter() {
-    if (filterValue === "" || filterValue === null) {
-      setFilteredObjects(returnedData)
-    } else {
-      setFilteredObjects(
-        returnedData.filter((item) => {
-          var text = ""
-          fields?.forEach((field: any, index) => {
-            if (index > 0) {
-              text = text + item[field]?.toString().toLowerCase()
-            }
-          })
-
-          return text.includes(filterValue.toLowerCase())
-        })
-      )
-    }
-  }
+  const [open, setOpen] = React.useState(false)
 
   React.useEffect(() => {
-    updateFilter()
-  }, [filterValue])
+    ;(async () => {
+      try {
+        const response = await fetch(route, {
+          method: 'GET',
+        })
+
+        if (!response?.ok) {
+          if (response.status === 429) {
+            const data = await response.json()
+            return toast({
+              title: 'API rate limit exceeded',
+              description: data.message,
+              variant: 'destructive',
+            })
+          }
+
+          return toast({
+            title: 'Something went wrong.',
+            description: 'Could not fetch data. Please try again.',
+            variant: 'destructive',
+          })
+        }
+
+        const data = await response.json()
+        if (data?.length > 0) {
+          setReturnedData(data)
+
+          if (selected === undefined || selected === null || selected === '') {
+            setSelectValue(data[0][fields[0]]?.toString())
+          }
+        }
+      } finally {
+        setIsLoading(false)
+      }
+    })()
+  }, [])
+
+  const selectLabel = React.useMemo(() => {
+    if (isLoading) {
+      return 'Loading...'
+    }
+
+    const item = selectValue
+      ? returnedData?.find(
+          (item) => item[fields[0]].toString() === selectValue.toString()
+        )
+      : undefined
+
+    return item
+      ? fields
+          .map((f) => item[f])
+          .slice(1)
+          .join(' ')
+      : 'Not Set'
+  }, [selectValue, returnedData, fields, isLoading])
 
   async function saveSelectedData() {
-    console.log("getInitialData")
-    if (isLoading) {
+    if (isSaving) {
       return
     }
-    setIsLoading(true)
-
-    const bodyJson = JSON.stringify({
-      route: route,
-      selectValue: selectValue,
-      subType: subType,
-    })
-    console.log(bodyJson)
+    setIsSaving(true)
 
     const response = await fetch(route, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
-      body: bodyJson,
+      body: JSON.stringify({
+        route: route,
+        selectValue: selectValue.toString(),
+        subType: subType,
+      }),
     })
 
-    setIsLoading(false)
+    setIsSaving(false)
 
     if (!response?.ok) {
       if (response.status === 429) {
-        console.log(response)
         const data = await response.json()
-        console.log(data)
         return toast({
-          title: "API rate limit exceeded",
+          title: 'API rate limit exceeded',
           description: data.message,
-          variant: "destructive",
+          variant: 'destructive',
         })
       }
       return toast({
-        title: "Something went wrong.",
-        description: "Your post was not created. Please try again.",
-        variant: "destructive",
+        title: 'Something went wrong.',
+        description: 'Your selection was not saved. Please try again.',
+        variant: 'destructive',
       })
     }
 
     router.push(redirect)
   }
 
-  if (!isLoading && (returnedData?.length ?? 0) < 1) {
-    getInitialData()
-  }
-
   return (
-    <div className="min-w-xl space-y-5 p-5 pt-2">
-      <DropdownMenu>
-        {!isLoading ? (
-          <DropdownMenuTrigger className="text-md h-10 w-full rounded-full border border-accent-1 bg-accent-1 px-5 py-2 text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
-            {selectLabel()}
-            <svg
-              className="float-right ml-2.5 mt-2 h-2.5 w-2.5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 10 6"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m1 1 4 4 4-4"
-              />
-            </svg>
-          </DropdownMenuTrigger>
-        ) : (
-          <div className="text-md mx-5 mb-0 mt-4 h-10 w-full overflow-hidden rounded-full  border border-accent-1 bg-accent-1 px-5 py-2  text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
-            <div className="">
-              {selectLabel()}
-              <svg
-                className="float-right ml-2.5 mt-2 h-2.5 w-2.5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 10 6"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m1 1 4 4 4-4"
-                />
-              </svg>
-            </div>
-          </div>
-        )}
-
-        <DropdownMenuContent
-          align="start"
-          className="w-100 dropdown ml-5 border-none border-whiteSmoke bg-whiteSmoke text-dark"
-        >
-          <input
-            type="text"
-            autoComplete="off"
-            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2  text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            value={filterValue}
-            onChange={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              setFilterValue(e.target.value ?? null)
-            }}
-            id="inputSearch"
-            placeholder="Search"
-          />
-          {filteredObjects?.map((item: any, index) => (
-            <DropdownMenuItem
-              className="w-100 border-none border-whiteSmoke bg-whiteSmoke"
-              key={"option" + index}
-              data-value={item[fields[0]]}
-              onClick={(e) =>
-                setSelectValue((e.target as HTMLElement).dataset.value)
-              }
-            >
-              {fields?.map((field: any, index) => {
-                if (index > 0) {
-                  return (
-                    <Fragment key={item[field] + index + "-key"}>
-                      {" "}
-                      {item[field]}{" "}
-                    </Fragment>
-                  )
-                } else {
-                  return (
-                    <Fragment key={item[field] + index + "-key"}></Fragment>
-                  )
-                }
-              })}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+    <div
+      className={`min-w-xl flex flex-col space-y-5 py-5 pt-2 ${
+        align === 'center' ? 'items-center' : 'items-start'
+      }`}
+    >
+      <Popover open={open && !!returnedData?.length} onOpenChange={setOpen}>
+        <PopoverTrigger>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            disabled={isLoading || isSaving}
+            className="text-md h-10 w-full rounded-full border border-accent-1 bg-accent-1 py-2 px-5 text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+          >
+            {selectLabel}
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="p-0" align="start">
+          <Command className="h-full">
+            <CommandInput placeholder="Search..." />
+            <CommandEmpty>No results</CommandEmpty>
+            <CommandGroup className="popover-list">
+              {returnedData?.map((item: any) => (
+                <CommandItem
+                  key={item[fields[0]]}
+                  value={item[fields[0]]}
+                  onSelect={() => {
+                    setSelectValue(item[fields[0]])
+                    setOpen(false)
+                  }}
+                >
+                  {fields
+                    .slice(1)
+                    .map((f) => item[f])
+                    .join(' ')}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </Command>
+        </PopoverContent>
+      </Popover>
 
       <button
         onClick={saveSelectedData}
         className={cn(
-          "font-large relative inline-flex h-9 items-center rounded-full border border-transparent bg-whiteSmoke  px-5  py-1 text-lg text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2",
+          'font-large relative inline-flex h-9 items-center rounded-full border border-transparent bg-whiteSmoke py-1 px-5 text-lg text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
           {
-            "cursor-not-allowed opacity-60": isLoading,
+            'cursor-not-allowed opacity-60': isLoading || isSaving,
           }
         )}
-        disabled={isLoading}
+        disabled={isLoading || isSaving}
         {...props}
       >
-        {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
+        {isSaving && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
         {title}
       </button>
     </div>
