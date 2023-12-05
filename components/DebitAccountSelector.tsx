@@ -35,7 +35,7 @@ export function DebitAccountSelector({
   redirect?: string
   align?: 'left' | 'center'
   initialValue?: string
-  initialMapping?: Record<string, string>
+  initialMapping?: Record<string, number>
   initialData?: Array<any>
 }) {
   const router = useRouter()
@@ -103,7 +103,7 @@ export function DebitAccountSelector({
       },
       body: JSON.stringify({
         route: route,
-        selectValue,
+        selectValue: selectValue,
         map: enableMapping ? map : undefined,
         subType: 'debit',
       }),
@@ -133,7 +133,7 @@ export function DebitAccountSelector({
   }
 
   const options = returnedData?.map((item: any) => ({
-    value: item[fields[0]],
+    value: item[fields[0]].toString(),
     label: fields
       .slice(1)
       .map((f) => item[f])
@@ -181,11 +181,11 @@ export function DebitAccountSelector({
             >
               <p className="mb-1 font-bold">{giftType}</p>
               <Combobox
-                value={map[giftType]}
+                value={map[giftType]?.toString()}
                 onChange={(val) =>
                   setMap({
                     ...map,
-                    [giftType]: val,
+                    [giftType]: parseInt(val),
                   })
                 }
                 isLoading={isLoading}

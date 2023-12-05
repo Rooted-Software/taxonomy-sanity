@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client'
 import { getServerSession } from 'next-auth'
 import * as z from 'zod'
 
@@ -31,31 +32,24 @@ const mappingCreateSchema = z.object({
       name: z.string(),
     })
     .array(),
-  feAccountID: z.string().optional(),
+  feCreditAccountID: z.string().optional(),
+  feDebitAccountID: z.string().optional(),
+  feDebitAccountForGiftType: z.record(z.string(), z.number()).optional(),
 })
 
 async function upsertMapping(
-  virProjectId: number,
-  feAccountID,
-  teamId,
-  virProjectName: string
+  teamId: string,
+  mapping: Prisma.ProjectAccountMappingCreateInput
 ) {
   await db.projectAccountMapping.upsert({
     where: {
       virProjectId_teamId: {
-        virProjectId,
-        teamId,
+        virProjectId: mapping.virProjectId,
+        teamId: teamId,
       },
     },
-    update: {
-      feAccountId: parseInt(feAccountID),
-    },
-    create: {
-      virProjectId,
-      virProjectName,
-      feAccountId: parseInt(feAccountID),
-      teamId,
-    },
+    update: mapping,
+    create: mapping,
   })
 }
 
@@ -105,30 +99,57 @@ export async function POST(req: Request) {
     console.log(body)
 
     // Cache FE Account so that we can always get to it during processing
-    if (body.feAccountID) {
-      upsertFeAccountFromId(body.feAccountID, user.team.id)
+    if (body.feCreditAccountID) {
+      await upsertFeAccountFromId(body.feCreditAccountID, user.team.id)
+    }
+    if (body.feDebitAccountID) {
+      await upsertFeAccountFromId(body.feDebitAccountID, user.team.id)
+    }
+    if (body.feDebitAccountForGiftType) {
+      await Promise.all(
+        Object.values(body.feDebitAccountForGiftType).map((id) =>
+          upsertFeAccountFromId(id, user.team.id)
+        )
+      )
     }
 
     if (body?.virProjects?.length == 0) {
-      // update default account if nothing is set....this is defunct
-      const userSettings = await db.team.update({
-        where: {
-          id: user.team.id,
-        },
-        data: {
-          defaultDebitAccount: body.feAccountID,
-        },
-        select: {
-          id: true,
-        },
-      })
-
       return new Response(null, { status: 200 })
     } else {
-      body?.virProjects?.forEach(({ id, name }) => {
-        console.log(id, name)
-        const map = upsertMapping(id, body.feAccountID, user.team.id, name)
-      })
+      await Promise.all(
+        body?.virProjects?.map(({ id, name }) =>
+          upsertMapping(user.team.id, {
+            team: {
+              connect: {
+                id: user.team.id,
+              },
+            },
+            virProjectId: id,
+            virProjectName: name,
+            feAccount: body.feCreditAccountID
+              ? {
+                  connect: {
+                    account_id_teamId: {
+                      account_id: parseInt(body.feCreditAccountID),
+                      teamId: user.team.id,
+                    },
+                  },
+                }
+              : undefined,
+            feDebitAccount: body.feDebitAccountID
+              ? {
+                  connect: {
+                    account_id_teamId: {
+                      account_id: parseInt(body.feDebitAccountID),
+                      teamId: user.team.id,
+                    },
+                  },
+                }
+              : undefined,
+            feDebitAccountForGiftType: body.feDebitAccountForGiftType,
+          })
+        )
+      )
     }
 
     return new Response(null, { status: 200 })
@@ -137,6 +158,7 @@ export async function POST(req: Request) {
       return new Response(JSON.stringify(error.issues), { status: 422 })
     }
 
+    console.error(error)
     return new Response(null, { status: 500 })
   }
 }
