@@ -1,3 +1,6 @@
+import { FeAccount, ProjectAccountMapping, Team } from '@prisma/client'
+import { JsonValue } from '@prisma/client/runtime/library'
+import { formatISO } from 'date-fns'
 import { z } from 'zod'
 
 import { db } from '@/lib/db'
@@ -51,39 +54,29 @@ async function createSyncHistory(batchId, status, duration, teamId) {
   })
 }
 
-export async function syncBatchGifts(teamId: string, batchId: string) {
-  console.log('POST RE Journal Entry Batches (test) API Route')
-  const start = performance.now()
+export type JournalEntry = {
+  type_code: 'Credit' | 'Debit'
+  account_number?: string
+  post_date: string
+  encumbrance: string
+  journal?: string
+  reference: string
+  amount: number
+  notes: string
+  class?: string | null
+  distributions: {
+    transaction_code_values?: JsonValue
+    percent: number
+    amount: number
+  }[]
+}
 
-  const team = await db.team.findUnique({
-    where: { id: teamId },
-  })
-
-  if (
-    team === null ||
-    team.defaultJournal === null ||
-    team.defaultCreditAccount === null ||
-    team.defaultDebitAccount === null
-  ) {
-    return { status: 'failure', message: 'not all required fields are set' }
-  }
-
-  const feAccountsData = getFeAccounts(teamId)
-  const mappingData = getProjectAccountMappings(teamId)
-  const [feAccounts, mappings] = await Promise.all([
-    feAccountsData,
-    mappingData,
-  ])
-  const defaultCreditAccount = parseInt(team.defaultCreditAccount)
-  const defaultDebitAccount = parseInt(team.defaultDebitAccount)
-  console.log('default credit account')
-  console.log(defaultCreditAccount)
-
-  function lookupAccount(accountId) {
-    const account = feAccounts.find((a) => a.account_id === accountId)
-    return account?.description
-  }
-
+export async function createJournalEntries(
+  gifts: any[],
+  feAccounts: Partial<FeAccount>[],
+  mappings: Partial<ProjectAccountMapping>[],
+  team: Team
+) {
   function lookupAccountNumber(accountId) {
     const account = feAccounts.find((a) => a.account_id === accountId)
     if (!account) {
@@ -107,190 +100,233 @@ export async function syncBatchGifts(teamId: string, batchId: string) {
     return account?.default_transaction_codes
   }
 
-  // get batch number
-  const batch = await getVirtuousBatch(teamId, batchId)
-  console.log('should have batch no')
-  if (batch) {
-    const gifts = batch.gifts
-    console.log(gifts)
-    var journalEntries = [] as Array<any>
-    console.log(team.defaultJournal)
-    const defaultJournal = await db.feJournal.findUnique({
-      where: {
-        teamId_id: {
-          id: parseInt(team.defaultJournal),
-          teamId: team.id,
-        },
+  const journalEntries = [] as JournalEntry[]
+
+  if (
+    team === null ||
+    team.defaultJournal === null ||
+    team.defaultCreditAccount === null ||
+    team.defaultDebitAccount === null
+  ) {
+    throw new Error('Team missing required fields')
+  }
+
+  const defaultJournal = await db.feJournal.findUnique({
+    where: {
+      teamId_id: {
+        id: parseInt(team.defaultJournal),
+        teamId: team.id,
       },
-      select: {
-        id: true,
-        code: true,
-        journal: true,
-      },
+    },
+    select: {
+      id: true,
+      code: true,
+      journal: true,
+    },
+  })
+
+  const defaultCreditAccount = parseInt(team.defaultCreditAccount)
+  const defaultDebitAccount = parseInt(team.defaultDebitAccount)
+
+  const debitByAccount = {}
+  const addDebitToAccount = (accountId: number, amount: number) => {
+    debitByAccount[accountId] = (debitByAccount[accountId] ?? 0) + amount
+  }
+
+  gifts.forEach((gift) => {
+    var totalDesignations: number = 0.0
+    let totalDesignationDebits = 0
+
+    // Create default distribution for gift
+    var overflowDistributions = [] as Array<any>
+    overflowDistributions.push({
+      transaction_code_values:
+        lookupAccountTransactionCodes(defaultCreditAccount), //lookup default transaction codes
+      percent: 100.0,
+      amount: gift?.amount || 0,
     })
-    console.log(defaultJournal)
+    console.log('overflow distributions')
+    console.log(gift.giftDesignations)
+    console.log(typeof gift.giftDesignations)
+    if (
+      Array.isArray(gift?.giftDesignations) &&
+      gift.giftDesignations.length > 0
+    ) {
+      gift?.giftDesignations?.forEach((designation: any): void => {
+        if (
+          designation &&
+          typeof designation === 'object' &&
+          designation.hasOwnProperty('projectId') &&
+          designation.hasOwnProperty('amountDesignated')
+        ) {
+          var subDistributions = [] as Array<any>
 
-    const debitByAccount = {}
-    const addDebitToAccount = (accountId: number, amount: number) => {
-      debitByAccount[accountId] = (debitByAccount[accountId] ?? 0) + amount
-    }
+          const mapping = designation?.projectId
+            ? mappings.find((m) => m.virProjectId === designation.projectId)
+            : null
+          console.log(mapping)
+          const creditAccountId = mapping?.feAccountId ?? defaultCreditAccount
+          const accno = lookupAccountNumber(creditAccountId)
+          const transaction_code_values =
+            lookupAccountTransactionCodes(creditAccountId)
 
-    gifts.forEach((gift) => {
-      var totalDesignations: number = 0.0
-      let totalDesignationDebits = 0
+          subDistributions.push({
+            transaction_code_values,
+            percent: 100.0,
+            amount:
+              designation && designation.amountDesignated
+                ? designation.amountDesignated
+                : 0,
+          })
 
-      // Create default distribution for gift
-      var overflowDistributions = [] as Array<any>
-      overflowDistributions.push({
-        transaction_code_values:
-          lookupAccountTransactionCodes(defaultCreditAccount), //lookup default transaction codes
-        percent: 100.0,
-        amount: gift?.amount || 0,
-      })
-      console.log('overflow distributions')
-      console.log(gift.giftDesignations)
-      console.log(typeof gift.giftDesignations)
-      if (
-        Array.isArray(gift?.giftDesignations) &&
-        gift.giftDesignations.length > 0
-      ) {
-        gift?.giftDesignations?.forEach((designation: any): void => {
-          if (
-            designation &&
-            typeof designation === 'object' &&
-            designation.hasOwnProperty('projectId') &&
-            designation.hasOwnProperty('amountDesignated')
-          ) {
-            var subDistributions = [] as Array<any>
+          totalDesignations += designation?.amountDesignated || 0
 
-            const mapping = designation?.projectId
-              ? mappings.find((m) => m.virProjectId === designation.projectId)
-              : null
-            console.log(mapping)
-            const creditAccountId = mapping?.feAccountId ?? defaultCreditAccount
-            const accno = lookupAccountNumber(creditAccountId)
-            const transaction_code_values =
-              lookupAccountTransactionCodes(creditAccountId)
-
-            subDistributions.push({
-              transaction_code_values,
-              percent: 100.0,
-              amount:
-                designation && designation.amountDesignated
-                  ? designation.amountDesignated
-                  : 0,
-            })
-
-            totalDesignations += designation?.amountDesignated || 0
-
-            // Handle credits
-            journalEntries.push({
-              type_code: 'Credit',
-              account_number: accno, //lookup account
-              post_date: '2018-07-02T00:00:00Z',
-              encumbrance: 'Regular',
-              journal: defaultJournal?.journal, //lookup default journal
-              reference: 'DonorSync',
-              amount:
-                designation && designation.amountDesignated
-                  ? designation.amountDesignated
-                  : 0,
-              notes: 'From DonorSync',
-              class: lookupAccountClassByAcctNo(accno),
-              distributions: subDistributions,
-            })
-
-            // Handle debits from mapping
-            if (designation && designation.amountDesignated) {
-              if (mapping?.feDebitAccountForGiftType?.[gift.giftType]) {
-                totalDesignationDebits += designation.amountDesignated
-                addDebitToAccount(
-                  mapping.feDebitAccountForGiftType[gift.giftType],
-                  designation.amountDesignated
-                )
-              } else if (mapping?.feDebitAccountId) {
-                totalDesignationDebits += designation.amountDesignated
-                addDebitToAccount(
-                  mapping.feDebitAccountId,
-                  designation.amountDesignated
-                )
-              }
-            }
-          }
-        })
-
-        // if we don't have enough designations to cover the gift, create a default entry for the remainder
-        if (gift?.amount && totalDesignations < gift.amount) {
+          // Handle credits
           journalEntries.push({
             type_code: 'Credit',
-            account_number: lookupAccountNumber(defaultCreditAccount), //lookup account
-            class: lookupAccountClass(defaultCreditAccount),
-            post_date: '2018-07-02T00:00:00Z',
+            account_number: accno, //lookup account
+            post_date: gift.giftDate,
             encumbrance: 'Regular',
             journal: defaultJournal?.journal, //lookup default journal
             reference: 'DonorSync',
-            amount: gift?.amount - totalDesignations,
+            amount:
+              designation && designation.amountDesignated
+                ? designation.amountDesignated
+                : 0,
             notes: 'From DonorSync',
-            distributions: overflowDistributions,
+            class: lookupAccountClassByAcctNo(accno),
+            distributions: subDistributions,
           })
+
+          // Handle debits from mapping
+          if (designation && designation.amountDesignated) {
+            if (mapping?.feDebitAccountForGiftType?.[gift.giftType]) {
+              totalDesignationDebits += designation.amountDesignated
+              addDebitToAccount(
+                mapping.feDebitAccountForGiftType[gift.giftType],
+                designation.amountDesignated
+              )
+            } else if (mapping?.feDebitAccountId) {
+              totalDesignationDebits += designation.amountDesignated
+              addDebitToAccount(
+                mapping.feDebitAccountId,
+                designation.amountDesignated
+              )
+            }
+          }
         }
-      } else {
-        // just push one entry if there are no designations
+      })
+
+      // if we don't have enough designations to cover the gift, create a default entry for the remainder
+      if (gift?.amount && totalDesignations < gift.amount) {
         journalEntries.push({
           type_code: 'Credit',
           account_number: lookupAccountNumber(defaultCreditAccount), //lookup account
           class: lookupAccountClass(defaultCreditAccount),
-          post_date: '2018-07-02T00:00:00Z',
+          post_date: gift.giftDate,
           encumbrance: 'Regular',
           journal: defaultJournal?.journal, //lookup default journal
           reference: 'DonorSync',
-          amount: gift?.amount || 0,
+          amount: gift?.amount - totalDesignations,
           notes: 'From DonorSync',
           distributions: overflowDistributions,
         })
       }
+    } else {
+      // just push one entry if there are no designations
+      journalEntries.push({
+        type_code: 'Credit',
+        account_number: lookupAccountNumber(defaultCreditAccount), //lookup account
+        class: lookupAccountClass(defaultCreditAccount),
+        post_date: gift.giftDate,
+        encumbrance: 'Regular',
+        journal: defaultJournal?.journal, //lookup default journal
+        reference: 'DonorSync',
+        amount: gift?.amount || 0,
+        notes: 'From DonorSync',
+        distributions: overflowDistributions,
+      })
+    }
 
-      // Handle debits by gift type that weren't handled by mapping
-      if (team.defaultDebitAccountForGiftType?.[gift.giftType]) {
-        addDebitToAccount(
-          team.defaultDebitAccountForGiftType[gift.giftType],
-          gift.amount - totalDesignationDebits
-        )
-      } else {
-        addDebitToAccount(
-          defaultDebitAccount,
-          gift.amount - totalDesignationDebits
-        )
-      }
-    })
+    // Handle debits by gift type that weren't handled by mapping
+    if (team.defaultDebitAccountForGiftType?.[gift.giftType]) {
+      addDebitToAccount(
+        team.defaultDebitAccountForGiftType[gift.giftType],
+        gift.amount - totalDesignationDebits
+      )
+    } else {
+      addDebitToAccount(
+        defaultDebitAccount,
+        gift.amount - totalDesignationDebits
+      )
+    }
+  })
 
-    // Create one debit per account
-    Object.keys(debitByAccount).forEach((accountIdStr) => {
-      const accountId = parseInt(accountIdStr)
-      const account = feAccounts.find((a) => a.account_id === accountId)
-      if (account) {
-        journalEntries.push({
-          type_code: 'Debit',
-          account_number: account?.account_number,
-          class: account.class,
-          post_date: '2018-07-02T00:00:00Z',
-          encumbrance: 'Regular',
-          journal: defaultJournal?.journal,
-          reference: 'DonorSync',
-          amount: debitByAccount[accountId],
-          notes: 'From DonorSync',
-          distributions: [
-            {
-              transaction_code_values: account.default_transaction_codes,
-              percent: 100.0,
-              amount: debitByAccount[accountId],
-            },
-          ],
-        })
-      } else {
-        console.error(`Couldn't find FE account for ID ${accountId}`)
-      }
-    })
+  // Create one debit per account
+  Object.keys(debitByAccount).forEach((accountIdStr) => {
+    const accountId = parseInt(accountIdStr)
+    const account = feAccounts.find((a) => a.account_id === accountId)
+    if (account) {
+      journalEntries.push({
+        type_code: 'Debit',
+        account_number: account?.account_number,
+        class: account.class,
+        post_date: formatISO(new Date()),
+        encumbrance: 'Regular',
+        journal: defaultJournal?.journal,
+        reference: 'DonorSync',
+        amount: debitByAccount[accountId],
+        notes: 'From DonorSync',
+        distributions: [
+          {
+            transaction_code_values: account.default_transaction_codes,
+            percent: 100.0,
+            amount: debitByAccount[accountId],
+          },
+        ],
+      })
+    } else {
+      console.error(`Couldn't find FE account for ID ${accountId}`)
+    }
+  })
+
+  return journalEntries
+}
+
+export async function syncBatchGifts(teamId: string, batchId: string) {
+  console.log('POST RE Journal Entry Batches (test) API Route')
+  const start = performance.now()
+
+  const team = await db.team.findUnique({
+    where: { id: teamId },
+  })
+
+  if (
+    team === null ||
+    team.defaultJournal === null ||
+    team.defaultCreditAccount === null ||
+    team.defaultDebitAccount === null
+  ) {
+    return { status: 'failure', message: 'not all required fields are set' }
+  }
+
+  const [feAccounts, mappings] = await Promise.all([
+    getFeAccounts(teamId),
+    getProjectAccountMappings(teamId),
+  ])
+
+  // get batch number
+  const batch = await getVirtuousBatch(teamId, batchId)
+  if (batch) {
+    const gifts = batch.gifts
+    console.log(gifts)
+
+    const journalEntries = await createJournalEntries(
+      gifts,
+      feAccounts,
+      mappings,
+      team
+    )
 
     const bodyJson = {
       description: batch.batch_name,

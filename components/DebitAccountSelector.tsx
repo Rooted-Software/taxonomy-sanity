@@ -158,7 +158,7 @@ export function DebitAccountSelector({
           type="checkbox"
           id="gift-type-mapping"
           checked={enableMapping}
-          onClick={() => setEnableMapping(!enableMapping)}
+          onChange={() => setEnableMapping(!enableMapping)}
         />
         <label
           htmlFor="gift-type-mapping"
