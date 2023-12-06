@@ -34,7 +34,7 @@ export default async function ReviewDataPage({ searchParams }) {
 
   const feAccountsData = getFeAccountsFromBlackbaud(user.team.id)
   const mappingData = getProjectAccountMappings(user.team.id)
-  const batchData = getVirtuousBatches(user.team.id)
+  const batchData = getVirtuousBatches(user.team.id, batchDays)
   const selectedBatchData = searchParams.batchId
     ? getVirtuousBatch(user.team.id, searchParams.batchId)
     : Promise.resolve()
