@@ -1,12 +1,11 @@
-import * as React from 'react'
 import { notFound } from 'next/navigation'
+import * as React from 'react'
 
-import { dashboardConfig } from '@/config/dashboard'
-import { getCurrentUser } from '@/lib/session'
 import { MainNav } from '@/components/main-nav'
 import { DashboardNav } from '@/components/nav'
 import { SiteFooter } from '@/components/site-footer'
-import { UserAccountNav } from '@/components/user-account-nav'
+import { dashboardConfig } from '@/config/dashboard'
+import { getCurrentUser } from '@/lib/session'
 
 interface DashboardLayoutProps {
   children?: React.ReactNode
@@ -28,15 +27,17 @@ export default async function DashboardLayout({
           <MainNav items={dashboardConfig.navigation} />
         </div>
       </header>
-      <div className="grid flex-1 md:grid-cols-[225px_1fr]">
-        <aside className="hidden w-[225px] flex-col bg-[#F5F5F5] text-dark md:flex">
+      <div className="flex">
+        <aside className="sticky top-0  h-screen ">
           <DashboardNav items={dashboardConfig.navigation} />
         </aside>
-        <main className="flex flex-1 flex-col bg-background px-4 py-6 md:px-10">
+        <main className="flex flex-1 flex-col overflow-y-auto bg-background px-4 py-6 md:px-10">
           {children}
+
+          <SiteFooter className="mt-auto border-t" />
         </main>
       </div>
-      <SiteFooter className="border-t" />
+
     </div>
   )
 }

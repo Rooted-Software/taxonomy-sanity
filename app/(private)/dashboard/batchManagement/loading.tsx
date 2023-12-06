@@ -1,12 +1,16 @@
 import Image from 'next/image'
 
+import { DashboardHeader } from "@/components/header"
+import { DashboardShell } from '@/components/shell'
+
 export default function DashboardLoading() {
   return (
-    <>
-      <div className="container mx-auto mt-8 grid w-full grid-cols-1 content-center items-center bg-dark pt-8 text-center  lg:max-w-none lg:grid-cols-1 lg:px-0">
-        getting projects and batches...
-        <br />
-        <br />
+    <DashboardShell>
+      <DashboardHeader
+        heading="Batch Management"
+        text=""
+      />
+      <div className="grid gap-10">
         <Image
           className="mx-auto animate-spin"
           src={'/icon.png'}
@@ -15,6 +19,6 @@ export default function DashboardLoading() {
           height={64}
         />
       </div>
-    </>
+    </DashboardShell>
   )
 }

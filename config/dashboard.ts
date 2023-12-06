@@ -9,12 +9,12 @@ export const dashboardConfig: DashboardConfig = {
     },
     {
       title: "Batch Management",
-      href: "/batchManagement",
+      href: "/dashboard/batchManagement",
       icon: "wallet",
     },
     {
       title: "Project Mapping",
-      href: "/projectMapping",
+      href: "/dashboard/projectMapping",
       icon: "map",
     },
     {

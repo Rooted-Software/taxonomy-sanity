@@ -1,15 +1,17 @@
 'use client'
 
-import * as React from 'react'
-import { useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import * as React from 'react'
+import { useEffect } from 'react'
 
-import { cn } from '@/lib/utils'
-import { toast } from '@/components/ui/use-toast'
 import { EmptyPlaceholder } from '@/components/empty-placeholder'
 import { Icons } from '@/components/icons'
+import { toast } from '@/components/ui/use-toast'
+import { cn } from '@/lib/utils'
 
+import { DashboardHeader } from "@/components/header"
+import { DashboardShell } from '../shell'
 import WindowOpenLink from '../ui/window-open-link'
 import styles from './grid.module.css'
 
@@ -215,10 +217,11 @@ export function BatchPreview({
   }, [batchDaysLoaded])
 
   return (
-    <div>
-      <h1 className="font-3xl my-0 p-4 py-0 text-3xl  font-bold text-white xl:m-4 xl:p-4">
-        {pathname === '/batchManagement' ? 'Batch Management' : 'Data Review'}{' '}
-      </h1>
+    <DashboardShell>
+      <DashboardHeader
+        heading={pathname === '/dashboard/batchManagement' ? 'Batch Management' : 'Data Review'}
+      />
+
       <div className="grid max-h-full w-full grid-cols-1 md:grid-cols-3">
         <div className="h-full bg-dark p-4 xl:p-8">
           <div className="m-auto flex flex-col justify-center space-y-3 xl:space-y-6 ">
@@ -227,7 +230,7 @@ export function BatchPreview({
                 <span className="font-bold text-accent-1">Batches</span>
               </p>
             </div>
-            <div className="justify-stretch flex w-full flex-row">
+            <div className="flex w-full flex-row justify-stretch">
               {batches?.length ? (
                 <div
                   className={`justify-left col-span-6 w-full overflow-scroll bg-whiteSmoke p-4 text-left text-dark`}
@@ -239,11 +242,10 @@ export function BatchPreview({
                         <Link
                           href={createBatchHref(batch.id)}
                           scroll={false}
-                          className={`flex w-full cursor-pointer flex-row items-center p-2  ${
-                            batch.id === selectedBatchId
-                              ? `bg-dark text-white`
-                              : `text-dark`
-                          }`}
+                          className={`flex w-full cursor-pointer flex-row items-center p-2  ${batch.id === selectedBatchId
+                            ? `bg-dark text-white`
+                            : `text-dark`
+                            }`}
                           onClick={() => {
                             setSelectedBatchId(batch.id)
                             setIsLoading(true)
@@ -574,6 +576,6 @@ export function BatchPreview({
 
         <div></div>
       </div>
-    </div>
+    </DashboardShell>
   )
 }

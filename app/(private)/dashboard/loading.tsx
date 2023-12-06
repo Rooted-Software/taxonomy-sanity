@@ -1,4 +1,4 @@
-import { DashboardHeader } from '@/components/dashboard/header'
+import { DashboardHeader } from '@/components/header'
 import { PostItem } from '@/components/post-item'
 import { DashboardShell } from '@/components/shell'
 

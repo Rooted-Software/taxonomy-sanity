@@ -1,34 +1,42 @@
 'use client'
 
+import { signOut } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { signOut } from 'next-auth/react'
 
-import { SidebarNavItem } from 'types'
-import { cn } from '@/lib/utils'
 import { Icons } from '@/components/icons'
+import { cn } from '@/lib/utils'
+import { useState } from 'react'
+import { SidebarNavItem } from 'types'
 
 interface DashboardNavProps {
   items: SidebarNavItem[]
 }
 
 export function DashboardNav({ items }: DashboardNavProps) {
-  const path = usePathname()
+  const [open, setOpen] = useState(true);
+  const path = usePathname();
+
+  const toggleOpen = () => {
+    const newState = open ? false : true;
+    setOpen(newState);
+  }
 
   if (!items?.length) {
     return null
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className={`hidden ${open ? "w-[225px]" : "w-20"} h-screen flex-col bg-[#F5F5F5] text-dark duration-300 md:flex`}>
+      <Icons.chevronLeft onClick={toggleOpen} className={` ${!open ? 'rotate-180' : ''} border-dark-purple absolute -right-3 top-9 w-7 cursor-pointer rounded-full border-2 bg-[#F5F5F5]`}></Icons.chevronLeft>
       <div className="group flex items-center p-4 pb-7">
         <a
           className="hidden items-center space-x-2 md:flex"
           href="https://app.donorsync.org"
         >
           <Image width={24} height={24} src="/icon.png" alt="" />
-          <span className="hidden font-bold sm:inline-block">DonorSync</span>
+          <span className={`${open ? 'sm:inline-block' : 'hidden'} font-bold duration-200 `}>DonorSync</span>
         </a>
       </div>
 
@@ -46,14 +54,14 @@ export function DashboardNav({ items }: DashboardNavProps) {
                   )}
                 >
                   <Icon className="mr-2 h-4 w-4" />
-                  <span>{item.title}</span>
+                  <span className={`${open ? '' : 'hidden'} `}>{item.title}</span>
                 </span>
               </Link>
             )
           )
         })}
       </nav>
-      <nav className="mb-7 mt-auto">
+      <nav className="mb-7 mt-auto grid gap-2">
         <Link href="/dashboard/support">
           <span
             className={cn(
@@ -62,7 +70,7 @@ export function DashboardNav({ items }: DashboardNavProps) {
             )}
           >
             <Icons.help className="mr-2 h-4 w-4" />
-            <span>Support</span>
+            <span className={`${open ? '' : 'hidden'} `}>Support</span>
           </span>
         </Link>
         <a
@@ -81,10 +89,10 @@ export function DashboardNav({ items }: DashboardNavProps) {
             )}
           >
             <Icons.logOut className="mr-2 h-4 w-4" />
-            <span>Log Out</span>
+            <span className={`${open ? '' : 'hidden'} `}>Log Out</span>
           </span>
         </a>
       </nav>
-    </div>
+    </div >
   )
 }

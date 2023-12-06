@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 
-import { dashboardConfig } from '@/config/dashboard'
+import { BatchPreview } from '@/components/dashboard/batch-preview'
 import { db } from '@/lib/db'
 import { getFeAccountsFromBlackbaud } from '@/lib/feAccounts'
 import { getCurrentUser } from '@/lib/session'
@@ -11,9 +11,6 @@ import {
   getVirtuousBatches,
 } from '@/lib/virGifts'
 import { getProjectAccountMappings } from '@/lib/virProjects'
-import { BatchPreview } from '@/components/dashboard/batch-preview'
-import { MainNav } from '@/components/main-nav'
-import { UserAccountNav } from '@/components/user-account-nav'
 
 // TODO: show sync date and view in FE in gift panel
 // TODO: add note that any changes since sync date are not carried over
@@ -107,39 +104,26 @@ export default async function BatchManagementPage({ searchParams }) {
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b bg-background">
-        <div className="container flex h-16 items-center justify-between py-4">
-          <MainNav items={dashboardConfig.mainNav} />
-          <UserAccountNav
-            user={{
-              name: user.name,
-              image: user.image,
-              email: user.email,
-            }}
-          />
-        </div>
-      </header>
-      <div>
-        {batches && feAccounts && mappings && projects ? (
-          <BatchPreview
-            batches={batches}
-            projects={projects}
-            feAccounts={feAccounts}
-            mappings={mappings}
-            defaultCreditAccount={user?.team.defaultCreditAccount}
-            defaultDebitAccount={user?.team.defaultDebitAccount}
-            defaultJournal={user?.team.defaultJournal}
-            feEnvironment={feEnvironment.environment_id}
-            journalName={journalName.journal}
-            batchDaysLoaded={batchDays}
-            nextBatchDays={nextBatchDays}
-            selectedBatch={selectedBatch}
-            className="border-slate-200 bg-white text-brand-900 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
-          />
-        ) : (
-          `getting projects and accounts...`
-        )}
-      </div>
+      {batches && feAccounts && mappings && projects ? (
+        <BatchPreview
+          batches={batches}
+          projects={projects}
+          feAccounts={feAccounts}
+          mappings={mappings}
+          defaultCreditAccount={user?.team.defaultCreditAccount}
+          defaultDebitAccount={user?.team.defaultDebitAccount}
+          defaultJournal={user?.team.defaultJournal}
+          feEnvironment={feEnvironment.environment_id}
+          journalName={journalName.journal}
+          batchDaysLoaded={batchDays}
+          nextBatchDays={nextBatchDays}
+          selectedBatch={selectedBatch}
+
+        />
+      ) : (
+        `getting projects and accounts...`
+      )}
+
     </>
   )
 }
