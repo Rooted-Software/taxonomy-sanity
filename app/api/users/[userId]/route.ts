@@ -3,7 +3,7 @@ import { z } from 'zod'
 
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
-import { userNameSchema } from '@/lib/validations/user'
+import { userRoleSchema } from '@/lib/validations/userRole'
 
 const routeContextSchema = z.object({
   params: z.object({
@@ -20,23 +20,34 @@ export async function PATCH(
     // Validate the route context.
     const { params } = routeContextSchema.parse(context)
 
-    // Ensure user is authentication and has access to this user.
+    // Is this Necesary? retrieve the user from database because we dont trust the frontend
+    const userToModify = await db.user.findUniqueOrThrow({
+      select: {
+        id: true,
+        teamId: true,
+      },
+      where: {
+        id: params.userId,
+      },
+    })
+    // Ensure user is authenticated and is removing a user from the same team
     const session = await getServerSession(authOptions)
-    if (!session?.user || params.userId !== session?.user.id) {
+    if (!session?.user || session?.user.role == 'admin' || session?.user.teamId !== userToModify.teamId) {
       return new Response(null, { status: 403 })
     }
 
+
     // Get the request body and validate it.
     const body = await req.json()
-    const payload = userNameSchema.parse(body)
+    const payload = userRoleSchema.parse(body)
 
     // Update the user.
     await db.user.update({
       where: {
-        id: session.user.id,
+        id: userToModify.id,
       },
       data: {
-        name: payload.name,
+        role: payload.role,
       },
     })
 

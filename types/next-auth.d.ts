@@ -13,6 +13,7 @@ declare module 'next-auth/jwt' {
       email: string
       picture: string
       setupStep: string
+      // eslint-disable-next-line no-undef
       team: Team
       teamId: string
     }
@@ -23,8 +24,10 @@ declare module 'next-auth' {
   interface Session {
     user: User & {
       id: UserId
+      // eslint-disable-next-line no-undef
       team: Team
       teamId: string
+      role: 'admin' | 'user'
     }
   }
 }
