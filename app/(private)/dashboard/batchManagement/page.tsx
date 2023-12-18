@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation'
 
-import { BatchPreview } from '@/components/dashboard/batch-preview'
 import { db } from '@/lib/db'
 import { getFeAccountsFromBlackbaud } from '@/lib/feAccounts'
+import { createJournalEntries } from '@/lib/feGiftBatches'
 import { getCurrentUser } from '@/lib/session'
 import { dateFilterOptions } from '@/lib/utils'
 import {
@@ -11,6 +11,7 @@ import {
   getVirtuousBatches,
 } from '@/lib/virGifts'
 import { getProjectAccountMappings } from '@/lib/virProjects'
+import { BatchPreview } from '@/components/dashboard/batch-preview'
 
 // TODO: show sync date and view in FE in gift panel
 // TODO: add note that any changes since sync date are not carried over
@@ -118,12 +119,20 @@ export default async function BatchManagementPage({ searchParams }) {
           batchDaysLoaded={batchDays}
           nextBatchDays={nextBatchDays}
           selectedBatch={selectedBatch}
-
+          journalEntries={
+            selectedBatch
+              ? await createJournalEntries(
+                  selectedBatch.gifts,
+                  feAccounts,
+                  mappings,
+                  user.team
+                )
+              : undefined
+          }
         />
       ) : (
         `getting projects and accounts...`
       )}
-
     </>
   )
 }

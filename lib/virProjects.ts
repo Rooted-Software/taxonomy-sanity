@@ -10,6 +10,8 @@ export const getProjectAccountMappings = async (teamId) => {
       virProjectId: true,
       feAccountId: true,
       virProjectName: true,
+      feDebitAccountId: true,
+      feDebitAccountForGiftType: true,
     },
     where: {
       teamId: teamId,

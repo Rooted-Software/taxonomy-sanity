@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 
 import { getFeAccountsFromBlackbaud } from '@/lib/feAccounts'
 import { getFeEnvironment, getFeJournalName } from '@/lib/feEnvironment'
+import { createJournalEntries } from '@/lib/feGiftBatches'
 import { getCurrentUser } from '@/lib/session'
 import { dateFilterOptions } from '@/lib/utils'
 import {
@@ -71,6 +72,7 @@ export default async function ReviewDataPage({ searchParams }) {
   if (!journalName) {
     redirect('/step3')
   }
+
   return (
     <div className="flex h-full w-full flex-col justify-center">
       {batches && feAccounts && mappings && projects ? (
@@ -87,7 +89,16 @@ export default async function ReviewDataPage({ searchParams }) {
           batchDaysLoaded={batchDays}
           nextBatchDays={nextBatchDays}
           selectedBatch={selectedBatch}
-          className="border-slate-200 bg-white text-brand-900 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+          journalEntries={
+            selectedBatch
+              ? await createJournalEntries(
+                  selectedBatch.gifts,
+                  feAccounts,
+                  mappings,
+                  user.team
+                )
+              : undefined
+          }
         />
       ) : (
         `getting projects and accounts...`

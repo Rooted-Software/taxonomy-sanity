@@ -1,16 +1,18 @@
 'use client'
 
-import Link from 'next/link'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import * as React from 'react'
 import { useEffect } from 'react'
+import Link from 'next/link'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { format } from 'date-fns'
 
-import { EmptyPlaceholder } from '@/components/empty-placeholder'
-import { Icons } from '@/components/icons'
-import { toast } from '@/components/ui/use-toast'
+import { JournalEntry } from '@/lib/feGiftBatches'
 import { cn } from '@/lib/utils'
+import { toast } from '@/components/ui/use-toast'
+import { EmptyPlaceholder } from '@/components/empty-placeholder'
+import { DashboardHeader } from '@/components/header'
+import { Icons } from '@/components/icons'
 
-import { DashboardHeader } from "@/components/header"
 import { DashboardShell } from '../shell'
 import WindowOpenLink from '../ui/window-open-link'
 import styles from './grid.module.css'
@@ -20,6 +22,7 @@ interface BatchPreviewProps extends React.HTMLAttributes<HTMLButtonElement> {
   feAccounts: any[]
   mappings: any[]
   batches: any[]
+  journalEntries?: JournalEntry[]
   defaultCreditAccount?: any
   defaultDebitAccount?: any
   defaultJournal?: any
@@ -35,12 +38,11 @@ export function BatchPreview({
   feAccounts,
   mappings,
   batches,
-  className,
+  journalEntries,
   defaultCreditAccount,
   defaultDebitAccount,
   defaultJournal,
   feEnvironment,
-  journalName,
   batchDaysLoaded,
   nextBatchDays,
   selectedBatch,
@@ -66,41 +68,6 @@ export function BatchPreview({
     setSelectedBatchId(selectedBatch?.id)
   }, [selectedBatch])
 
-  const [virProjectID, setVirProjectID] = React.useState<any[]>([])
-  const [feAccountID, setFeAccountID] = React.useState('')
-  const [feAccountObj, setFeAccountObj] = React.useState({})
-  const [textFilter, setTextFilter] = React.useState('')
-  const [textFeFilter, setTextFeFilter] = React.useState('')
-  const [filteredProjects, setFilteredProjects] =
-    React.useState<any[]>(projects)
-  const [filteredAccounts, setFilteredAccounts] =
-    React.useState<any[]>(feAccounts)
-
-  // Project filters
-  const [filterProjectName, setFilterProjectName] =
-    React.useState<boolean>(true)
-  const [filterProjectCode, setFilterProjectCode] =
-    React.useState<boolean>(true)
-  const [filterOnlineDisplayName, setFilterOnlineDisplayName] =
-    React.useState<boolean>(false)
-  const [filterExternalAccountingCode, setFilterExternalAccountingCode] =
-    React.useState<boolean>(true)
-  const [filterDescription, setFilterDescription] =
-    React.useState<boolean>(true)
-  const [filterIsActive, setFilterIsActive] = React.useState<boolean>(true)
-  const [filterIsPublic, setFilterIsPublic] = React.useState<boolean>(false)
-  const [filterIsTaxDeductible, setFilterIsTaxDeductible] =
-    React.useState<boolean>(false)
-  const [filterCase, setFilterCase] = React.useState<boolean>(false)
-
-  // Account filters
-  const [filterAccountId, setFilterAccountId] = React.useState<boolean>(true)
-  const [filterAccountDescription, setFilterAccountDescription] =
-    React.useState<boolean>(true)
-  const [filterAccountNumber, setFilterAccountNumber] =
-    React.useState<boolean>(true)
-  const [filterFeCase, setFilterFeCase] = React.useState<boolean>(false)
-
   const searchParams = useSearchParams()
 
   const {
@@ -115,6 +82,17 @@ export function BatchPreview({
     if (
       accountId === parseInt(defaultCreditAccount) ||
       accountId === parseInt(defaultDebitAccount)
+    ) {
+      return <span className="">{account?.description} (default)</span>
+    }
+    return <span className="">{account?.description}</span>
+  }
+
+  function lookupAccountForNumber(account_number?: string) {
+    const account = feAccounts.find((a) => a.account_number === account_number)
+    if (
+      account.account_id === parseInt(defaultCreditAccount) ||
+      account.account_id === parseInt(defaultDebitAccount)
     ) {
       return <span className="">{account?.description} (default)</span>
     }
@@ -219,7 +197,11 @@ export function BatchPreview({
   return (
     <DashboardShell>
       <DashboardHeader
-        heading={pathname === '/dashboard/batchManagement' ? 'Batch Management' : 'Data Review'}
+        heading={
+          pathname === '/dashboard/batchManagement'
+            ? 'Batch Management'
+            : 'Data Review'
+        }
       />
 
       <div className="grid max-h-full w-full grid-cols-1 md:grid-cols-3">
@@ -242,10 +224,11 @@ export function BatchPreview({
                         <Link
                           href={createBatchHref(batch.id)}
                           scroll={false}
-                          className={`flex w-full cursor-pointer flex-row items-center p-2  ${batch.id === selectedBatchId
-                            ? `bg-dark text-white`
-                            : `text-dark`
-                            }`}
+                          className={`flex w-full cursor-pointer flex-row items-center p-2  ${
+                            batch.id === selectedBatchId
+                              ? `bg-dark text-white`
+                              : `text-dark`
+                          }`}
                           onClick={() => {
                             setSelectedBatchId(batch.id)
                             setIsLoading(true)
@@ -329,7 +312,7 @@ export function BatchPreview({
                 className="justify-left col-span-6 w-full overflow-scroll bg-whiteSmoke p-4 text-left text-dark"
                 style={{ height: '45vh' }}
               >
-                {gifts?.length ? (
+                {journalEntries?.length ? (
                   <>
                     {!isLoading ? (
                       <>
@@ -407,83 +390,40 @@ export function BatchPreview({
                           <div className=" col-span-2  p-2 pl-3 font-bold">
                             Transaction Codes
                           </div>
-
-                          {gifts.map((gift, index) => (
+                          {journalEntries?.map((entry, index) => (
                             <>
-                              {/* do a credit for each designation */}
-                              {gift.giftDesignations.length > 0 ? (
-                                <>
-                                  {gift.giftDesignations.map((part, index) => (
-                                    <>
-                                      <div
-                                        key={'designation' + index}
-                                        className=" col-span-2  p-2 pl-3"
-                                      >
-                                        {lookupMapping(part.projectId)}
-                                      </div>
-                                      <div className=" p-2  pl-3 ">
-                                        {gift.giftDateFormatted}
-                                      </div>
-                                      <div className=" p-2  pl-3 ">
-                                        {journalName}
-                                      </div>
-                                      <div className=" p-2  pl-3 ">
-                                        DonorSync
-                                      </div>
-                                      <div className=" p-2  pl-3 "></div>
-                                      <div className=" p-2  pl-3 text-right">
-                                        ${part.amountDesignated.toFixed(2)}
-                                      </div>
+                              <div
+                                key={'entry-' + index}
+                                className=" col-span-2  p-2 pl-3"
+                              >
+                                {lookupAccountForNumber(entry.account_number)}
+                              </div>
+                              <div className=" p-2  pl-3 ">
+                                {format(
+                                  new Date(entry.post_date),
+                                  'MM/dd/yyyy'
+                                )}
+                              </div>
+                              <div className=" p-2  pl-3 ">{entry.journal}</div>
+                              <div className=" p-2  pl-3 ">
+                                {entry.reference}
+                              </div>
+                              <div className=" p-2  pl-3 text-right">
+                                {entry.type_code === 'Debit'
+                                  ? `$${entry.amount.toFixed(2)}`
+                                  : ''}
+                              </div>
+                              <div className=" p-2  pl-3 text-right">
+                                {entry.type_code === 'Credit'
+                                  ? `$${entry.amount.toFixed(2)}`
+                                  : ''}
+                              </div>
 
-                                      <div className=" col-span-2  p-2 pl-3">
-                                        Default Transaction Codes (Set in FE)
-                                      </div>
-                                    </>
-                                  ))}
-                                  {/* do a credit for difference between total and designation */}
-                                </>
-                              ) : (
-                                <>
-                                  {/* do a credit if there are no designations */}
-                                  <div className=" col-span-2  p-2 pl-3">
-                                    {lookupAccount(
-                                      parseInt(defaultCreditAccount)
-                                    )}
-                                  </div>
-                                  <div className=" p-2  pl-3 ">
-                                    {gift.giftDateFormatted}
-                                  </div>
-                                  <div className=" p-2  pl-3 ">
-                                    {journalName}
-                                  </div>
-                                  <div className=" p-2  pl-3 ">DonorSync</div>
-                                  <div className=" p-2  pl-3 "></div>
-                                  <div className=" p-2  pl-3 text-right">
-                                    ${gift.amount.toFixed(2)}
-                                  </div>
-
-                                  <div className=" col-span-2  p-2 pl-3">
-                                    Default Transaction Codes (Set in FE)
-                                  </div>
-                                </>
-                              )}
+                              <div className=" col-span-2  p-2 pl-3">
+                                Default Transaction Codes (Set in FE)
+                              </div>
                             </>
                           ))}
-                          {/* do the debit for total amount */}
-                          <div className=" col-span-2  p-2 pl-3">
-                            {lookupAccount(parseInt(defaultDebitAccount))}
-                          </div>
-                          <div className=" p-2  pl-3 "></div>
-                          <div className=" p-2  pl-3 ">{journalName}</div>
-                          <div className=" p-2  pl-3 ">DonorSync</div>
-
-                          <div className=" p-2  pl-3 text-right">
-                            ${batchCredits.toFixed(2)}
-                          </div>
-                          <div className=" p-2  pl-3 "></div>
-                          <div className=" col-span-2  p-2 pl-3">
-                            Default Transaction Codes (Set in FE)
-                          </div>
                         </div>
                       </>
                     ) : (

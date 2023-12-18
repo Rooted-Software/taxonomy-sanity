@@ -3,7 +3,7 @@ import { getFeAccountsFromBlackbaud } from '@/lib/feAccounts'
 import { getCurrentUser } from '@/lib/session'
 import { dateFilterOptions } from '@/lib/utils'
 import { getVirtuousProjects } from '@/lib/virProjects'
-import { MappingCreateButton } from '@/components/dashboard/mapping-create-button'
+import { MappingEditor } from '@/components/dashboard/mapping-editor'
 
 export const metadata = {
   title: 'Map your data',
@@ -17,6 +17,8 @@ const getProjectAccountMappings = async (teamId) => {
       virProjectName: true,
       virProjectId: true,
       feAccountId: true,
+      feDebitAccountId: true,
+      feDebitAccountForGiftType: true,
     },
     where: {
       teamId: teamId,
@@ -51,13 +53,12 @@ export default async function DataMapPage({ searchParams }) {
     <>
       <div>
         {projects && feAccounts ? (
-          <MappingCreateButton
+          <MappingEditor
             projects={projects}
             feAccounts={feAccounts}
             mappings={mappings}
             nextProjectDays={nextProjectDays}
             projectsDaysLoaded={projectDays}
-            className="border-slate-200 bg-white text-brand-900 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
           />
         ) : (
           `getting projects and accounts...`

@@ -8,23 +8,14 @@ import '@/styles/globals.css'
 
 import * as React from 'react'
 import { useRouter } from 'next/navigation'
-import { ChevronsUpDown } from 'lucide-react'
 
-import { Button } from '../ui/button'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from '../ui/command'
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import Combobox from '../ui/combobox'
 
 interface UniversalButtonProps {
   title: String
   route: RequestInfo
   fields: string[]
-  redirect: string
+  redirect?: string
   selected: any
   subType?: string
   initialData?: Array<any>
@@ -49,7 +40,6 @@ export function UniversalSelect({
   const [selectValue, setSelectValue] = React.useState(
     selected ?? initialData?.[0][fields[0]]?.toString()
   )
-  const [open, setOpen] = React.useState(false)
 
   React.useEffect(() => {
     ;(async () => {
@@ -89,25 +79,6 @@ export function UniversalSelect({
     })()
   }, [])
 
-  const selectLabel = React.useMemo(() => {
-    if (isLoading) {
-      return 'Loading...'
-    }
-
-    const item = selectValue
-      ? returnedData?.find(
-          (item) => item[fields[0]].toString() === selectValue.toString()
-        )
-      : undefined
-
-    return item
-      ? fields
-          .map((f) => item[f])
-          .slice(1)
-          .join(' ')
-      : 'Not Set'
-  }, [selectValue, returnedData, fields, isLoading])
-
   async function saveSelectedData() {
     if (isSaving) {
       return
@@ -144,7 +115,7 @@ export function UniversalSelect({
       })
     }
 
-    router.push(redirect)
+    if (redirect) router.push(redirect)
   }
 
   return (
@@ -153,43 +124,19 @@ export function UniversalSelect({
         align === 'center' ? 'items-center' : 'items-start'
       }`}
     >
-      <Popover open={open && !!returnedData?.length} onOpenChange={setOpen}>
-        <PopoverTrigger>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            disabled={isLoading || isSaving}
-            className="text-md h-10 w-full rounded-full border border-accent-1 bg-accent-1 py-2 px-5 text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-          >
-            {selectLabel}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="p-0" align="start">
-          <Command className="h-full">
-            <CommandInput placeholder="Search..." />
-            <CommandEmpty>No results</CommandEmpty>
-            <CommandGroup className="popover-list">
-              {returnedData?.map((item: any) => (
-                <CommandItem
-                  key={item[fields[0]]}
-                  value={item[fields[0]]}
-                  onSelect={() => {
-                    setSelectValue(item[fields[0]])
-                    setOpen(false)
-                  }}
-                >
-                  {fields
-                    .slice(1)
-                    .map((f) => item[f])
-                    .join(' ')}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </Command>
-        </PopoverContent>
-      </Popover>
+      <Combobox
+        value={selectValue}
+        onChange={setSelectValue}
+        isLoading={isLoading}
+        disabled={isLoading || isSaving}
+        options={returnedData?.map((item: any) => ({
+          value: item[fields[0]].toString(),
+          label: fields
+            .slice(1)
+            .map((f) => item[f])
+            .join(' '),
+        }))}
+      />
 
       <button
         onClick={saveSelectedData}

@@ -56,6 +56,7 @@ model Team {
   defaultJournal         String?
   defaultCreditAccount   String?
   defaultDebitAccount    String?
+  defaultDebitAccountForGiftType Json?
   setupStep              String?
   ProjectAccountMapping  ProjectAccountMapping[]
   automation             Boolean?                @default(false)
@@ -283,8 +284,11 @@ model ProjectAccountMapping {
   id             String    @id @default(cuid())
   virProjectId   Int
   virProjectName String
-  feAccount      FeAccount @relation(fields: [feAccountId, teamId], references: [account_id, teamId])
-  feAccountId    Int
+  feAccount      FeAccount? @relation(name: "credit", fields: [feAccountId, teamId], references: [account_id, teamId])
+  feAccountId    Int?
+  feDebitAccount FeAccount? @relation(name: "debit", fields: [feDebitAccountId, teamId], references: [account_id, teamId])
+  feDebitAccountId Int?
+  feDebitAccountForGiftType Json?
   teamId         String
   team           Team      @relation(fields: [teamId], references: [id])
 
@@ -311,7 +315,8 @@ model FeAccount {
   updatedAt                 DateTime                @default(now()) @map(name: "updated_at")
   teamId                    String
   team                      Team                    @relation(fields: [teamId], references: [id])
-  ProjectAccountMapping     ProjectAccountMapping[]
+  projectAccountMappingCredit ProjectAccountMapping[] @relation(name: "credit")
+  projectAccountMappingDebit ProjectAccountMapping[] @relation(name: "debit")
 
   @@id([account_id, teamId])
   @@unique([account_id, teamId])
