@@ -1,11 +1,12 @@
-import { notFound } from 'next/navigation'
 import * as React from 'react'
+import { notFound } from 'next/navigation'
 
+import { dashboardConfig } from '@/config/dashboard'
+import { getCurrentUser } from '@/lib/session'
+import SubscriptionBlock from '@/components/dashboard/subscription-block'
 import { MainNav } from '@/components/main-nav'
 import { DashboardNav } from '@/components/nav'
 import { SiteFooter } from '@/components/site-footer'
-import { dashboardConfig } from '@/config/dashboard'
-import { getCurrentUser } from '@/lib/session'
 
 interface DashboardLayoutProps {
   children?: React.ReactNode
@@ -18,6 +19,10 @@ export default async function DashboardLayout({
 
   if (!user) {
     return notFound()
+  }
+
+  if (!user.team.stripeSubscriptionId) {
+    return <SubscriptionBlock />
   }
 
   return (
@@ -37,7 +42,6 @@ export default async function DashboardLayout({
           <SiteFooter className="mt-auto border-t" />
         </main>
       </div>
-
     </div>
   )
 }

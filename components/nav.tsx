@@ -78,16 +78,11 @@ export function DashboardNav({ items }: DashboardNavProps) {
           onClick={(event) => {
             event.preventDefault()
             signOut({
-              callbackUrl: `${window.location.origin}/login?from=/dashboard`,
+              callbackUrl: `${window.location.origin}/login?from=${path}`,
             })
           }}
         >
-          <span
-            className={cn(
-              'group mr-8 flex items-center rounded-r-md py-2 pl-7 text-sm font-medium hover:bg-accent-1',
-              path === '/support' ? 'bg-accent-1' : 'transparent'
-            )}
-          >
+          <span className="group mr-8 flex items-center rounded-r-md py-2 pl-7 text-sm font-medium hover:bg-accent-1">
             <Icons.logOut className="mr-2 h-4 w-4" />
             <span className={`${open ? '' : 'hidden'} `}>Log Out</span>
           </span>

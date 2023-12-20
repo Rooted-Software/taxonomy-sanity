@@ -4,7 +4,6 @@ import * as z from 'zod'
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { RequiresProPlanError } from '@/lib/exceptions'
-import { getTeamSubscriptionPlan } from '@/lib/subscription'
 
 const postCreateSchema = z.object({
   title: z.string(),
@@ -44,23 +43,6 @@ export async function POST(req: Request) {
 
     if (!session) {
       return new Response('Unauthorized', { status: 403 })
-    }
-
-    const { user } = session
-    const subscriptionPlan = await getTeamSubscriptionPlan(user.team.id)
-
-    // If user is on a free plan.
-    // Check if user has reached limit of 3 posts.
-    if (!subscriptionPlan?.isPro) {
-      const count = await db.post.count({
-        where: {
-          authorId: user.id,
-        },
-      })
-
-      if (count >= 3) {
-        throw new RequiresProPlanError()
-      }
     }
 
     const json = await req.json()

@@ -1,5 +1,5 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import { Prisma } from '@prisma/client'
+import { Prisma, Team } from '@prisma/client'
 import Mailgun from 'mailgun.js'
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
@@ -7,6 +7,8 @@ import EmailProvider from 'next-auth/providers/email'
 
 import { siteConfig } from '@/config/site'
 import { db } from '@/lib/db'
+
+import { createSubscriptionIfNeeded } from './stripe'
 
 type Credentials = {
   email: string
@@ -17,10 +19,9 @@ type Credentials = {
 const FormData = require('form-data')
 
 const setDefaultNewTeam = async (user: any) => {
-  const stripe = require('stripe')(process.env.STRIPE_API_KEY || '')
   console.log('Creating new default team')
   // create a team
-  const newTeam = await db.team.create({
+  await db.team.create({
     data: {
       name: user.email,
       users: {
@@ -33,7 +34,7 @@ const setDefaultNewTeam = async (user: any) => {
       id: true,
     },
   })
-  const updatedUser = await db.user.update({
+  await db.user.update({
     where: {
       id: user.id,
     },
@@ -42,20 +43,7 @@ const setDefaultNewTeam = async (user: any) => {
     },
   })
   // return newTeam // this is here because strip secret key is failing on localhost
-  const customer = await stripe.customers.create({
-    email: user.email,
-    metadata: { teamId: newTeam.id, userId: user.id },
-  })
-  // update team with stripe customer id
-  const updatedTeam = await db.team.update({
-    where: {
-      id: newTeam.id,
-    },
-    data: {
-      stripeCustomerId: customer.id,
-    },
-  })
-  return updatedTeam
+  return await createSubscriptionIfNeeded(user)
 }
 export const authOptions: NextAuthOptions = {
   // huh any! I know.
@@ -324,7 +312,7 @@ export const authOptions: NextAuthOptions = {
       return session
     },
     async jwt({ token, user, account, profile }) {
-      let newTeam
+      let newTeam: Team | undefined = undefined
       const dbUser = await db.user.findUniqueOrThrow({
         where: {
           email: token.email || account?.providerAccountId,
@@ -358,8 +346,8 @@ export const authOptions: NextAuthOptions = {
         email: dbUser.email,
         picture: dbUser.image,
         setupStep: dbUser.team?.setupStep,
-        team: dbUser.team || newTeam,
-        teamId: dbUser.teamId || newTeam.id,
+        team: dbUser.team ?? newTeam,
+        teamId: dbUser.teamId ?? newTeam?.id,
       }
     },
   },

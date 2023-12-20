@@ -1,19 +1,9 @@
 import { redirect } from 'next/navigation'
+import Stripe from 'stripe'
 
 import { authOptions } from '@/lib/auth'
 import { getCurrentUser } from '@/lib/session'
-import { stripe } from '@/lib/stripe'
-import { getTeamSubscriptionPlan } from '@/lib/subscription'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { BillingForm } from '@/components/billing-form'
-import { DashboardHeader } from '@/components/header'
-import { Icons } from '@/components/icons'
-import { DashboardShell } from '@/components/shell'
-
-export const metadata = {
-  title: 'Billing',
-  description: 'Manage billing and your subscription plan.',
-}
+import { createSubscriptionIfNeeded, stripe } from '@/lib/stripe'
 
 export default async function BillingPage() {
   const user = await getCurrentUser()
@@ -22,40 +12,67 @@ export default async function BillingPage() {
     redirect(authOptions?.pages?.signIn || '/login')
   }
 
-  const subscriptionPlan = await getTeamSubscriptionPlan(user.team.id)
+  await createSubscriptionIfNeeded(user)
 
-  // If user has a pro plan, check cancel status on Stripe.
-  let isCanceled = false
-  if (subscriptionPlan.isPro && subscriptionPlan.stripeSubscriptionId) {
-    const stripePlan = await stripe.subscriptions.retrieve(
-      subscriptionPlan.stripeSubscriptionId
+  const configurationParams: Stripe.BillingPortal.ConfigurationCreateParams = {
+    business_profile: {
+      headline: 'DonorSync partners with Stripe for simplified billing',
+    },
+    features: {
+      customer_update: {
+        enabled: true,
+        allowed_updates: ['address', 'email', 'name', 'phone'],
+      },
+      invoice_history: {
+        enabled: true,
+      },
+      payment_method_update: {
+        enabled: true,
+      },
+      subscription_cancel: {
+        enabled: true,
+      },
+      subscription_pause: {
+        enabled: true,
+      },
+      subscription_update: {
+        enabled: true,
+        default_allowed_updates: ['price'],
+        products: (await stripe.products.list()).data.flatMap((product) =>
+          product.default_price
+            ? [
+                {
+                  product: product.id,
+                  prices: [
+                    typeof product.default_price === 'string'
+                      ? product.default_price
+                      : product.default_price.id,
+                  ],
+                },
+              ]
+            : []
+        ),
+      },
+    },
+  }
+  let configuration: Stripe.BillingPortal.Configuration | undefined = undefined
+  try {
+    configuration =
+      await stripe.billingPortal.configurations.retrieve('donorsync-billing')
+    await stripe.billingPortal.configurations.update(
+      configuration.id,
+      configurationParams
     )
-    isCanceled = stripePlan.cancel_at_period_end
+  } catch {
+    configuration =
+      await stripe.billingPortal.configurations.create(configurationParams)
   }
 
-  return (
-    <DashboardShell>
-      <DashboardHeader
-        heading="Billing"
-        text="Manage billing and your subscription plan."
-      />
-      <div className="grid gap-8">
-        <Alert className="!pl-14">
-          <Icons.warning />
-          <AlertTitle>This is a beta app.</AlertTitle>
-          <AlertDescription>
-            The Virtuous - Financial Edge sync tool is still in beta. We will
-            give notice before we start charging for the service. You can cancel
-            at any time.
-          </AlertDescription>
-        </Alert>
-        <BillingForm
-          subscriptionPlan={{
-            ...subscriptionPlan,
-            isCanceled,
-          }}
-        />
-      </div>
-    </DashboardShell>
-  )
+  const session = await stripe.billingPortal.sessions.create({
+    customer: user.team.stripeCustomerId,
+    configuration: configuration.id,
+    return_url: `${process.env.VERCEL_URL}/dashboard`,
+  })
+
+  redirect(session.url)
 }
