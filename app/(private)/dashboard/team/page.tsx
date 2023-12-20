@@ -1,19 +1,13 @@
-import { TeamUserAdd } from "@/components/dashboard/team-user-add"
-import { TeamUserRemove } from "@/components/dashboard/team-user-remove"
-import { DashboardHeader } from "@/components/header"
-import { Icons } from "@/components/icons"
-import { DashboardShell } from "@/components/shell"
-import { Badge } from "@/components/ui/badge"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { authOptions } from "@/lib/auth"
-import { db } from "@/lib/db"
-import { getCurrentUser } from "@/lib/session"
-import { redirect } from "next/navigation"
+import { redirect } from 'next/navigation'
+
+import { TeamUserAdd } from '@/components/dashboard/team-user-add'
+import TeamUserDropdown from '@/components/dashboard/team-user-dropdown'
+import { DashboardHeader } from '@/components/header'
+import { DashboardShell } from '@/components/shell'
+import { Badge } from '@/components/ui/badge'
+import { authOptions } from '@/lib/auth'
+import { db } from '@/lib/db'
+import { getCurrentUser } from '@/lib/session'
 
 // import us from 'next/server'
 
@@ -93,33 +87,7 @@ export default async function TeamPage() {
                   </Badge>
                 </td>
                 <td className="absolute right-0 top-[10px] sm:relative sm:py-2 sm:text-right">
-                  {user.id == teamuser.id ? (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Icons.lock className="mr-2 h-4 w-4" />
-                        </TooltipTrigger>
-
-                        <TooltipContent sideOffset={4}>
-                          You cannot remove yourself
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  ) : teamuser.role == "admin" ? (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Icons.lock className="mr-2 h-4 w-4" />
-                        </TooltipTrigger>
-
-                        <TooltipContent sideOffset={4}>
-                          You cannot remove admins
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  ) : (
-                    <TeamUserRemove user={teamuser} />
-                  )}
+                  <TeamUserDropdown user={user} teamuser={teamuser} />
                 </td>
               </tr>
             ))}
@@ -130,6 +98,6 @@ export default async function TeamPage() {
           <TeamUserAdd />
         </div>
       </div>
-    </DashboardShell>
+    </DashboardShell >
   )
 }
