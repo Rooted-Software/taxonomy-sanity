@@ -74,7 +74,7 @@ export default async function ReviewDataPage({ searchParams }) {
   }
 
   return (
-    <div className="flex h-full w-full flex-col justify-center">
+    <div className="flex h-full w-screen flex-col justify-center p-4">
       {batches && feAccounts && mappings && projects ? (
         <BatchPreview
           batches={batches}

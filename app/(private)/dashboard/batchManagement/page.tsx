@@ -104,7 +104,7 @@ export default async function BatchManagementPage({ searchParams }) {
   }
 
   return (
-    <>
+    <div className="lg:h-[90vh]">
       {batches && feAccounts && mappings && projects ? (
         <BatchPreview
           batches={batches}
@@ -133,6 +133,6 @@ export default async function BatchManagementPage({ searchParams }) {
       ) : (
         `getting projects and accounts...`
       )}
-    </>
+    </div>
   )
 }

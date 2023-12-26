@@ -68,7 +68,7 @@ export default async function ConnectFEPage() {
   }
   const data = await reSettingsForUser(user?.teamId)
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 lg:pl-20">
+    <div className="my-auto grid grid-cols-1 lg:grid-cols-2 lg:pl-20">
       <div className="content-center space-y-6 p-8">
         <div className="flex flex-col space-y-2 md:max-w-xl lg:max-w-3xl">
           <ContextualHelp articleId="setting-up-financial-edge" />

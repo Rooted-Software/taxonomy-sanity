@@ -40,28 +40,25 @@ export default async function DataMapPage({ searchParams }) {
   const currentDateIndex = dateFilterOptions.indexOf(projectDays)
   const nextProjectDays = dateFilterOptions[currentDateIndex + 1]
 
-  const feAccountsData = getFeAccountsFromBlackbaud(user.team.id)
-  const projectsData = getVirtuousProjects(user.team.id, projectDays)
-  const mappingData = getProjectAccountMappings(user.team.id)
   const [projects, feAccounts, mappings] = await Promise.all([
-    projectsData,
-    feAccountsData,
-    mappingData,
+    getVirtuousProjects(user.team.id, projectDays),
+    getFeAccountsFromBlackbaud(user.team.id),
+    getProjectAccountMappings(user.team.id),
   ])
-  console.log('accounts length: ', feAccounts.length)
-  console.log('projects length: ', projects.length)
 
   return (
     <>
       <div className="center-content h-full w-full">
         {projects && feAccounts ? (
-          <MappingEditor
-            projects={projects}
-            feAccounts={feAccounts}
-            mappings={mappings}
-            nextProjectDays={nextProjectDays}
-            projectsDaysLoaded={projectDays}
-          />
+          <div className="h-full px-8 pt-8 lg:pr-0">
+            <MappingEditor
+              projects={projects}
+              feAccounts={feAccounts}
+              mappings={mappings}
+              nextProjectDays={nextProjectDays}
+              projectsDaysLoaded={projectDays}
+            />
+          </div>
         ) : (
           `getting projects and accounts...`
         )}

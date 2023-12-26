@@ -11,7 +11,7 @@ export default function WizardLayout({ children }: WizardLayoutProps) {
     <div className="h-screen min-h-screen bg-dark">
       <div className="flex h-full w-screen flex-col items-center">
         <div className="flex h-0 flex-1 flex-col overflow-auto text-white">
-          <div className="my-auto">{children}</div>
+          {children}
         </div>
         <Stepper />
       </div>

@@ -50,20 +50,18 @@ export default async function DataMapPage({ searchParams }) {
   ])
 
   return (
-    <>
-      <div>
-        {projects && feAccounts ? (
-          <MappingEditor
-            projects={projects}
-            feAccounts={feAccounts}
-            mappings={mappings}
-            nextProjectDays={nextProjectDays}
-            projectsDaysLoaded={projectDays}
-          />
-        ) : (
-          `getting projects and accounts...`
-        )}
-      </div>
-    </>
+    <div className="lg:h-[90vh]">
+      {projects && feAccounts ? (
+        <MappingEditor
+          projects={projects}
+          feAccounts={feAccounts}
+          mappings={mappings}
+          nextProjectDays={nextProjectDays}
+          projectsDaysLoaded={projectDays}
+        />
+      ) : (
+        `getting projects and accounts...`
+      )}
+    </div>
   )
 }
