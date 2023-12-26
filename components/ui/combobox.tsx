@@ -45,9 +45,9 @@ export default function Combobox({
           role="combobox"
           aria-expanded={open}
           disabled={disabled}
-          className="text-md h-10 w-full whitespace-nowrap rounded-full border border-accent-1 bg-accent-1 py-2 px-5 text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+          className="text-md h-10 max-w-[300px] whitespace-nowrap rounded-full border border-accent-1 bg-accent-1 py-2 px-5 text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:max-w-[450px] md:max-w-full"
         >
-          {selectLabel}
+          <div className="truncate">{selectLabel}</div>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -55,7 +55,7 @@ export default function Combobox({
         <Command className="h-full">
           <CommandInput placeholder="Search..." />
           <CommandEmpty>No results</CommandEmpty>
-          <CommandGroup className="popover-list">
+          <CommandGroup className="popover-list text-ellipsis">
             {options?.map(({ label, value }) => (
               <CommandItem
                 key={value}

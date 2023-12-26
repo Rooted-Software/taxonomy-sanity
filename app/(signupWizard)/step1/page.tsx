@@ -1,16 +1,17 @@
-import { ContextualHelp } from "@/components/contextual-help"
-import { VirtuousSettingsForm } from "@/components/dashboard/virtuous-settings"
-import { db } from "@/lib/db"
-import { getCurrentUser } from "@/lib/session"
-import { User } from "@prisma/client"
-import { cache } from "react"
+import { cache } from 'react'
+import { User } from '@prisma/client'
+
+import { db } from '@/lib/db'
+import { getCurrentUser } from '@/lib/session'
+import { ContextualHelp } from '@/components/contextual-help'
+import { VirtuousSettingsForm } from '@/components/dashboard/virtuous-settings'
 
 export const metadata = {
-  title: "Create an account",
-  description: "Create an account to get started.",
+  title: 'Create an account',
+  description: 'Create an account to get started.',
 }
 
-const getApiKey = cache(async (teamId: User["teamId"]) => {
+const getApiKey = cache(async (teamId: User['teamId']) => {
   if (!teamId) return null
   return await db.apiSetting.findFirst({
     where: {
@@ -33,14 +34,16 @@ export default async function ConnectVirtuousOrg() {
     <>
       <ContextualHelp articleId="creating-a-virtuous-permissions-groups" />
 
-      <div className="mb-12 text-center">
-        <p className="text-lg leading-8 text-white">
+      <div class="px-8">
+        <p className="text-whit text-center text-lg leading-8">
           <span className="font-bold text-accent-1">STEP 1:</span> Get API Key
           from Virtuous
         </p>
         <p className="leading-8 text-muted-foreground">
           Access your Virtuous account to create and copy an API key.
         </p>
+      </div>
+      <div className="mb-12 text-center">
         <a
           href="https://app.virtuoussoftware.com/Generosity/People/ApiKeys"
           target="_blank"
@@ -54,8 +57,8 @@ export default async function ConnectVirtuousOrg() {
         <div className="flex flex-col space-y-2 text-center ">
           {/* https://app.virtuoussoftware.com/Generosity/People/ApiKeys */}
           <VirtuousSettingsForm
-            apiKey={data?.virtuousAPI || ""}
-            teamName={data?.team.name || ""}
+            apiKey={data?.virtuousAPI || ''}
+            teamName={data?.team.name || ''}
           />
         </div>
       </div>

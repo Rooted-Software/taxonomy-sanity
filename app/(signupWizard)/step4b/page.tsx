@@ -10,7 +10,7 @@ export default async function ConnectFECreditAccount() {
   const user = await getCurrentUser()
   console.log(user)
   return (
-    <div className="flex flex-col space-y-2 p-8 text-center">
+    <div className="flex flex-col px-8 text-center">
       <p className="justify-left text-lg text-white">
         <span className="font-bold text-accent-1">STEP 4b:</span> Select your
         default Credit account. This is where all unmapped transactions will be

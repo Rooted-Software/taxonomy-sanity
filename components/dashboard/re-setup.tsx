@@ -81,7 +81,11 @@ export function RESetupForm({
   }
 
   return (
-    <form className={cn(className)} onSubmit={(e) => onSubmit(e)} {...props}>
+    <form
+      className={`mx-auto ${cn(className)}`}
+      onSubmit={(e) => onSubmit(e)}
+      {...props}
+    >
       {!reDataFromProps?.id ? (
         <button
           type="submit"

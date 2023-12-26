@@ -162,14 +162,14 @@ export function DebitAccountSelector({
         />
         <label
           htmlFor="gift-type-mapping"
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
         >
           Use a different default debit account for each Virtuous gift type
         </label>
       </div>
       {enableMapping && (
         <div
-          className={`flex flex-col gap-3 ${
+          className={`flex flex-col gap-3 lg:grid  lg:grid-cols-2 ${
             align === 'center' ? 'items-center' : 'items-start'
           }`}
         >

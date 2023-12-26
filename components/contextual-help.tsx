@@ -1,9 +1,10 @@
-"use client"
+'use client'
 
-import { Icons } from "@/components/icons"
-import { AvatarProps } from "@radix-ui/react-avatar"
-import { notFound } from "next/navigation"
-import { useState } from "react"
+import { useState } from 'react'
+import { notFound } from 'next/navigation'
+import { AvatarProps } from '@radix-ui/react-avatar'
+
+import { Icons } from '@/components/icons'
 
 interface ContextualHelpProps extends AvatarProps {
   articleId: string
@@ -12,7 +13,7 @@ interface ContextualHelpProps extends AvatarProps {
 export function ContextualHelp({ articleId, ...props }: ContextualHelpProps) {
   const [showHelp, setShowHelp] = useState<boolean>(false)
 
-  const slug = articleId || ""
+  const slug = articleId || ''
   /* load docs from slug */
   if (!slug) {
     notFound()
@@ -21,7 +22,7 @@ export function ContextualHelp({ articleId, ...props }: ContextualHelpProps) {
   return (
     <>
       <div
-        className="absolute left-10 top-10 h-[100] w-[100] rounded-full bg-cyan p-3 text-2xl text-accent-1"
+        className="absolute bottom-5 left-5 h-[100] w-[100] rounded-full bg-cyan p-3 text-2xl text-accent-1 md:left-10 md:top-10 md:bottom-auto"
         onClick={() => setShowHelp(true)}
       >
         <Icons.help className="h-9 w-9 text-lg text-dark" />
@@ -31,7 +32,7 @@ export function ContextualHelp({ articleId, ...props }: ContextualHelpProps) {
           <div onClick={() => setShowHelp(false)} className="float-right">
             <Icons.close />
           </div>
-          <iframe src={"/help/" + slug} className="h-[90%] w-full" />
+          <iframe src={'/help/' + slug} className="h-[90%] w-full" />
         </div>
       ) : null}
     </>

@@ -8,8 +8,8 @@ export const metadata = {
 export default async function ConnectFEDebitAccount() {
   return (
     <>
-      <div className="space-y-2 p-8 text-center">
-        <p className="text-lg text-white">
+      <div class="px-8">
+        <p className="text-center text-lg text-white">
           <span className="font-bold text-accent-1">STEP 4:</span> Select your
           default DEBIT account.
         </p>
