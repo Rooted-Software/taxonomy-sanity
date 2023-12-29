@@ -1,7 +1,6 @@
 import React from 'react'
 import { ChevronsUpDown } from 'lucide-react'
 
-import { Button } from './button'
 import {
   Command,
   CommandEmpty,
@@ -40,18 +39,19 @@ export default function Combobox({
   return (
     <Popover open={open && !!options?.length} onOpenChange={setOpen}>
       <PopoverTrigger>
-        <Button
+        <div
           variant="outline"
           role="combobox"
+          aria-controls="expanded"
           aria-expanded={open}
           disabled={disabled}
-          className="text-md h-10 max-w-[300px] whitespace-nowrap rounded-full border border-accent-1 bg-accent-1 py-2 px-5 text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:max-w-[450px] md:max-w-full"
+          className="text-md flex h-10 max-w-[300px] whitespace-nowrap rounded-full border border-accent-1 bg-accent-1 py-2 px-5 text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:max-w-[400px] xl:max-w-[500px]"
         >
           <div className="truncate">{selectLabel}</div>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
+        </div>
       </PopoverTrigger>
-      <PopoverContent className="p-0" align="start">
+      <PopoverContent id="expanded" className="p-0" align="start">
         <Command className="h-full">
           <CommandInput placeholder="Search..." />
           <CommandEmpty>No results</CommandEmpty>

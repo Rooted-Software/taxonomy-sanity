@@ -54,6 +54,7 @@ export default async function DataMapPage({ searchParams }) {
       <div>
         {projects && feAccounts ? (
           <MappingEditor
+            showHeading={true}
             projects={projects}
             feAccounts={feAccounts}
             mappings={mappings}

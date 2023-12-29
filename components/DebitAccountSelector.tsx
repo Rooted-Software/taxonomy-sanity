@@ -169,13 +169,13 @@ export function DebitAccountSelector({
       </div>
       {enableMapping && (
         <div
-          className={`flex flex-col gap-3 lg:grid  lg:grid-cols-2 ${
+          className={`flex flex-col gap-3  lg:grid lg:grid-cols-2 ${
             align === 'center' ? 'items-center' : 'items-start'
           }`}
         >
           {giftTypes.map((giftType) => (
             <div
-              className={`flex flex-col ${
+              className={`flex w-[50vw] flex-col xl:w-[750px] ${
                 align === 'center' ? 'items-center' : 'items-start'
               }`}
             >

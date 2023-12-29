@@ -9,10 +9,10 @@ import { PopoverTrigger } from '@radix-ui/react-popover'
 import { cn } from '@/lib/utils'
 import { toast } from '@/components/ui/use-toast'
 import { EmptyPlaceholder } from '@/components/empty-placeholder'
-import { DashboardHeader } from '@/components/header'
 import { Icons } from '@/components/icons'
 
 import { giftTypes } from '../DebitAccountSelector'
+import { DashboardHeader } from '../header'
 import { DashboardShell } from '../shell'
 import { Button } from '../ui/button'
 import Combobox from '../ui/combobox'
@@ -20,6 +20,7 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '../ui/dialog'
 import { Popover, PopoverContent } from '../ui/popover'
 
 interface MappingEditorProps extends React.HTMLAttributes<HTMLButtonElement> {
+  showHeading?: boolean
   projects: any[]
   feAccounts: any[]
   mappings: any[]
@@ -123,13 +124,13 @@ function FeAccountPicker({
             <div className="align-right items-right mx-2 my-auto basis-1/3">
               <Popover>
                 <PopoverTrigger>
-                  <button
+                  <div
                     className="inline-flex h-9 shrink items-center rounded-md border border-transparent bg-tightWhite px-4 py-2 text-sm font-medium  text-dark hover:bg-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
                     disabled={isLoading}
                   >
                     <Icons.listFilter className="mr-2 h-4 w-4" />
                     Filter
-                  </button>
+                  </div>
                 </PopoverTrigger>
                 <PopoverContent className="w-full max-w-md overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <p className="text-lg font-medium leading-6 text-gray-900">
@@ -243,7 +244,7 @@ function FeAccountPicker({
             {filteredAccounts?.length ? (
               <div
                 className="justify-left col-span-6 w-full overflow-scroll bg-whiteSmoke p-4 text-left text-dark"
-                style={{ height: '45vh' }}
+                style={{ height: 'calc(100vh - 550px)' }}
               >
                 <div className="flex flex-row items-center p-1">
                   <input
@@ -499,7 +500,7 @@ function VirProjectList({
 
   return (
     <>
-      <div className="h-full bg-dark p-8">
+      <div className="h-full bg-dark p-4 lg:pr-0">
         <div className="m-auto flex flex-col justify-center space-y-6 ">
           <div className="w-full  text-left ">
             <p className="justify-left text-lg text-white">
@@ -522,13 +523,13 @@ function VirProjectList({
             <div className="align-right items-right mx-2 my-auto basis-1/3">
               <Popover>
                 <PopoverTrigger>
-                  <button
+                  <div
                     className="inline-flex h-9 shrink items-center rounded-md border border-transparent bg-tightWhite px-4 py-2 text-sm text-dark hover:bg-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
                     disabled={isLoading}
                   >
                     <Icons.listFilter className="mr-2 h-4 w-4" />
                     Filter
-                  </button>
+                  </div>
                 </PopoverTrigger>
                 <PopoverContent className="w-full max-w-md overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <p className="text-lg font-medium leading-6 text-gray-900">
@@ -722,11 +723,11 @@ function VirProjectList({
               </Popover>
             </div>
           </div>
-          <div className="flex w-[800px] min-w-[800px]  max-w-[800px] flex-row">
+          <div className="flex w-full flex-row">
             {filteredProjects?.length ? (
               <div
-                className="justify-left col-span-6 min-w-[600px] overflow-scroll bg-whiteSmoke p-4 text-left text-dark"
-                style={{ height: '45vh' }}
+                className="justify-left col-span-6 w-full overflow-scroll bg-whiteSmoke p-4 text-left text-dark "
+                style={{ height: 'calc(100vh - 550px)' }}
               >
                 {filteredProjects &&
                   filteredProjects.map((project) => (
@@ -847,6 +848,7 @@ function VirProjectList({
 }
 
 export function MappingEditor({
+  showHeading,
   projects,
   feAccounts,
   mappings,
@@ -971,53 +973,231 @@ export function MappingEditor({
   }
 
   return (
-    <DashboardShell>
-      <DashboardHeader
-        heading="Map your data"
-        text="Select which projects should map to which accounts."
-      />
-      <div className="grid min-w-full grid-cols-1 lg:grid-cols-4">
-        <VirProjectList
-          virProjects={virProjects}
-          setVirProjects={setVirProjects}
-          projects={projects}
-          mappings={mappings}
-          isLoading={isLoading}
-          projectsDaysLoaded={projectsDaysLoaded}
-          nextProjectDays={nextProjectDays}
-        />
+    <>
+      <DashboardShell>
+        {showHeading ? (
+          <DashboardHeader
+            heading="Map your data"
+            text="Select which projects should map to which accounts."
+          />
+        ) : null}
+        <div className="grid h-full min-w-full grid-cols-1 lg:grid-cols-4">
+          <VirProjectList
+            virProjects={virProjects}
+            setVirProjects={setVirProjects}
+            projects={projects}
+            mappings={mappings}
+            isLoading={isLoading}
+            projectsDaysLoaded={projectsDaysLoaded}
+            nextProjectDays={nextProjectDays}
+          />
 
-        <div className="h-full bg-dark p-8 md:col-span-2">
-          <div className="flex gap-4">
-            <FeAccountPicker
-              title="Financial Edge Credit Account"
-              name="fe-credit"
-              onSelect={(id, obj) => {
-                setFeCreditAccountID(id)
-                setFeCreditAccountObj(obj)
-              }}
-              feAccounts={feAccounts}
-              isLoading={isLoading}
-            />
-            <FeAccountPicker
-              title="Financial Edge Debit Account"
-              name="fe-debit"
-              onSelect={(id, obj) => {
-                setFeDebitAccountID(id)
-                setFeDebitAccountObj(obj)
-              }}
-              feAccounts={feAccounts}
-              isLoading={isLoading}
-            />
+          <div className="h-full bg-dark p-4 md:col-span-2">
+            <div className="flex gap-4">
+              <FeAccountPicker
+                title="Financial Edge Credit Account"
+                name="fe-credit"
+                onSelect={(id, obj) => {
+                  setFeCreditAccountID(id)
+                  setFeCreditAccountObj(obj)
+                }}
+                feAccounts={feAccounts}
+                isLoading={isLoading}
+              />
+              <FeAccountPicker
+                title="Financial Edge Debit Account"
+                name="fe-debit"
+                onSelect={(id, obj) => {
+                  setFeDebitAccountID(id)
+                  setFeDebitAccountObj(obj)
+                }}
+                feAccounts={feAccounts}
+                isLoading={isLoading}
+              />
+            </div>
+
+            <div className="mt-4 bg-tightWhite p-4 text-dark">
+              {(feCreditAccountID && feCreditAccountObj?.account_id) ||
+              (feDebitAccountID && feDebitAccountObj) ? (
+                <button
+                  onClick={onClick}
+                  className={cn(
+                    `relative float-right m-4 inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
+                    {
+                      'cursor-not-allowed opacity-60': isLoading,
+                    }
+                  )}
+                  disabled={isLoading}
+                  {...props}
+                >
+                  {isLoading ? (
+                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Icons.add className="mr-2 h-4 w-4" />
+                  )}
+                  Map Project(s)
+                </button>
+              ) : (
+                <span className="text-dark">Please Select an Account</span>
+              )}
+
+              {(feCreditAccountID && feCreditAccountObj?.account_id) ||
+              (feDebitAccountID && feDebitAccountObj?.account_id) ? (
+                <div>
+                  <p>
+                    Credit:{' '}
+                    <b>
+                      {feCreditAccountObj?.description
+                        ? feCreditAccountObj?.description
+                        : 'Default'}
+                    </b>
+                  </p>
+                  <div className="my-2 flex items-center gap-3">
+                    <p>
+                      Debit:{' '}
+                      <b>
+                        {feDebitAccountObj?.description
+                          ? feDebitAccountObj?.description
+                          : 'Default'}
+                      </b>
+                    </p>
+                    <Dialog>
+                      <DialogTrigger>
+                        <Button
+                          variant="outline"
+                          size="xs"
+                          className="whitespace-nowrap"
+                        >
+                          Customize for gift type
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-[unset]">
+                        <DialogTitle className="px-7 text-center">
+                          Customize Financial Edge Debit Account for Virtuous
+                          Gift Type
+                        </DialogTitle>
+                        <div className="mt-4 space-y-3">
+                          {giftTypes.map((giftType) => (
+                            <div className="flex flex-col items-start">
+                              <p className="mb-1 text-sm font-bold text-gray-800">
+                                {giftType}
+                              </p>
+                              <Combobox
+                                value={feDebitMap[giftType]}
+                                onChange={(val) =>
+                                  setFeDebitMap({
+                                    ...feDebitMap,
+                                    [giftType]: val,
+                                  })
+                                }
+                                isLoading={isLoading}
+                                disabled={isLoading}
+                                options={[
+                                  { label: 'Unset', value: '' },
+                                  ...feAccounts.map((item: any) => ({
+                                    value: item.account_id,
+                                    label: [
+                                      'account_number',
+                                      'description',
+                                      'class',
+                                    ]
+                                      .map((f) => item[f])
+                                      .join(' '),
+                                  })),
+                                ]}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                  <p className="text-sm text-dark">Transaction Codes:</p>
+                  <div className="ml-3">
+                    {feCreditAccountObj?.default_transaction_codes?.map(
+                      (tc) => {
+                        return (
+                          <span key={'tc' + tc?.name} className="text-sm">
+                            {tc?.name}:{' '}
+                            {tc?.value && tc?.value !== 'None'
+                              ? tc?.value
+                              : 'None'}{' '}
+                            <br />
+                          </span>
+                        )
+                      }
+                    )}{' '}
+                  </div>
+                </div>
+              ) : null}
+            </div>
           </div>
 
-          <div className="mt-4 bg-tightWhite p-4 text-dark">
-            {(feCreditAccountID && feCreditAccountObj?.account_id) ||
-            (feDebitAccountID && feDebitAccountObj) ? (
+          <div className="mb-4 bg-whiteSmoke">
+            <h1 className="p-8 text-2xl text-dark">Mappings</h1>
+
+            {mappings?.length ? (
+              <div
+                className="justify-left overflow-y-auto bg-whiteSmoke p-2 text-left text-dark"
+                style={{
+                  height:
+                    pathname === '/dashboard/projectMapping'
+                      ? 'calc(100vh - 335px)'
+                      : 'calc(100vh - 445px)',
+                }}
+              >
+                <div className="flex items-center p-1">
+                  <Icons.trash className="mr-2 h-4 w-4 opacity-0" />
+                  <span className="flex-1 text-right font-bold">
+                    Virtuous Project
+                  </span>
+                  <Icons.arrowRight className="mx-2 h-4 w-4" />{' '}
+                  <span className="flex-1 text-sm font-bold">
+                    FE Credit Account
+                  </span>
+                </div>
+                {mappings.map((mapping) => (
+                  <div className="flex items-center p-1" key={mapping.id}>
+                    <Icons.trash
+                      className="mr-2 h-4 w-4 text-red-500"
+                      onClick={() => onDeleteMapping(mapping.id)}
+                    />
+                    <span className="flex-1 text-right">
+                      {mapping.virProjectName}
+                    </span>
+                    <Icons.arrowRight className="mx-2 h-4 w-4" />{' '}
+                    <span
+                      className="flex-1 text-sm"
+                      title={`Credit: ${lookupAccount(
+                        mapping.feAccountId
+                      )}, Debit: ${lookupAccount(mapping.feDebitAccountId)} ${
+                        Object.keys(mapping.feDebitAccountForGiftType ?? {})
+                          .length > 0
+                          ? '(with gift type customization)'
+                          : ''
+                      }`}
+                    >
+                      {lookupAccount(mapping.feAccountId)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <EmptyPlaceholder>
+                <EmptyPlaceholder.Icon name="post" />
+                <EmptyPlaceholder.Title>
+                  No Mappings Found
+                </EmptyPlaceholder.Title>
+                <EmptyPlaceholder.Description>
+                  You don&apos;t have any mappings yet.
+                </EmptyPlaceholder.Description>
+              </EmptyPlaceholder>
+            )}
+            {mappings?.length && pathname !== '/dashboard/projectMapping' ? (
               <button
-                onClick={onClick}
+                onClick={advanceStep}
                 className={cn(
-                  `relative float-right m-4 inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
+                  `relative m-8 inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
                   {
                     'cursor-not-allowed opacity-60': isLoading,
                   }
@@ -1028,177 +1208,14 @@ export function MappingEditor({
                 {isLoading ? (
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
-                  <Icons.add className="mr-2 h-4 w-4" />
+                  <Icons.arrowRight className="mr-2 h-4 w-4" />
                 )}
-                Map Project(s)
+                {'Continue (Data Review)'}
               </button>
-            ) : (
-              <span className="text-dark">Please Select an Account</span>
-            )}
-
-            {(feCreditAccountID && feCreditAccountObj?.account_id) ||
-            (feDebitAccountID && feDebitAccountObj?.account_id) ? (
-              <div>
-                <p>
-                  Credit:{' '}
-                  <b>
-                    {feCreditAccountObj?.description
-                      ? feCreditAccountObj?.description
-                      : 'Default'}
-                  </b>
-                </p>
-                <div className="my-2 flex items-center gap-3">
-                  <p>
-                    Debit:{' '}
-                    <b>
-                      {feDebitAccountObj?.description
-                        ? feDebitAccountObj?.description
-                        : 'Default'}
-                    </b>
-                  </p>
-                  <Dialog>
-                    <DialogTrigger>
-                      <Button variant="outline" size="xs">
-                        Customize for gift type
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-[unset]">
-                      <DialogTitle className="px-7 text-center">
-                        Customize Financial Edge Debit Account for Virtuous Gift
-                        Type
-                      </DialogTitle>
-                      <div className="mt-4 space-y-3">
-                        {giftTypes.map((giftType) => (
-                          <div className="flex flex-col items-start">
-                            <p className="mb-1 text-sm font-bold text-gray-800">
-                              {giftType}
-                            </p>
-                            <Combobox
-                              value={feDebitMap[giftType]}
-                              onChange={(val) =>
-                                setFeDebitMap({
-                                  ...feDebitMap,
-                                  [giftType]: val,
-                                })
-                              }
-                              isLoading={isLoading}
-                              disabled={isLoading}
-                              options={[
-                                { label: 'Unset', value: '' },
-                                ...feAccounts.map((item: any) => ({
-                                  value: item.account_id,
-                                  label: [
-                                    'account_number',
-                                    'description',
-                                    'class',
-                                  ]
-                                    .map((f) => item[f])
-                                    .join(' '),
-                                })),
-                              ]}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-                <p className="text-sm text-dark">Transaction Codes:</p>
-                <div className="ml-3">
-                  {feCreditAccountObj?.default_transaction_codes?.map((tc) => {
-                    return (
-                      <span key={'tc' + tc?.name} className="text-sm">
-                        {tc?.name}:{' '}
-                        {tc?.value && tc?.value !== 'None' ? tc?.value : 'None'}{' '}
-                        <br />
-                      </span>
-                    )
-                  })}{' '}
-                </div>
-              </div>
             ) : null}
           </div>
         </div>
-
-        <div className="flex h-full w-full flex-col bg-whiteSmoke p-8 pt-[24px] ">
-          <h1 className="py-8 text-2xl text-dark">Mappings</h1>
-
-          {mappings?.length ? (
-            <div
-              className="justify-left overflow-scroll bg-whiteSmoke p-2 text-left text-dark"
-              style={{ height: '50vh' }}
-            >
-              <div className="flex items-center p-1">
-                <Icons.trash className="mr-2 h-4 w-4 opacity-0" />
-                <span className="flex-1 text-right font-bold">
-                  Virtuous Project
-                </span>
-                <Icons.arrowRight className="mx-2 h-4 w-4" />{' '}
-                <span className="flex-1 text-sm font-bold">
-                  FE Credit Account
-                </span>
-              </div>
-              {mappings.map((mapping) => (
-                <div className="flex items-center p-1" key={mapping.id}>
-                  <Icons.trash
-                    className="mr-2 h-4 w-4 text-red-500"
-                    onClick={() => onDeleteMapping(mapping.id)}
-                  />
-                  <span className="flex-1 text-right">
-                    {mapping.virProjectName}
-                  </span>
-                  <Icons.arrowRight className="mx-2 h-4 w-4" />{' '}
-                  <span
-                    className="flex-1 text-sm"
-                    title={`Credit: ${lookupAccount(
-                      mapping.feAccountId
-                    )}, Debit: ${lookupAccount(mapping.feDebitAccountId)} ${
-                      Object.keys(mapping.feDebitAccountForGiftType ?? {})
-                        .length > 0
-                        ? '(with gift type customization)'
-                        : ''
-                    }`}
-                  >
-                    {lookupAccount(mapping.feAccountId)}
-                  </span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <EmptyPlaceholder>
-              <EmptyPlaceholder.Icon name="post" />
-              <EmptyPlaceholder.Title>No Mappings Found</EmptyPlaceholder.Title>
-              <EmptyPlaceholder.Description>
-                You don&apos;t have any mappings yet.
-              </EmptyPlaceholder.Description>
-            </EmptyPlaceholder>
-          )}
-          {mappings?.length ? (
-            <button
-              onClick={advanceStep}
-              className={cn(
-                `relative m-8 inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
-                {
-                  'cursor-not-allowed opacity-60': isLoading,
-                }
-              )}
-              disabled={isLoading}
-              {...props}
-            >
-              {isLoading ? (
-                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Icons.arrowRight className="mr-2 h-4 w-4" />
-              )}
-              {pathname === '/projectMapping'
-                ? 'Return to dashboard'
-                : 'Continue (Data Review)'}
-            </button>
-          ) : null}
-        </div>
-
-        <div></div>
-      </div>
-    </DashboardShell>
+      </DashboardShell>
+    </>
   )
 }
