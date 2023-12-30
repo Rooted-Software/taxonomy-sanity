@@ -96,14 +96,16 @@ export default async function DashboardPage({ searchParams }) {
               <div className="flex items-center justify-between px-4 py-2">
                 <div className="grid gap-1">
                   <Link
-                    href={`/batchManagement/?batchId=${batch.id}`}
+                    href={`/dashboard/gifts?batch=${batch.batch_name}`}
                     className="font-semibold hover:underline"
                   >
                     {batch.batch_name}
                   </Link>
                   <div>
                     <p className="text-sm text-muted-foreground">
-                      {formatDate(batch.latestGiftAt?.toDateString())}
+                      {batch.latestGiftAt
+                        ? formatDate(batch.latestGiftAt?.toDateString())
+                        : ''}
                     </p>
                   </div>
                 </div>

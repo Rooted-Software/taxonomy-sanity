@@ -228,8 +228,9 @@ model Gift {
   updatedAt               DateTime  @default(now()) @map(name: "updated_at")
   teamId                  String
   team                    Team      @relation(fields: [teamId], references: [id])
+  syncHistoryId           String?
+  syncHistory             SyncHistory? @relation(fields: [syncHistoryId], references: [id])
 
-  @@unique([teamId, id])
   @@map(name: "gifts")
 }
 
@@ -355,12 +356,15 @@ model SyncHistory {
   userId       String?
   User         User?      @relation(fields: [userId], references: [id])
   syncDate     DateTime
-  syncType     String
+  syncType     String //manual or automatic
   syncStatus   String
   syncMessage  String?
   syncDuration Int
   giftBatch    GiftBatch? @relation(fields: [giftBatchId], references: [id])
   giftBatchId  String?
+  syncFilter   Json?
+  jobStatus    String?
+  gifts       Gift[]
 
   @@map(name: "sync_history")
 }
