@@ -49,9 +49,14 @@ export default async function DataMapPage({ searchParams }) {
   return (
     <>
       <div className="center-content h-full w-full">
+        <p className="justify-left px-5 pt-8 text-lg text-white">
+          <span className="font-bold text-accent-1">STEP 5:</span> Select which
+          projects should map to which accounts.
+        </p>
         {projects && feAccounts ? (
           <div className="h-full px-8 pt-8 lg:pr-0">
             <MappingEditor
+              showHeader={false}
               projects={projects}
               feAccounts={feAccounts}
               mappings={mappings}

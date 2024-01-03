@@ -32,7 +32,7 @@ export async function PATCH(
     })
     // Ensure user is authenticated and is removing a user from the same team
     const session = await getServerSession(authOptions)
-    if (!session?.user || session?.user.role == 'admin' || session?.user.teamId !== userToModify.teamId) {
+    if (!session?.user || session?.user.role != 'admin' || session?.user.teamId !== userToModify.teamId) {
       return new Response(null, { status: 403 })
     }
 

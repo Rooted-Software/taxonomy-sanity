@@ -25,6 +25,7 @@ interface MappingEditorProps extends React.HTMLAttributes<HTMLButtonElement> {
   mappings: any[]
   projectsDaysLoaded?: number
   nextProjectDays: number
+  showHeader?: boolean
 }
 
 type FeAccount = {
@@ -798,6 +799,7 @@ export function MappingEditor({
   mappings,
   projectsDaysLoaded,
   nextProjectDays,
+  showHeader,
   ...props
 }: MappingEditorProps) {
   const router = useRouter()
@@ -908,10 +910,12 @@ export function MappingEditor({
 
   return (
     <DashboardShell>
-      <DashboardHeader
-        heading="Map your data"
-        text="Select which projects should map to which accounts."
-      />
+      {showHeader && (
+        <DashboardHeader
+          heading="Map your data"
+          text="Select which projects should map to which accounts."
+        />
+      )}
       <div className="flex h-0 flex-1 flex-col gap-8 lg:flex-row">
         <VirProjectList
           virProjects={virProjects}

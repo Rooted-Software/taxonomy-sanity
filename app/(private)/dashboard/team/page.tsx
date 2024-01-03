@@ -1,13 +1,13 @@
 import { redirect } from 'next/navigation'
 
+import { authOptions } from '@/lib/auth'
+import { db } from '@/lib/db'
+import { getCurrentUser } from '@/lib/session'
+import { Badge } from '@/components/ui/badge'
 import { TeamUserAdd } from '@/components/dashboard/team-user-add'
 import TeamUserDropdown from '@/components/dashboard/team-user-dropdown'
 import { DashboardHeader } from '@/components/header'
 import { DashboardShell } from '@/components/shell'
-import { Badge } from '@/components/ui/badge'
-import { authOptions } from '@/lib/auth'
-import { db } from '@/lib/db'
-import { getCurrentUser } from '@/lib/session'
 
 // import us from 'next/server'
 
@@ -21,21 +21,21 @@ const getTeam = async (teamId) => {
 }
 
 export const metadata = {
-  title: "Team",
-  description: "Manage your team and invite users",
+  title: 'Team',
+  description: 'Manage your team and invite users',
 }
 
 // Assuming this is your handler function
 function myHandler() {
   // Your handler logic here
-  console.log("not implemented")
+  console.log('not implemented')
 }
 
 export default async function TeamPage() {
   const user = await getCurrentUser()
 
   if (!user) {
-    redirect(authOptions?.pages?.signIn || "/login")
+    redirect(authOptions?.pages?.signIn || '/login')
   }
 
   const team = await getTeam(user.team.id)
@@ -61,9 +61,11 @@ export default async function TeamPage() {
               <th className="border-b border-foreground py-4 pb-3 pt-0 text-left font-medium text-muted-foreground ">
                 Role
               </th>
-              <th className="w-[150px] border-b border-foreground py-4 pb-3 pt-0 text-right font-medium text-muted-foreground ">
-                Actions
-              </th>
+              {user.role === 'admin' ? (
+                <th className="w-[150px] border-b border-foreground py-4 pb-3 pt-0 text-right font-medium text-muted-foreground ">
+                  Actions
+                </th>
+              ) : null}
             </tr>
           </thead>
           <tbody className="divide-y-2 sm:divide-y-0">
@@ -73,7 +75,7 @@ export default async function TeamPage() {
                 className="relative flex flex-col py-3 sm:table-row"
               >
                 <td className="sm:py-2">
-                  <span className={teamuser.name ? "mr-4" : ""}>
+                  <span className={teamuser.name ? 'mr-4' : ''}>
                     {teamuser.name}
                   </span>
                   <Badge variant="secondary" className="mb-2 sm:hidden">
@@ -86,9 +88,11 @@ export default async function TeamPage() {
                     {teamuser.role}
                   </Badge>
                 </td>
-                <td className="absolute right-0 top-[10px] sm:relative sm:py-2 sm:text-right">
-                  <TeamUserDropdown user={user} teamuser={teamuser} />
-                </td>
+                {user.role === 'admin' ? (
+                  <td className="absolute right-0 top-[10px] sm:relative sm:py-2 sm:text-right">
+                    <TeamUserDropdown user={user} teamuser={teamuser} />
+                  </td>
+                ) : null}
               </tr>
             ))}
           </tbody>
@@ -98,6 +102,6 @@ export default async function TeamPage() {
           <TeamUserAdd />
         </div>
       </div>
-    </DashboardShell >
+    </DashboardShell>
   )
 }

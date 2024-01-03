@@ -1,5 +1,26 @@
+import { cache } from 'react'
+import { redirect } from 'next/navigation'
+
+import { authOptions } from '@/lib/auth'
+import { db } from '@/lib/db'
+import { getFeAccountsFromBlackbaud } from '@/lib/feAccounts'
 import { getCurrentUser } from '@/lib/session'
 import { UniversalSelect } from '@/components/dashboard/universal-select'
+
+const feSettingsForUser = cache(async (teamId) => {
+  return await db.feSetting.findFirst({
+    select: {
+      id: true,
+      environment_name: true,
+      legal_entity_id: true,
+      email: true,
+      expires_in: true,
+    },
+    where: {
+      teamId: teamId,
+    },
+  })
+})
 
 export const metadata = {
   title: 'Create an account',
@@ -8,6 +29,17 @@ export const metadata = {
 
 export default async function ConnectFECreditAccount() {
   const user = await getCurrentUser()
+
+  if (!user || user === undefined) {
+    redirect(authOptions?.pages?.signIn || '/login')
+  }
+  const feSettings = await feSettingsForUser(user.team.id)
+  let feAccounts: any = []
+  if (!feSettings) {
+    feAccounts = []
+  } else {
+    feAccounts = await getFeAccountsFromBlackbaud(user.team.id)
+  }
   console.log(user)
   return (
     <div className="my-auto flex flex-col space-y-2 p-8 text-center">
@@ -21,6 +53,7 @@ export default async function ConnectFECreditAccount() {
         route={process.env.NEXT_PUBLIC_APP_URL + '/api/feAccounts'}
         fields={['account_id', 'account_number', 'description', 'class']}
         subType="credit"
+        initialData={feAccounts}
         selected={user?.team?.defaultCreditAccount}
         redirect="/step5"
       />

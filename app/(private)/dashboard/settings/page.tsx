@@ -127,8 +127,12 @@ export default async function SettingsPage() {
                 <div className="justify-left mr-4 flex flex-col justify-center space-y-2 text-center text-white">
                   <DebitAccountSelector
                     title="Save"
-                    initialValue={user?.team?.defaultDebitAccount}
-                    initialMapping={user?.team?.defaultDebitAccountForGiftType}
+                    initialValue={user?.team?.defaultDebitAccount ?? undefined}
+                    initialMapping={
+                      user?.team?.defaultDebitAccountForGiftType as
+                        | Record<string, number>
+                        | undefined
+                    }
                     initialData={feAccounts}
                     align="left"
                   />
