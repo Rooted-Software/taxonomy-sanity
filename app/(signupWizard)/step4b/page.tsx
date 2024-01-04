@@ -42,7 +42,7 @@ export default async function ConnectFECreditAccount() {
   }
   console.log(user)
   return (
-    <div className="my-auto flex flex-col space-y-2 p-8 text-center">
+    <div className="flex h-full w-full flex-col items-center justify-center space-y-2 p-8 text-center">
       <p className="justify-left text-lg text-white">
         <span className="font-bold text-accent-1">STEP 4b:</span> Select your
         default Credit account. This is where all unmapped transactions will be

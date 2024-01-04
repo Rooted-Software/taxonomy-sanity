@@ -31,17 +31,19 @@ export default async function ConnectVirtuousOrg() {
   console.log(user)
   const data = await getApiKey(user?.team.id)
   return (
-    <div className="my-auto">
+    <div className="flex h-full flex-col items-center justify-center">
       <ContextualHelp articleId="creating-a-virtuous-permissions-groups" />
 
-      <div className="mb-12 text-center">
-        <p className="text-lg leading-8 text-white">
+      <div className="px-8">
+        <p className="text-center text-lg leading-8 text-white">
           <span className="font-bold text-accent-1">STEP 1:</span> Get API Key
           from Virtuous
         </p>
         <p className="leading-8 text-muted-foreground">
           Access your Virtuous account to create and copy an API key.
         </p>
+      </div>
+      <div className="mb-12 text-center">
         <a
           href="https://app.virtuoussoftware.com/Generosity/People/ApiKeys"
           target="_blank"

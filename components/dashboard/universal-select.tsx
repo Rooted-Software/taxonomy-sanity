@@ -120,7 +120,7 @@ export function UniversalSelect({
 
   return (
     <div
-      className={`min-w-xl flex flex-col space-y-5 py-5 pt-2 ${
+      className={`min-w-xl flex max-w-full flex-col space-y-5 py-5 pt-2 ${
         align === 'center' ? 'items-center' : 'items-start'
       }`}
     >

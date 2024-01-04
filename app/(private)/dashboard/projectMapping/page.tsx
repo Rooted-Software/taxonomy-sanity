@@ -4,6 +4,8 @@ import { getCurrentUser } from '@/lib/session'
 import { dateFilterOptions } from '@/lib/utils'
 import { getVirtuousProjects } from '@/lib/virProjects'
 import { MappingEditor } from '@/components/dashboard/mapping-editor'
+import { DashboardHeader } from '@/components/header'
+import { DashboardShell } from '@/components/shell'
 
 export const metadata = {
   title: 'Map your data',
@@ -52,13 +54,19 @@ export default async function DataMapPage({ searchParams }) {
   return (
     <div className="lg:h-[90vh]">
       {projects && feAccounts ? (
-        <MappingEditor
-          projects={projects}
-          feAccounts={feAccounts}
-          mappings={mappings}
-          nextProjectDays={nextProjectDays}
-          projectsDaysLoaded={projectDays}
-        />
+        <DashboardShell>
+          <DashboardHeader
+            heading="Map your data"
+            text="Select which projects should map to which accounts."
+          />
+          <MappingEditor
+            projects={projects}
+            feAccounts={feAccounts}
+            mappings={mappings}
+            nextProjectDays={nextProjectDays}
+            projectsDaysLoaded={projectDays}
+          />
+        </DashboardShell>
       ) : (
         `getting projects and accounts...`
       )}

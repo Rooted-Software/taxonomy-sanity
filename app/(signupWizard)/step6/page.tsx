@@ -74,32 +74,38 @@ export default async function ReviewDataPage({ searchParams }) {
   }
 
   return (
-    <div className="flex h-full w-screen flex-col justify-center p-4">
+    <div className="flex h-full w-full flex-col justify-center p-4">
+      <p className="justify-left p-8 pb-0 text-lg text-white">
+        <span className="font-bold text-accent-1">STEP 6:</span> Review your
+        virtuous gifts and sync your first batch
+      </p>
       {batches && feAccounts && mappings && projects ? (
-        <BatchPreview
-          batches={batches}
-          projects={projects}
-          feAccounts={feAccounts}
-          mappings={mappings}
-          defaultCreditAccount={user?.team.defaultCreditAccount}
-          defaultDebitAccount={user?.team.defaultDebitAccount}
-          defaultJournal={user?.team.defaultJournal}
-          feEnvironment={feEnvironment.environment_id}
-          journalName={journalName.journal}
-          batchDaysLoaded={batchDays}
-          nextBatchDays={nextBatchDays}
-          selectedBatch={selectedBatch}
-          journalEntries={
-            selectedBatch
-              ? await createJournalEntries(
-                  selectedBatch.gifts,
-                  feAccounts,
-                  mappings,
-                  user.team
-                )
-              : undefined
-          }
-        />
+        <div className="h-0 flex-1 px-8 pt-8 lg:pr-0">
+          <BatchPreview
+            batches={batches}
+            projects={projects}
+            feAccounts={feAccounts}
+            mappings={mappings}
+            defaultCreditAccount={user?.team.defaultCreditAccount}
+            defaultDebitAccount={user?.team.defaultDebitAccount}
+            defaultJournal={user?.team.defaultJournal}
+            feEnvironment={feEnvironment.environment_id}
+            journalName={journalName.journal}
+            batchDaysLoaded={batchDays}
+            nextBatchDays={nextBatchDays}
+            selectedBatch={selectedBatch}
+            journalEntries={
+              selectedBatch
+                ? await createJournalEntries(
+                    selectedBatch.gifts,
+                    feAccounts,
+                    mappings,
+                    user.team
+                  )
+                : undefined
+            }
+          />
+        </div>
       ) : (
         `getting projects and accounts...`
       )}

@@ -9,11 +9,9 @@ import { PopoverTrigger } from '@radix-ui/react-popover'
 import { cn } from '@/lib/utils'
 import { toast } from '@/components/ui/use-toast'
 import { EmptyPlaceholder } from '@/components/empty-placeholder'
-import { DashboardHeader } from '@/components/header'
 import { Icons } from '@/components/icons'
 
 import { giftTypes } from '../DebitAccountSelector'
-import { DashboardShell } from '../shell'
 import { Button } from '../ui/button'
 import Combobox from '../ui/combobox'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '../ui/dialog'
@@ -25,7 +23,6 @@ interface MappingEditorProps extends React.HTMLAttributes<HTMLButtonElement> {
   mappings: any[]
   projectsDaysLoaded?: number
   nextProjectDays: number
-  showHeader?: boolean
 }
 
 type FeAccount = {
@@ -799,7 +796,6 @@ export function MappingEditor({
   mappings,
   projectsDaysLoaded,
   nextProjectDays,
-  showHeader,
   ...props
 }: MappingEditorProps) {
   const router = useRouter()
@@ -909,214 +905,48 @@ export function MappingEditor({
   }
 
   return (
-    <DashboardShell>
-      {showHeader && (
-        <DashboardHeader
-          heading="Map your data"
-          text="Select which projects should map to which accounts."
-        />
-      )}
-      <div className="flex h-0 flex-1 flex-col gap-8 lg:flex-row">
-        <VirProjectList
-          virProjects={virProjects}
-          setVirProjects={setVirProjects}
-          projects={projects}
-          mappings={mappings}
-          isLoading={isLoading}
-          projectsDaysLoaded={projectsDaysLoaded}
-          nextProjectDays={nextProjectDays}
-        />
+    <div className="flex h-0 flex-1 flex-col gap-8 lg:flex-row">
+      <VirProjectList
+        virProjects={virProjects}
+        setVirProjects={setVirProjects}
+        projects={projects}
+        mappings={mappings}
+        isLoading={isLoading}
+        projectsDaysLoaded={projectsDaysLoaded}
+        nextProjectDays={nextProjectDays}
+      />
 
-        <div className="flex flex-col bg-dark pb-5 md:flex-[2]">
-          <div className="flex h-0 flex-1 flex-col gap-4 md:flex-row">
-            <FeAccountPicker
-              title="Financial Edge Credit Account"
-              name="fe-credit"
-              onSelect={(id, obj) => {
-                setFeCreditAccountID(id)
-                setFeCreditAccountObj(obj)
-              }}
-              feAccounts={feAccounts}
-              isLoading={isLoading}
-            />
-            <FeAccountPicker
-              title="Financial Edge Debit Account"
-              name="fe-debit"
-              onSelect={(id, obj) => {
-                setFeDebitAccountID(id)
-                setFeDebitAccountObj(obj)
-              }}
-              feAccounts={feAccounts}
-              isLoading={isLoading}
-            />
-          </div>
-
-          <div className="mt-4 bg-tightWhite p-4 text-dark">
-            {(feCreditAccountID && feCreditAccountObj?.account_id) ||
-            (feDebitAccountID && feDebitAccountObj) ? (
-              <button
-                onClick={onClick}
-                className={cn(
-                  `relative float-right m-4 inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
-                  {
-                    'cursor-not-allowed opacity-60': isLoading,
-                  }
-                )}
-                disabled={isLoading}
-                {...props}
-              >
-                {isLoading ? (
-                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Icons.add className="mr-2 h-4 w-4" />
-                )}
-                Map Project(s)
-              </button>
-            ) : (
-              <span className="text-dark">Please Select an Account</span>
-            )}
-
-            {(feCreditAccountID && feCreditAccountObj?.account_id) ||
-            (feDebitAccountID && feDebitAccountObj?.account_id) ? (
-              <div>
-                <p>
-                  Credit:{' '}
-                  <b>
-                    {feCreditAccountObj?.description
-                      ? feCreditAccountObj?.description
-                      : 'Default'}
-                  </b>
-                </p>
-                <div className="my-2 flex items-center gap-3">
-                  <p>
-                    Debit:{' '}
-                    <b>
-                      {feDebitAccountObj?.description
-                        ? feDebitAccountObj?.description
-                        : 'Default'}
-                    </b>
-                  </p>
-                  <Dialog>
-                    <DialogTrigger>
-                      <Button variant="outline" size="xs">
-                        Customize for gift type
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-[unset]">
-                      <DialogTitle className="px-7 text-center">
-                        Customize Financial Edge Debit Account for Virtuous Gift
-                        Type
-                      </DialogTitle>
-                      <div className="mt-4 space-y-3">
-                        {giftTypes.map((giftType) => (
-                          <div className="flex flex-col items-start">
-                            <p className="mb-1 text-sm font-bold text-gray-800">
-                              {giftType}
-                            </p>
-                            <Combobox
-                              value={feDebitMap[giftType]}
-                              onChange={(val) =>
-                                setFeDebitMap({
-                                  ...feDebitMap,
-                                  [giftType]: val,
-                                })
-                              }
-                              isLoading={isLoading}
-                              disabled={isLoading}
-                              options={[
-                                { label: 'Unset', value: '' },
-                                ...feAccounts.map((item: any) => ({
-                                  value: item.account_id,
-                                  label: [
-                                    'account_number',
-                                    'description',
-                                    'class',
-                                  ]
-                                    .map((f) => item[f])
-                                    .join(' '),
-                                })),
-                              ]}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-                <p className="text-sm text-dark">Transaction Codes:</p>
-                <div className="ml-3">
-                  {feCreditAccountObj?.default_transaction_codes?.map((tc) => {
-                    return (
-                      <span key={'tc' + tc?.name} className="text-sm">
-                        {tc?.name}:{' '}
-                        {tc?.value && tc?.value !== 'None' ? tc?.value : 'None'}{' '}
-                        <br />
-                      </span>
-                    )
-                  })}{' '}
-                </div>
-              </div>
-            ) : null}
-          </div>
+      <div className="flex flex-col bg-dark pb-5 md:flex-[2]">
+        <div className="flex h-0 flex-1 flex-col gap-4 md:flex-row">
+          <FeAccountPicker
+            title="Financial Edge Credit Account"
+            name="fe-credit"
+            onSelect={(id, obj) => {
+              setFeCreditAccountID(id)
+              setFeCreditAccountObj(obj)
+            }}
+            feAccounts={feAccounts}
+            isLoading={isLoading}
+          />
+          <FeAccountPicker
+            title="Financial Edge Debit Account"
+            name="fe-debit"
+            onSelect={(id, obj) => {
+              setFeDebitAccountID(id)
+              setFeDebitAccountObj(obj)
+            }}
+            feAccounts={feAccounts}
+            isLoading={isLoading}
+          />
         </div>
 
-        <div className="flex h-full flex-1 flex-col bg-whiteSmoke px-2 py-4">
-          <h1 className="mb-4 ml-4 text-2xl text-dark">Mappings</h1>
-
-          {mappings?.length ? (
-            <div className="justify-left h-0 max-h-[50vh] flex-1 overflow-scroll bg-whiteSmoke text-left text-dark lg:max-h-full">
-              <div className="flex items-center p-1">
-                <Icons.trash className="mr-2 h-4 w-4 opacity-0" />
-                <span className="flex-1 text-right font-bold">
-                  Virtuous Project
-                </span>
-                <Icons.arrowRight className="mx-2 h-4 w-4" />{' '}
-                <span className="flex-1 text-sm font-bold">
-                  FE Credit Account
-                </span>
-              </div>
-              {mappings.map((mapping) => (
-                <div className="flex items-center p-1" key={mapping.id}>
-                  <Icons.trash
-                    className="mr-2 h-4 w-4 text-red-500"
-                    onClick={() => onDeleteMapping(mapping.id)}
-                  />
-                  <span className="flex-1 text-right text-sm">
-                    {mapping.virProjectName}
-                  </span>
-                  <Icons.arrowRight className="mx-2 h-4 w-4" />{' '}
-                  <span
-                    className="flex-1 text-sm"
-                    title={`Credit: ${lookupAccount(
-                      mapping.feAccountId
-                    )}, Debit: ${lookupAccount(mapping.feDebitAccountId)} ${
-                      Object.keys(mapping.feDebitAccountForGiftType ?? {})
-                        .length > 0
-                        ? '(with gift type customization)'
-                        : ''
-                    }`}
-                  >
-                    {lookupAccount(mapping.feAccountId)}
-                  </span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <EmptyPlaceholder>
-              <EmptyPlaceholder.Icon name="post" />
-              <EmptyPlaceholder.Title className="text-gray-800">
-                No Mappings Found
-              </EmptyPlaceholder.Title>
-              <EmptyPlaceholder.Description>
-                You don&apos;t have any mappings yet.
-              </EmptyPlaceholder.Description>
-            </EmptyPlaceholder>
-          )}
-          {mappings?.length ? (
+        <div className="mt-4 bg-tightWhite p-4 text-dark">
+          {(feCreditAccountID && feCreditAccountObj?.account_id) ||
+          (feDebitAccountID && feDebitAccountObj) ? (
             <button
-              onClick={advanceStep}
+              onClick={onClick}
               className={cn(
-                `relative m-4 inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
+                `relative float-right m-4 inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
                 {
                   'cursor-not-allowed opacity-60': isLoading,
                 }
@@ -1127,15 +957,173 @@ export function MappingEditor({
               {isLoading ? (
                 <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
               ) : (
-                <Icons.arrowRight className="mr-2 h-4 w-4" />
+                <Icons.add className="mr-2 h-4 w-4" />
               )}
-              {pathname === '/projectMapping'
-                ? 'Return to dashboard'
-                : 'Continue (Data Review)'}
+              Map Project(s)
             </button>
+          ) : (
+            <span className="text-dark">Please Select an Account</span>
+          )}
+
+          {(feCreditAccountID && feCreditAccountObj?.account_id) ||
+          (feDebitAccountID && feDebitAccountObj?.account_id) ? (
+            <div>
+              <p>
+                Credit:{' '}
+                <b>
+                  {feCreditAccountObj?.description
+                    ? feCreditAccountObj?.description
+                    : 'Default'}
+                </b>
+              </p>
+              <div className="my-2 flex items-center gap-3">
+                <p>
+                  Debit:{' '}
+                  <b>
+                    {feDebitAccountObj?.description
+                      ? feDebitAccountObj?.description
+                      : 'Default'}
+                  </b>
+                </p>
+                <Dialog>
+                  <DialogTrigger>
+                    <Button variant="outline" size="xs">
+                      Customize for gift type
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-[unset]">
+                    <DialogTitle className="px-7 text-center">
+                      Customize Financial Edge Debit Account for Virtuous Gift
+                      Type
+                    </DialogTitle>
+                    <div className="mt-4 space-y-3">
+                      {giftTypes.map((giftType) => (
+                        <div className="flex flex-col items-start">
+                          <p className="mb-1 text-sm font-bold text-gray-800">
+                            {giftType}
+                          </p>
+                          <Combobox
+                            value={feDebitMap[giftType]}
+                            onChange={(val) =>
+                              setFeDebitMap({
+                                ...feDebitMap,
+                                [giftType]: val,
+                              })
+                            }
+                            isLoading={isLoading}
+                            disabled={isLoading}
+                            options={[
+                              { label: 'Unset', value: '' },
+                              ...feAccounts.map((item: any) => ({
+                                value: item.account_id,
+                                label: [
+                                  'account_number',
+                                  'description',
+                                  'class',
+                                ]
+                                  .map((f) => item[f])
+                                  .join(' '),
+                              })),
+                            ]}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+              <p className="text-sm text-dark">Transaction Codes:</p>
+              <div className="ml-3">
+                {feCreditAccountObj?.default_transaction_codes?.map((tc) => {
+                  return (
+                    <span key={'tc' + tc?.name} className="text-sm">
+                      {tc?.name}:{' '}
+                      {tc?.value && tc?.value !== 'None' ? tc?.value : 'None'}{' '}
+                      <br />
+                    </span>
+                  )
+                })}{' '}
+              </div>
+            </div>
           ) : null}
         </div>
       </div>
-    </DashboardShell>
+
+      <div className="flex h-full flex-1 flex-col bg-whiteSmoke px-2 py-4">
+        <h1 className="mb-4 ml-4 text-2xl text-dark">Mappings</h1>
+
+        {mappings?.length ? (
+          <div className="justify-left h-0 max-h-[50vh] flex-1 overflow-scroll bg-whiteSmoke text-left text-dark lg:max-h-full">
+            <div className="flex items-center p-1">
+              <Icons.trash className="mr-2 h-4 w-4 opacity-0" />
+              <span className="flex-1 text-right font-bold">
+                Virtuous Project
+              </span>
+              <Icons.arrowRight className="mx-2 h-4 w-4" />{' '}
+              <span className="flex-1 text-sm font-bold">
+                FE Credit Account
+              </span>
+            </div>
+            {mappings.map((mapping) => (
+              <div className="flex items-center p-1" key={mapping.id}>
+                <Icons.trash
+                  className="mr-2 h-4 w-4 text-red-500"
+                  onClick={() => onDeleteMapping(mapping.id)}
+                />
+                <span className="flex-1 text-right text-sm">
+                  {mapping.virProjectName}
+                </span>
+                <Icons.arrowRight className="mx-2 h-4 w-4" />{' '}
+                <span
+                  className="flex-1 text-sm"
+                  title={`Credit: ${lookupAccount(
+                    mapping.feAccountId
+                  )}, Debit: ${lookupAccount(mapping.feDebitAccountId)} ${
+                    Object.keys(mapping.feDebitAccountForGiftType ?? {})
+                      .length > 0
+                      ? '(with gift type customization)'
+                      : ''
+                  }`}
+                >
+                  {lookupAccount(mapping.feAccountId)}
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <EmptyPlaceholder>
+            <EmptyPlaceholder.Icon name="post" />
+            <EmptyPlaceholder.Title className="text-gray-800">
+              No Mappings Found
+            </EmptyPlaceholder.Title>
+            <EmptyPlaceholder.Description>
+              You don&apos;t have any mappings yet.
+            </EmptyPlaceholder.Description>
+          </EmptyPlaceholder>
+        )}
+        {mappings?.length ? (
+          <button
+            onClick={advanceStep}
+            className={cn(
+              `relative m-4 inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
+              {
+                'cursor-not-allowed opacity-60': isLoading,
+              }
+            )}
+            disabled={isLoading}
+            {...props}
+          >
+            {isLoading ? (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Icons.arrowRight className="mr-2 h-4 w-4" />
+            )}
+            {pathname === '/projectMapping'
+              ? 'Return to dashboard'
+              : 'Continue (Data Review)'}
+          </button>
+        ) : null}
+      </div>
+    </div>
   )
 }

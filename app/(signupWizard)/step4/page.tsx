@@ -41,7 +41,7 @@ export default async function ConnectFEDebitAccount() {
     feAccounts = await getFeAccountsFromBlackbaud(user.team.id)
   }
   return (
-    <div className="my-auto space-y-2 p-8 text-center">
+    <div className="h-full space-y-2 overflow-y-auto p-8 text-center">
       <p className="text-lg text-white">
         <span className="font-bold text-accent-1">STEP 4:</span> Select your
         default DEBIT account.
