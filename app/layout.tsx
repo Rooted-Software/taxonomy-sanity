@@ -4,6 +4,7 @@ import { siteConfig } from '@/config/site'
 import { cn } from '@/lib/utils'
 import { Toaster } from '@/components/ui/toaster'
 import { Analytics } from '@/components/analytics'
+import ErrorHandling from '@/components/ErrorHandling'
 import { TailwindIndicator } from '@/components/tailwind-indicator'
 import { ThemeProvider } from '@/components/theme-provider'
 
@@ -78,6 +79,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+          <ErrorHandling />
           {children}
           <Analytics />
           <Toaster />
