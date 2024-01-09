@@ -8,11 +8,9 @@ interface WizardLayoutProps {
 
 export default function WizardLayout({ children }: WizardLayoutProps) {
   return (
-    <div className="h-screen min-h-screen bg-dark">
-      <div className="flex h-full w-screen flex-col items-center">
-        <div className="flex h-0 flex-1 flex-col overflow-auto text-white">
-          <div className="my-auto">{children}</div>
-        </div>
+    <div className="h-screen min-h-screen bg-dark text-white">
+      <div className="flex h-screen w-screen flex-col items-center">
+        <div className="h-0 w-full flex-1">{children}</div>
         <Stepper />
       </div>
     </div>

@@ -52,7 +52,11 @@ export async function virApiFetch(url, method, teamId, body?) {
       console.log(
         'Initial response failed - this could indicate a malformed request'
       )
-      console.log(res2.status, Array.from(res2.headers.entries()))
+      console.log(
+        res2.status,
+        Array.from(res2.headers.entries()),
+        await res2.text()
+      )
       setTimeout(function () {
         return retryFetch(url, params)
       }, 1000)

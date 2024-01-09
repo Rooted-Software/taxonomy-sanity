@@ -12,6 +12,8 @@ import {
 } from '@/lib/virGifts'
 import { getProjectAccountMappings } from '@/lib/virProjects'
 import { BatchPreview } from '@/components/dashboard/batch-preview'
+import { DashboardHeader } from '@/components/header'
+import { DashboardShell } from '@/components/shell'
 
 // TODO: show sync date and view in FE in gift panel
 // TODO: add note that any changes since sync date are not carried over
@@ -104,35 +106,38 @@ export default async function BatchManagementPage({ searchParams }) {
   }
 
   return (
-    <>
-      {batches && feAccounts && mappings && projects ? (
-        <BatchPreview
-          batches={batches}
-          projects={projects}
-          feAccounts={feAccounts}
-          mappings={mappings}
-          defaultCreditAccount={user?.team.defaultCreditAccount}
-          defaultDebitAccount={user?.team.defaultDebitAccount}
-          defaultJournal={user?.team.defaultJournal}
-          feEnvironment={feEnvironment.environment_id}
-          journalName={journalName.journal}
-          batchDaysLoaded={batchDays}
-          nextBatchDays={nextBatchDays}
-          selectedBatch={selectedBatch}
-          journalEntries={
-            selectedBatch
-              ? await createJournalEntries(
-                  selectedBatch.gifts,
-                  feAccounts,
-                  mappings,
-                  user.team
-                )
-              : undefined
-          }
-        />
-      ) : (
-        `getting projects and accounts...`
-      )}
-    </>
+    <div className="lg:h-[90vh]">
+      <DashboardShell>
+        <DashboardHeader heading="Batch Management" />
+        {batches && feAccounts && mappings && projects ? (
+          <BatchPreview
+            batches={batches}
+            projects={projects}
+            feAccounts={feAccounts}
+            mappings={mappings}
+            defaultCreditAccount={user?.team.defaultCreditAccount}
+            defaultDebitAccount={user?.team.defaultDebitAccount}
+            defaultJournal={user?.team.defaultJournal}
+            feEnvironment={feEnvironment.environment_id}
+            journalName={journalName.journal}
+            batchDaysLoaded={batchDays}
+            nextBatchDays={nextBatchDays}
+            selectedBatch={selectedBatch}
+            journalEntries={
+              selectedBatch
+                ? await createJournalEntries(
+                    selectedBatch.gifts,
+                    feAccounts,
+                    mappings,
+                    user.team
+                  )
+                : undefined
+            }
+          />
+        ) : (
+          `getting projects and accounts...`
+        )}
+      </DashboardShell>
+    </div>
   )
 }

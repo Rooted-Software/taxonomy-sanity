@@ -37,7 +37,7 @@ export function Stepper({ className, ...props }: StepperProps) {
   return (
     <div className="hidden w-full items-center justify-center bg-white p-0 md:block">
       <div className="mx-auto lg:w-2/3">
-        <div className="relative left-[10%] top-[50px] m-auto  ml-4 w-[80%] bg-[#E8F1FB] xl:top-[50px] 2xl:left-[5%] 2xl:w-[90%]">
+        <div className="relative left-[10%] top-[50px] m-auto  ml-4 w-[80%] max-w-full bg-[#E8F1FB] xl:top-[50px] 2xl:left-[5%] 2xl:w-[90%]">
           <div
             className={`advanceTransition  rounded-xl border-[20px] border-b border-accent-1`}
             style={{ width: `${percent}%` }}

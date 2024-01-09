@@ -17,12 +17,12 @@ export default async function CompletePage() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-6 p-8">
+    <div className="flex h-full flex-col items-center justify-center gap-6 p-8">
       <h1 className="text-center text-3xl font-bold">
         Congratulations, your configuration is complete!
       </h1>
 
-      <div className="max-width:400 m-10 text-left">
+      <div className="max-width:400 text-left">
         <p>
           If you are ready to have your data automatically synced, you can turn
           on the switch below.

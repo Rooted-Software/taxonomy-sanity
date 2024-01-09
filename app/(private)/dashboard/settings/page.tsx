@@ -89,7 +89,7 @@ export default async function SettingsPage() {
         <div className="my-6">
           <AutosaveSwitch
             label="Automatic Sync"
-            initialValue={user.team.automation}
+            initialValue={user.team.automation ?? undefined}
             fieldName="automation"
             route="/api/teamSettings"
           />
@@ -105,12 +105,12 @@ export default async function SettingsPage() {
         </div>
 
         {feSettings ? (
-          <div className="flex ">
-            <div className="space-y-3">
-              <div className="mr-4 flex flex-col space-y-2 text-left ">
+          <div className="flex">
+            <div className="w-full space-y-3">
+              <div className="flex flex-col space-y-2 text-left ">
                 <span className="text-accent-1">Default Journal</span> Select
                 your default journal from Financial Edge.
-                <div className="justify-left text-md mr-4 justify-center text-center text-white">
+                <div className="justify-left text-md justify-center text-center text-white">
                   <UniversalSelect
                     title="Save"
                     route="/api/reJournals"
@@ -121,23 +121,27 @@ export default async function SettingsPage() {
                 </div>
               </div>
 
-              <div className="mr-4 flex flex-col space-y-2 text-left ">
+              <div className="flex flex-col space-y-2 text-left ">
                 <span className="text-accent-1">Default Debit Account</span>{' '}
                 Select your default debit account from Financial Edge.
-                <div className="justify-left mr-4 flex flex-col justify-center space-y-2 text-center text-white">
+                <div className="justify-left flex flex-col justify-center space-y-2 text-center text-white">
                   <DebitAccountSelector
                     title="Save"
-                    initialValue={user?.team?.defaultDebitAccount}
-                    initialMapping={user?.team?.defaultDebitAccountForGiftType}
+                    initialValue={user?.team?.defaultDebitAccount ?? undefined}
+                    initialMapping={
+                      user?.team?.defaultDebitAccountForGiftType as
+                        | Record<string, number>
+                        | undefined
+                    }
                     initialData={feAccounts}
                     align="left"
                   />
                 </div>
               </div>
-              <div className="mr-4 flex flex-col space-y-2 text-left ">
+              <div className="flex flex-col space-y-2 text-left ">
                 <span className="text-accent-1">Default Credit Account</span>{' '}
                 Select your default credit account from Financial Edge.
-                <div className="justify-left mr-4 justify-center text-center text-white ">
+                <div className="justify-left justify-center text-center text-white ">
                   <UniversalSelect
                     title="Save"
                     route="/api/feAccounts"

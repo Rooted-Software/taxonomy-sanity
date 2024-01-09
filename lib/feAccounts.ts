@@ -27,7 +27,7 @@ export const getFeAccountsFromBlackbaud = async (teamId) => {
     teamId
   )
   if (res.status !== 200) {
-    throw new Error('Unable to fetch accounts')
+    throw new Error(`Unable to fetch accounts, ${res.status}`)
   } else {
     const data = await res.json()
     //console.log('accounts', data)

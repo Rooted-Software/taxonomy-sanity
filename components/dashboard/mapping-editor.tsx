@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { PopoverTrigger } from '@radix-ui/react-popover'
@@ -9,11 +9,9 @@ import { PopoverTrigger } from '@radix-ui/react-popover'
 import { cn } from '@/lib/utils'
 import { toast } from '@/components/ui/use-toast'
 import { EmptyPlaceholder } from '@/components/empty-placeholder'
-import { DashboardHeader } from '@/components/header'
 import { Icons } from '@/components/icons'
 
 import { giftTypes } from '../DebitAccountSelector'
-import { DashboardShell } from '../shell'
 import { Button } from '../ui/button'
 import Combobox from '../ui/combobox'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '../ui/dialog'
@@ -56,7 +54,6 @@ function FeAccountPicker({
   const [filterAccountNumber, setFilterAccountNumber] =
     React.useState<boolean>(true)
   const [filterFeCase, setFilterFeCase] = React.useState<boolean>(false)
-  let [isFeAccountFilterOpen, setIsFeAccountFilterOpen] = useState(false)
 
   const filteredAccounts = React.useMemo(() => {
     let value = textFeFilter
@@ -100,245 +97,210 @@ function FeAccountPicker({
   ])
 
   return (
-    <>
-      <div className="m-auto flex w-full flex-col justify-center space-y-6 ">
-        <div className="m-auto flex w-full flex-col justify-center space-y-6 ">
-          <div className="w-full text-left ">
-            <p className="justify-left text-lg text-white">
-              <span className="font-bold text-accent-1">{title}</span>
-            </p>
-          </div>
-          <div className="flex w-full flex-row space-y-2 text-center">
-            <div className="mt-1 basis-2/3 items-center justify-end">
+    <div className="flex flex-1 flex-col justify-center gap-3">
+      <p className="justify-left text-lg font-bold text-accent-1">{title}</p>
+      <div className="flex flex-row items-center gap-2">
+        <div className="w-0 flex-1 items-center justify-end">
+          <input
+            id="textFilter"
+            value={textFeFilter}
+            onChange={(e) => {
+              setTextFeFilter(e.target.value)
+            }}
+            placeholder="Search"
+            className="w-full rounded-lg border border-gray-400 p-2 text-brand-400"
+          />
+        </div>
+        <Popover>
+          <PopoverTrigger>
+            <button
+              className="inline-flex h-9 shrink items-center rounded-md border border-transparent bg-tightWhite px-4 py-2 text-sm font-medium  text-dark hover:bg-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
+              disabled={isLoading}
+            >
+              <Icons.listFilter className="mr-2 h-4 w-4" />
+              Filter
+            </button>
+          </PopoverTrigger>
+          <PopoverContent
+            className="overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+            side="bottom"
+            align="end"
+          >
+            <div className="mt-2">
+              <p className="text-sm text-gray-500">
+                <input
+                  id={`checkbox-filterAccountId`}
+                  checked={filterAccountId ? true : false}
+                  type="checkbox"
+                  value={filterAccountId.toString()}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setFilterAccountId(true)
+                    } else {
+                      setFilterAccountId(false)
+                    }
+                  }}
+                  className="text-large h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 "
+                />
+                <label
+                  htmlFor={`checkbox-filterAccountId`}
+                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                >
+                  Filter Account Id{' '}
+                </label>
+                <br />
+                <input
+                  id={`checkbox-filterAccountNumber`}
+                  checked={filterAccountNumber ? true : false}
+                  type="checkbox"
+                  value={filterAccountNumber.toString()}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setFilterAccountNumber(true)
+                    } else {
+                      setFilterAccountNumber(false)
+                    }
+                  }}
+                  className="text-large h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 "
+                />
+                <label
+                  htmlFor={`checkbox-filterAccountNumber`}
+                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                >
+                  Filter Account Number{' '}
+                </label>
+                <br />
+                <input
+                  id={`checkbox-filterAccountDescription`}
+                  checked={filterAccountDescription ? true : false}
+                  type="checkbox"
+                  value={filterAccountDescription.toString()}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setFilterAccountDescription(true)
+                    } else {
+                      setFilterAccountDescription(false)
+                    }
+                  }}
+                  className="text-large h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 "
+                />
+                <label
+                  htmlFor={`checkbox-filterAccountDescription`}
+                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                >
+                  Filter Account Description{' '}
+                </label>
+                <br />
+                <input
+                  id={`checkbox-filterCase`}
+                  checked={filterFeCase ? true : false}
+                  type="checkbox"
+                  value={filterFeCase.toString()}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setFilterFeCase(true)
+                    } else {
+                      setFilterFeCase(false)
+                    }
+                  }}
+                  className="text-large h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 "
+                />
+                <label
+                  htmlFor={`checkbox-filterCase`}
+                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                >
+                  Match Exact Case
+                </label>
+                <br />
+              </p>
+            </div>
+          </PopoverContent>
+        </Popover>
+      </div>
+      <div className="h-0 w-full flex-1">
+        {filteredAccounts?.length ? (
+          <div className="justify-left max-h-[50vh] overflow-scroll bg-whiteSmoke p-4 text-left text-dark lg:max-h-full">
+            <div className="flex flex-row items-center p-1">
               <input
-                id="textFilter"
-                value={textFeFilter}
-                onChange={(e) => {
-                  setTextFeFilter(e.target.value)
-                }}
-                placeholder="Search"
-                className="w-full rounded-lg border border-gray-400 p-2 text-brand-400"
+                type="radio"
+                name={name}
+                id={`${name}-default`}
+                value=""
+                className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+                defaultChecked
+                onClick={() => onSelect('')}
               />
-            </div>
-            <div className="align-right items-right mx-2 my-auto basis-1/3">
-              <Popover>
-                <PopoverTrigger>
-                  <button
-                    className="inline-flex h-9 shrink items-center rounded-md border border-transparent bg-tightWhite px-4 py-2 text-sm font-medium  text-dark hover:bg-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
-                    disabled={isLoading}
-                  >
-                    <Icons.listFilter className="mr-2 h-4 w-4" />
-                    Filter
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-full max-w-md overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <p className="text-lg font-medium leading-6 text-gray-900">
-                    FE Accounts Filter
-                  </p>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      <input
-                        id={`checkbox-filterAccountId`}
-                        checked={filterAccountId ? true : false}
-                        type="checkbox"
-                        value={filterAccountId.toString()}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setFilterAccountId(true)
-                          } else {
-                            setFilterAccountId(false)
-                          }
-                        }}
-                        className="text-large h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 "
-                      />
-                      <label
-                        htmlFor={`checkbox-filterAccountId`}
-                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                      >
-                        Filter Account Id{' '}
-                      </label>
-                      <br />
-                      <input
-                        id={`checkbox-filterAccountNumber`}
-                        checked={filterAccountNumber ? true : false}
-                        type="checkbox"
-                        value={filterAccountNumber.toString()}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setFilterAccountNumber(true)
-                          } else {
-                            setFilterAccountNumber(false)
-                          }
-                        }}
-                        className="text-large h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 "
-                      />
-                      <label
-                        htmlFor={`checkbox-filterAccountNumber`}
-                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                      >
-                        Filter Account Number{' '}
-                      </label>
-                      <br />
-                      <input
-                        id={`checkbox-filterAccountDescription`}
-                        checked={filterAccountDescription ? true : false}
-                        type="checkbox"
-                        value={filterAccountDescription.toString()}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setFilterAccountDescription(true)
-                          } else {
-                            setFilterAccountDescription(false)
-                          }
-                        }}
-                        className="text-large h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 "
-                      />
-                      <label
-                        htmlFor={`checkbox-filterAccountDescription`}
-                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                      >
-                        Filter Account Description{' '}
-                      </label>
-                      <br />
-                      <input
-                        id={`checkbox-filterCase`}
-                        checked={filterFeCase ? true : false}
-                        type="checkbox"
-                        value={filterFeCase.toString()}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setFilterFeCase(true)
-                          } else {
-                            setFilterFeCase(false)
-                          }
-                        }}
-                        className="text-large h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 "
-                      />
-                      <label
-                        htmlFor={`checkbox-filterCase`}
-                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                      >
-                        Match Exact Case
-                      </label>
-                      <br />
-                    </p>
-                  </div>
-
-                  <div className="mt-4">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={() => {
-                        setIsFeAccountFilterOpen(false)
-                      }}
-                    >
-                      Done
-                    </button>
-                  </div>
-                </PopoverContent>
-              </Popover>
-            </div>
-          </div>
-          <div className="flex w-full flex-row">
-            {filteredAccounts?.length ? (
-              <div
-                className="justify-left col-span-6 w-full overflow-scroll bg-whiteSmoke p-4 text-left text-dark"
-                style={{ height: '45vh' }}
+              <label
+                htmlFor={`${name}-default`}
+                className="px-2 text-sm font-medium text-gray-900 dark:text-gray-300"
               >
-                <div className="flex flex-row items-center p-1">
+                Default
+              </label>
+            </div>
+            {filteredAccounts.map((feAccount) => (
+              <div className="p-1" key={feAccount?.account_id}>
+                <div className="flex flex-row items-center">
                   <input
+                    id={`${name}-checked-checkbox-${feAccount?.account_id}`}
                     type="radio"
                     name={name}
-                    id={`${name}-default`}
-                    value=""
+                    value={feAccount?.account_id}
+                    onClick={(e) => {
+                      let accountObj = feAccounts.find(
+                        (account) =>
+                          account.account_id?.toString() ===
+                          (e.target as HTMLInputElement).value
+                      )
+                      onSelect((e.target as HTMLInputElement).value, accountObj)
+                    }}
                     className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
-                    defaultChecked
-                    onClick={() => onSelect('')}
                   />
                   <label
-                    htmlFor={`${name}-default`}
-                    className="mx-6 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    htmlFor={`${name}-checked-checkbox-${feAccount?.account_id}`}
+                    className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                   >
-                    Default
+                    {feAccount?.description ? (
+                      <span>{feAccount?.description}</span>
+                    ) : (
+                      <span>Undefined </span>
+                    )}{' '}
                   </label>
                 </div>
-                {filteredAccounts.map((feAccount) => (
-                  <div className="p-1" key={feAccount?.account_id}>
-                    <div className="flex flex-row items-center">
-                      <input
-                        id={`${name}-checked-checkbox-${feAccount?.account_id}`}
-                        type="radio"
-                        name={name}
-                        value={feAccount?.account_id}
-                        onClick={(e) => {
-                          let accountObj = feAccounts.find(
-                            (account) =>
-                              account.account_id?.toString() ===
-                              (e.target as HTMLInputElement).value
-                          )
-                          console.log(accountObj)
-                          onSelect(
-                            (e.target as HTMLInputElement).value,
-                            accountObj
-                          )
-                        }}
-                        className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
-                      />
-                      <label
-                        htmlFor={`${name}-checked-checkbox-${feAccount?.account_id}`}
-                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                      >
-                        {feAccount?.description ? (
-                          <span className="mx-4">
-                            {' '}
-                            {feAccount?.description}
-                          </span>
-                        ) : (
-                          <span className="mx-4"> Undefined </span>
-                        )}{' '}
-                      </label>
-                    </div>
-                    <div className="ml-8 pl-3 text-xs text-brand-400">
-                      id: {feAccount.account_id} | number:{' '}
-                      {feAccount.account_number}
-                    </div>
-                    <div className="ml-8 pl-3 text-xs text-brand-400">
-                      {feAccount.class !== 'none' ? (
-                        <span> Class: {feAccount.class}</span>
-                      ) : null}{' '}
-                    </div>
-                    <div className="ml-8 pl-3 text-xs text-brand-400">
-                      {feAccount.cashflow ? (
-                        <span className="text-success">
-                          {feAccount.cashflow}
-                        </span>
-                      ) : null}{' '}
-                    </div>
-                    <div className="ml-8 pl-3 text-xs text-brand-400">
-                      {feAccount.working_capital ? (
-                        <span className="text-success">
-                          {feAccount.working_capital}
-                        </span>
-                      ) : null}{' '}
-                    </div>
-                  </div>
-                ))}
+                <div className="ml-3 pl-3 text-xs text-brand-400">
+                  id: {feAccount.account_id} | number:{' '}
+                  {feAccount.account_number}
+                </div>
+                <div className="ml-3 pl-3 text-xs text-brand-400">
+                  {feAccount.class !== 'none' ? (
+                    <span> Class: {feAccount.class}</span>
+                  ) : null}{' '}
+                </div>
+                <div className="ml-3 pl-3 text-xs text-brand-400">
+                  {feAccount.cashflow ? (
+                    <span className="text-success">{feAccount.cashflow}</span>
+                  ) : null}{' '}
+                </div>
+                <div className="ml-3 pl-3 text-xs text-brand-400">
+                  {feAccount.working_capital ? (
+                    <span className="text-success">
+                      {feAccount.working_capital}
+                    </span>
+                  ) : null}{' '}
+                </div>
               </div>
-            ) : (
-              <EmptyPlaceholder>
-                <EmptyPlaceholder.Icon name="post" />
-                <EmptyPlaceholder.Title>
-                  No Accounts Found
-                </EmptyPlaceholder.Title>
-                <EmptyPlaceholder.Description>
-                  You don&apos;t have any RE/FE accounts yet.
-                </EmptyPlaceholder.Description>
-              </EmptyPlaceholder>
-            )}
+            ))}
           </div>
-        </div>
+        ) : (
+          <EmptyPlaceholder>
+            <EmptyPlaceholder.Icon name="post" />
+            <EmptyPlaceholder.Title>No Accounts Found</EmptyPlaceholder.Title>
+            <EmptyPlaceholder.Description>
+              You don&apos;t have any RE/FE accounts yet.
+            </EmptyPlaceholder.Description>
+          </EmptyPlaceholder>
+        )}
       </div>
-    </>
+    </div>
   )
 }
 
@@ -381,7 +343,6 @@ function VirProjectList({
   const [filterCase, setFilterCase] = React.useState<boolean>(false)
 
   function addVirProject(project) {
-    console.log(project)
     setVirProjects([...virProjects, project])
   }
 
@@ -499,27 +460,23 @@ function VirProjectList({
 
   return (
     <>
-      <div className="h-full bg-dark p-8">
-        <div className="m-auto flex flex-col justify-center space-y-6 ">
-          <div className="w-full  text-left ">
-            <p className="justify-left text-lg text-white">
-              <span className="font-bold text-accent-1">Virtuous Projects</span>
-            </p>
-          </div>
-          <div className="flex w-full  flex-row space-y-2 text-center">
-            <div className="mt-1 basis-2/3 items-center justify-end">
-              <input
-                id="textFilter"
-                value={textFilter}
-                onChange={(e) => {
-                  setTextFilter(e.target.value)
-                  filterProjects(e.target.value)
-                }}
-                placeholder="Search"
-                className="w-full rounded-lg border border-gray-400 p-2 text-brand-400"
-              />
-            </div>
-            <div className="align-right items-right mx-2 my-auto basis-1/3">
+      <div className="flex flex-1 flex-col bg-dark pb-5">
+        <div className="flex h-0 flex-1 flex-col justify-center gap-3">
+          <p className="justify-left text-lg text-white">
+            <span className="font-bold text-accent-1">Virtuous Projects</span>
+          </p>
+          <div className="flex flex-row items-center gap-2">
+            <input
+              id="textFilter"
+              value={textFilter}
+              onChange={(e) => {
+                setTextFilter(e.target.value)
+                filterProjects(e.target.value)
+              }}
+              placeholder="Search"
+              className="w-0 flex-1 rounded-lg border border-gray-400 p-2 text-brand-400"
+            />
+            <div className="align-right items-right">
               <Popover>
                 <PopoverTrigger>
                   <button
@@ -530,10 +487,11 @@ function VirProjectList({
                     Filter
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-full max-w-md overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <p className="text-lg font-medium leading-6 text-gray-900">
-                    Virtuous Projects Filter
-                  </p>
+                <PopoverContent
+                  className="w-full max-w-md overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                  side="bottom"
+                  align="end"
+                >
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
                       <input
@@ -706,28 +664,13 @@ function VirProjectList({
                       <br />
                     </p>
                   </div>
-
-                  <div className="mt-4">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={() => {
-                        filterProjects(textFilter)
-                      }}
-                    >
-                      Done
-                    </button>
-                  </div>
                 </PopoverContent>
               </Popover>
             </div>
           </div>
-          <div className="flex w-[800px] min-w-[800px]  max-w-[800px] flex-row">
+          <div className="flex h-0 flex-1 flex-row">
             {filteredProjects?.length ? (
-              <div
-                className="justify-left col-span-6 min-w-[600px] overflow-scroll bg-whiteSmoke p-4 text-left text-dark"
-                style={{ height: '45vh' }}
-              >
+              <div className="justify-left col-span-6 max-h-[50vh] overflow-scroll bg-whiteSmoke p-4 text-left text-dark lg:max-h-full">
                 {filteredProjects &&
                   filteredProjects.map((project) => (
                     <div className="p-1" key={project.id}>
@@ -753,16 +696,17 @@ function VirProjectList({
                         </label>
                       </div>
                       {project.onlineDisplayName ? (
-                        <div className="ml-8 pl-3 text-xs font-bold text-brand-400">
+                        <div className="ml-3 pl-3 text-xs font-bold text-brand-400">
                           {' '}
                           {project.onlineDisplayName}
                         </div>
                       ) : null}
-                      <div className="ml-8 pl-3 text-xs text-brand-400">
+                      <div className="ml-3 pl-3 text-xs text-brand-400">
                         id: {project.id} | Project code: {project.projectCode}
                       </div>
-                      <div className="text-wrap ml-8 pl-3 text-xs text-brand-400">
-                        {project.externalAccountingCode !== 'none' ? (
+                      <div className="text-wrap ml-3 pl-3 text-xs text-brand-400">
+                        {project.externalAccountCode &&
+                        project.externalAccountingCode !== 'none' ? (
                           <span>
                             {' '}
                             Accounting Code: {project.externalAccountingCode}
@@ -772,7 +716,7 @@ function VirProjectList({
                           <span>| desc: {project.description}</span>
                         ) : null}
                       </div>
-                      <div className="ml-8 pl-3 text-xs text-brand-400">
+                      <div className="ml-3 pl-3 text-xs text-brand-400">
                         {project.isPublic ? (
                           <span className="text-success">Public</span>
                         ) : null}{' '}
@@ -814,7 +758,7 @@ function VirProjectList({
           </>
         )}
 
-        <div className="mt-2">
+        <div className="mt-2 text-sm">
           {projectsDaysLoaded === 730 ? (
             <p>Showing projects from the past two years</p>
           ) : projectsDaysLoaded === 365 ? (
@@ -872,7 +816,6 @@ export function MappingEditor({
     }
   }
 
-  console.log(mappings)
   function lookupAccount(accountId) {
     return accountId
       ? feAccounts.find((a) => a.account_id === accountId)?.description
@@ -884,7 +827,6 @@ export function MappingEditor({
       return
     }
     setIsLoading(true)
-    console.log('client side mapping')
     const response = await fetch('/api/mapping', {
       method: 'POST',
       headers: {
@@ -914,26 +856,20 @@ export function MappingEditor({
       })
     }
 
-    console.log('invalidating cache')
     setVirProjects([])
     // This forces a cache invalidation.  Had to set a delay to get the new item. :)
     setTimeout(function () {
-      console.log('Executed after 1 second')
       setIsLoading(false)
       router.refresh()
     }, 400)
   }
 
   async function onDeleteMapping(mappingId) {
-    console.log('deleting mapping: ' + mappingId)
     if (isLoading) {
       return
     }
     setIsLoading(true)
 
-    console.log(virProjects)
-    console.log(feCreditAccountID)
-    console.log('client side deleting')
     const response = await fetch('/api/mapping/' + mappingId, {
       method: 'DELETE',
       headers: {
@@ -964,220 +900,53 @@ export function MappingEditor({
       variant: 'destructive',
     })
 
-    console.log('invalidating cache')
-
     // This forces a cache invalidation.
     router.refresh()
   }
 
   return (
-    <DashboardShell>
-      <DashboardHeader
-        heading="Map your data"
-        text="Select which projects should map to which accounts."
+    <div className="flex h-0 flex-1 flex-col gap-8 lg:flex-row">
+      <VirProjectList
+        virProjects={virProjects}
+        setVirProjects={setVirProjects}
+        projects={projects}
+        mappings={mappings}
+        isLoading={isLoading}
+        projectsDaysLoaded={projectsDaysLoaded}
+        nextProjectDays={nextProjectDays}
       />
-      <div className="grid min-w-full grid-cols-1 lg:grid-cols-4">
-        <VirProjectList
-          virProjects={virProjects}
-          setVirProjects={setVirProjects}
-          projects={projects}
-          mappings={mappings}
-          isLoading={isLoading}
-          projectsDaysLoaded={projectsDaysLoaded}
-          nextProjectDays={nextProjectDays}
-        />
 
-        <div className="h-full bg-dark p-8 md:col-span-2">
-          <div className="flex gap-4">
-            <FeAccountPicker
-              title="Financial Edge Credit Account"
-              name="fe-credit"
-              onSelect={(id, obj) => {
-                setFeCreditAccountID(id)
-                setFeCreditAccountObj(obj)
-              }}
-              feAccounts={feAccounts}
-              isLoading={isLoading}
-            />
-            <FeAccountPicker
-              title="Financial Edge Debit Account"
-              name="fe-debit"
-              onSelect={(id, obj) => {
-                setFeDebitAccountID(id)
-                setFeDebitAccountObj(obj)
-              }}
-              feAccounts={feAccounts}
-              isLoading={isLoading}
-            />
-          </div>
-
-          <div className="mt-4 bg-tightWhite p-4 text-dark">
-            {(feCreditAccountID && feCreditAccountObj?.account_id) ||
-            (feDebitAccountID && feDebitAccountObj) ? (
-              <button
-                onClick={onClick}
-                className={cn(
-                  `relative float-right m-4 inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
-                  {
-                    'cursor-not-allowed opacity-60': isLoading,
-                  }
-                )}
-                disabled={isLoading}
-                {...props}
-              >
-                {isLoading ? (
-                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Icons.add className="mr-2 h-4 w-4" />
-                )}
-                Map Project(s)
-              </button>
-            ) : (
-              <span className="text-dark">Please Select an Account</span>
-            )}
-
-            {(feCreditAccountID && feCreditAccountObj?.account_id) ||
-            (feDebitAccountID && feDebitAccountObj?.account_id) ? (
-              <div>
-                <p>
-                  Credit:{' '}
-                  <b>
-                    {feCreditAccountObj?.description
-                      ? feCreditAccountObj?.description
-                      : 'Default'}
-                  </b>
-                </p>
-                <div className="my-2 flex items-center gap-3">
-                  <p>
-                    Debit:{' '}
-                    <b>
-                      {feDebitAccountObj?.description
-                        ? feDebitAccountObj?.description
-                        : 'Default'}
-                    </b>
-                  </p>
-                  <Dialog>
-                    <DialogTrigger>
-                      <Button variant="outline" size="xs">
-                        Customize for gift type
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-[unset]">
-                      <DialogTitle className="px-7 text-center">
-                        Customize Financial Edge Debit Account for Virtuous Gift
-                        Type
-                      </DialogTitle>
-                      <div className="mt-4 space-y-3">
-                        {giftTypes.map((giftType) => (
-                          <div className="flex flex-col items-start">
-                            <p className="mb-1 text-sm font-bold text-gray-800">
-                              {giftType}
-                            </p>
-                            <Combobox
-                              value={feDebitMap[giftType]}
-                              onChange={(val) =>
-                                setFeDebitMap({
-                                  ...feDebitMap,
-                                  [giftType]: val,
-                                })
-                              }
-                              isLoading={isLoading}
-                              disabled={isLoading}
-                              options={[
-                                { label: 'Unset', value: '' },
-                                ...feAccounts.map((item: any) => ({
-                                  value: item.account_id,
-                                  label: [
-                                    'account_number',
-                                    'description',
-                                    'class',
-                                  ]
-                                    .map((f) => item[f])
-                                    .join(' '),
-                                })),
-                              ]}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-                <p className="text-sm text-dark">Transaction Codes:</p>
-                <div className="ml-3">
-                  {feCreditAccountObj?.default_transaction_codes?.map((tc) => {
-                    return (
-                      <span key={'tc' + tc?.name} className="text-sm">
-                        {tc?.name}:{' '}
-                        {tc?.value && tc?.value !== 'None' ? tc?.value : 'None'}{' '}
-                        <br />
-                      </span>
-                    )
-                  })}{' '}
-                </div>
-              </div>
-            ) : null}
-          </div>
+      <div className="flex flex-col bg-dark pb-5 md:flex-[2]">
+        <div className="flex h-0 flex-1 flex-col gap-4 md:flex-row">
+          <FeAccountPicker
+            title="Financial Edge Credit Account"
+            name="fe-credit"
+            onSelect={(id, obj) => {
+              setFeCreditAccountID(id)
+              setFeCreditAccountObj(obj)
+            }}
+            feAccounts={feAccounts}
+            isLoading={isLoading}
+          />
+          <FeAccountPicker
+            title="Financial Edge Debit Account"
+            name="fe-debit"
+            onSelect={(id, obj) => {
+              setFeDebitAccountID(id)
+              setFeDebitAccountObj(obj)
+            }}
+            feAccounts={feAccounts}
+            isLoading={isLoading}
+          />
         </div>
 
-        <div className="flex h-full w-full flex-col bg-whiteSmoke p-8 pt-[24px] ">
-          <h1 className="py-8 text-2xl text-dark">Mappings</h1>
-
-          {mappings?.length ? (
-            <div
-              className="justify-left overflow-scroll bg-whiteSmoke p-2 text-left text-dark"
-              style={{ height: '50vh' }}
-            >
-              <div className="flex items-center p-1">
-                <Icons.trash className="mr-2 h-4 w-4 opacity-0" />
-                <span className="flex-1 text-right font-bold">
-                  Virtuous Project
-                </span>
-                <Icons.arrowRight className="mx-2 h-4 w-4" />{' '}
-                <span className="flex-1 text-sm font-bold">
-                  FE Credit Account
-                </span>
-              </div>
-              {mappings.map((mapping) => (
-                <div className="flex items-center p-1" key={mapping.id}>
-                  <Icons.trash
-                    className="mr-2 h-4 w-4 text-red-500"
-                    onClick={() => onDeleteMapping(mapping.id)}
-                  />
-                  <span className="flex-1 text-right">
-                    {mapping.virProjectName}
-                  </span>
-                  <Icons.arrowRight className="mx-2 h-4 w-4" />{' '}
-                  <span
-                    className="flex-1 text-sm"
-                    title={`Credit: ${lookupAccount(
-                      mapping.feAccountId
-                    )}, Debit: ${lookupAccount(mapping.feDebitAccountId)} ${
-                      Object.keys(mapping.feDebitAccountForGiftType ?? {})
-                        .length > 0
-                        ? '(with gift type customization)'
-                        : ''
-                    }`}
-                  >
-                    {lookupAccount(mapping.feAccountId)}
-                  </span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <EmptyPlaceholder>
-              <EmptyPlaceholder.Icon name="post" />
-              <EmptyPlaceholder.Title>No Mappings Found</EmptyPlaceholder.Title>
-              <EmptyPlaceholder.Description>
-                You don&apos;t have any mappings yet.
-              </EmptyPlaceholder.Description>
-            </EmptyPlaceholder>
-          )}
-          {mappings?.length ? (
+        <div className="mt-4 bg-tightWhite p-4 text-dark">
+          {(feCreditAccountID && feCreditAccountObj?.account_id) ||
+          (feDebitAccountID && feDebitAccountObj) ? (
             <button
-              onClick={advanceStep}
+              onClick={onClick}
               className={cn(
-                `relative m-8 inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
+                `relative float-right m-4 inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
                 {
                   'cursor-not-allowed opacity-60': isLoading,
                 }
@@ -1188,17 +957,173 @@ export function MappingEditor({
               {isLoading ? (
                 <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
               ) : (
-                <Icons.arrowRight className="mr-2 h-4 w-4" />
+                <Icons.add className="mr-2 h-4 w-4" />
               )}
-              {pathname === '/projectMapping'
-                ? 'Return to dashboard'
-                : 'Continue (Data Review)'}
+              Map Project(s)
             </button>
+          ) : (
+            <span className="text-dark">Please Select an Account</span>
+          )}
+
+          {(feCreditAccountID && feCreditAccountObj?.account_id) ||
+          (feDebitAccountID && feDebitAccountObj?.account_id) ? (
+            <div>
+              <p>
+                Credit:{' '}
+                <b>
+                  {feCreditAccountObj?.description
+                    ? feCreditAccountObj?.description
+                    : 'Default'}
+                </b>
+              </p>
+              <div className="my-2 flex items-center gap-3">
+                <p>
+                  Debit:{' '}
+                  <b>
+                    {feDebitAccountObj?.description
+                      ? feDebitAccountObj?.description
+                      : 'Default'}
+                  </b>
+                </p>
+                <Dialog>
+                  <DialogTrigger>
+                    <Button variant="outline" size="xs">
+                      Customize for gift type
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-[unset]">
+                    <DialogTitle className="px-7 text-center">
+                      Customize Financial Edge Debit Account for Virtuous Gift
+                      Type
+                    </DialogTitle>
+                    <div className="mt-4 space-y-3">
+                      {giftTypes.map((giftType) => (
+                        <div className="flex flex-col items-start">
+                          <p className="mb-1 text-sm font-bold text-gray-800">
+                            {giftType}
+                          </p>
+                          <Combobox
+                            value={feDebitMap[giftType]}
+                            onChange={(val) =>
+                              setFeDebitMap({
+                                ...feDebitMap,
+                                [giftType]: val,
+                              })
+                            }
+                            isLoading={isLoading}
+                            disabled={isLoading}
+                            options={[
+                              { label: 'Unset', value: '' },
+                              ...feAccounts.map((item: any) => ({
+                                value: item.account_id,
+                                label: [
+                                  'account_number',
+                                  'description',
+                                  'class',
+                                ]
+                                  .map((f) => item[f])
+                                  .join(' '),
+                              })),
+                            ]}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+              <p className="text-sm text-dark">Transaction Codes:</p>
+              <div className="ml-3">
+                {feCreditAccountObj?.default_transaction_codes?.map((tc) => {
+                  return (
+                    <span key={'tc' + tc?.name} className="text-sm">
+                      {tc?.name}:{' '}
+                      {tc?.value && tc?.value !== 'None' ? tc?.value : 'None'}{' '}
+                      <br />
+                    </span>
+                  )
+                })}{' '}
+              </div>
+            </div>
           ) : null}
         </div>
-
-        <div></div>
       </div>
-    </DashboardShell>
+
+      <div className="flex h-full flex-1 flex-col bg-whiteSmoke px-2 py-4">
+        <h1 className="mb-4 ml-4 text-2xl text-dark">Mappings</h1>
+
+        {mappings?.length ? (
+          <div className="justify-left h-0 max-h-[50vh] flex-1 overflow-scroll bg-whiteSmoke text-left text-dark lg:max-h-full">
+            <div className="flex items-center p-1">
+              <Icons.trash className="mr-2 h-4 w-4 opacity-0" />
+              <span className="flex-1 text-right font-bold">
+                Virtuous Project
+              </span>
+              <Icons.arrowRight className="mx-2 h-4 w-4" />{' '}
+              <span className="flex-1 text-sm font-bold">
+                FE Credit Account
+              </span>
+            </div>
+            {mappings.map((mapping) => (
+              <div className="flex items-center p-1" key={mapping.id}>
+                <Icons.trash
+                  className="mr-2 h-4 w-4 text-red-500"
+                  onClick={() => onDeleteMapping(mapping.id)}
+                />
+                <span className="flex-1 text-right text-sm">
+                  {mapping.virProjectName}
+                </span>
+                <Icons.arrowRight className="mx-2 h-4 w-4" />{' '}
+                <span
+                  className="flex-1 text-sm"
+                  title={`Credit: ${lookupAccount(
+                    mapping.feAccountId
+                  )}, Debit: ${lookupAccount(mapping.feDebitAccountId)} ${
+                    Object.keys(mapping.feDebitAccountForGiftType ?? {})
+                      .length > 0
+                      ? '(with gift type customization)'
+                      : ''
+                  }`}
+                >
+                  {lookupAccount(mapping.feAccountId)}
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <EmptyPlaceholder>
+            <EmptyPlaceholder.Icon name="post" />
+            <EmptyPlaceholder.Title className="text-gray-800">
+              No Mappings Found
+            </EmptyPlaceholder.Title>
+            <EmptyPlaceholder.Description>
+              You don&apos;t have any mappings yet.
+            </EmptyPlaceholder.Description>
+          </EmptyPlaceholder>
+        )}
+        {mappings?.length ? (
+          <button
+            onClick={advanceStep}
+            className={cn(
+              `relative m-4 inline-flex h-9 items-center rounded-full border border-transparent bg-accent-1 px-4 py-2 text-sm font-medium text-dark hover:bg-cyan focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2`,
+              {
+                'cursor-not-allowed opacity-60': isLoading,
+              }
+            )}
+            disabled={isLoading}
+            {...props}
+          >
+            {isLoading ? (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Icons.arrowRight className="mr-2 h-4 w-4" />
+            )}
+            {pathname === '/projectMapping'
+              ? 'Return to dashboard'
+              : 'Continue (Data Review)'}
+          </button>
+        ) : null}
+      </div>
+    </div>
   )
 }

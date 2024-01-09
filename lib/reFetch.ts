@@ -44,7 +44,7 @@ export async function reFetch(url, method, id, body = {}) {
     }
     if (res2.status !== 200) {
       console.log('Initial response')
-      console.log(res2)
+      console.log(res2.status)
       if (res2.status === 401) {
         console.log('401 - need to refresh')
         const authStuff = `Basic ${Buffer.from(

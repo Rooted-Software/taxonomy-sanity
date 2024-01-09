@@ -17,12 +17,14 @@ export default function Combobox({
   onChange,
   isLoading,
   disabled,
+  triggerClassName = '',
 }: {
   options?: { label: string; value: string }[]
   value?: string
   onChange: (val: string) => void
   isLoading?: boolean
   disabled?: boolean
+  triggerClassName?: string
 }) {
   const [open, setOpen] = React.useState(false)
   const selectLabel = React.useMemo(() => {
@@ -39,23 +41,23 @@ export default function Combobox({
 
   return (
     <Popover open={open && !!options?.length} onOpenChange={setOpen}>
-      <PopoverTrigger>
+      <PopoverTrigger asChild>
         <Button
-          variant="outline"
           role="combobox"
+          aria-controls="expanded"
           aria-expanded={open}
           disabled={disabled}
-          className="text-md h-10 w-full whitespace-nowrap rounded-full border border-accent-1 bg-accent-1 py-2 px-5 text-left text-dark focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+          className={`max-w-full whitespace-nowrap rounded-full ${triggerClassName}`}
         >
-          {selectLabel}
+          <div className="truncate">{selectLabel}</div>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="p-0" align="start">
+      <PopoverContent id="expanded" className="p-0" align="start">
         <Command className="h-full">
           <CommandInput placeholder="Search..." />
           <CommandEmpty>No results</CommandEmpty>
-          <CommandGroup className="popover-list">
+          <CommandGroup className="popover-list text-ellipsis">
             {options?.map(({ label, value }) => (
               <CommandItem
                 key={value}

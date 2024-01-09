@@ -68,35 +68,37 @@ export default async function ConnectFEPage() {
   }
   const data = await reSettingsForUser(user?.teamId)
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 lg:pl-20">
-      <div className="content-center space-y-6 p-8">
-        <div className="flex flex-col space-y-2 md:max-w-xl lg:max-w-3xl">
-          <ContextualHelp articleId="setting-up-financial-edge" />
-          <p className="justify-left text-lg text-white">
-            <span className="font-bold text-accent-1">STEP 2:</span> Now
-            it&apos;s time to connect Financial Edge. Please be sure you if you
-            have a pop up blocker it is disabled.
-          </p>
-          <p className="justify-left mt-8 pt-8 text-white">
-            Clicking &apos;Connect to Financial Edge&apos; will pop up a login
-            window. Log in with your Financial Edge credentials. Select which
-            environment you wish to connect to and click &apos;Authorize&apos;
-            and you will be returned to this screen.
-          </p>
+    <div className="flex h-full flex-col items-center justify-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 lg:pl-20">
+        <div className="content-center space-y-6 p-8">
+          <div className="flex flex-col space-y-2 md:max-w-xl lg:max-w-3xl">
+            <ContextualHelp articleId="setting-up-financial-edge" />
+            <p className="justify-left text-lg text-white">
+              <span className="font-bold text-accent-1">STEP 2:</span> Now
+              it&apos;s time to connect Financial Edge. Please be sure you if
+              you have a pop up blocker it is disabled.
+            </p>
+            <p className="justify-left mt-8 pt-8 text-white">
+              Clicking &apos;Connect to Financial Edge&apos; will pop up a login
+              window. Log in with your Financial Edge credentials. Select which
+              environment you wish to connect to and click &apos;Authorize&apos;
+              and you will be returned to this screen.
+            </p>
+          </div>
+          <RESetupForm
+            user={{ id: user.id, name: user.name }}
+            reAuthorizeURL={reAuthorizeURL}
+            reData={data}
+          />
         </div>
-        <RESetupForm
-          user={{ id: user.id, name: user.name }}
-          reAuthorizeURL={reAuthorizeURL}
-          reData={data}
-        />
-      </div>
-      <div className="flex w-full flex-col justify-center space-y-6 md:max-w-xl">
-        <Image
-          src="/images/dualScreenFE.png"
-          alt="pictures of Financial Edge connect screens"
-          width={1000}
-          height={740}
-        />
+        <div className="flex w-full flex-col justify-center space-y-6 md:max-w-xl">
+          <Image
+            src="/images/dualScreenFE.png"
+            alt="pictures of Financial Edge connect screens"
+            width={1000}
+            height={740}
+          />
+        </div>
       </div>
     </div>
   )

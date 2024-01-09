@@ -10,7 +10,7 @@ export default async function ConnectFEPage() {
   const user = await getCurrentUser()
   console.log(user)
   return (
-    <div className="space-y-2 p-8 text-center">
+    <div className="flex h-full flex-col items-center justify-center space-y-2 p-8 text-center">
       <p className="text-lg">
         <span className="font-bold text-accent-1">STEP 3:</span> Select your
         journal from Financial Edge.
