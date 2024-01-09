@@ -125,19 +125,19 @@ export const authOptions: NextAuthOptions = {
 
         let credBody =
           credentials.twoFactor !== '' &&
-          credentials.twoFactor !== undefined &&
-          credentials.twoFactor !== 'undefined'
+            credentials.twoFactor !== undefined &&
+            credentials.twoFactor !== 'undefined'
             ? 'grant_type=password&username=' +
-              credentials.email +
-              '&password=' +
-              credentials.password +
-              '&otp=' +
-              credentials.twoFactor +
-              ''
+            credentials.email +
+            '&password=' +
+            credentials.password +
+            '&otp=' +
+            credentials.twoFactor +
+            ''
             : 'grant_type=password&username=' +
-              encodeURI(credentials.email) +
-              '&password=' +
-              credentials.password
+            encodeURI(credentials.email) +
+            '&password=' +
+            credentials.password
 
         const res = await fetch('https://api.virtuoussoftware.com/Token', {
           method: 'POST',
@@ -306,6 +306,7 @@ export const authOptions: NextAuthOptions = {
         session.user.name = token.name
         session.user.email = token.email
         session.user.image = token.picture
+        session.user.role = token.role
         session.user.team = token.team
         session.user.teamId = token.teamId
       }
@@ -344,6 +345,7 @@ export const authOptions: NextAuthOptions = {
         id: dbUser.id,
         name: dbUser.name,
         email: dbUser.email,
+        role: dbUser.role,
         picture: dbUser.image,
         setupStep: dbUser.team?.setupStep,
         team: dbUser.team ?? newTeam,
