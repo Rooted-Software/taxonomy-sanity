@@ -80,6 +80,8 @@
     "date-fns": "^2.29.3",
     "inngest": "^2.3.0",
     "intl-segmenter-polyfill": "^0.4.4",
+    "logrocket": "^7.0.0",
+    "logrocket-react": "^6.0.3",
     "lucide-react": "^0.92.0",
     "mailgun.js": "^9.2.1",
     "next": "^13.4.19",

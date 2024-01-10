@@ -4,6 +4,7 @@ import { siteConfig } from '@/config/site'
 import { cn } from '@/lib/utils'
 import { Toaster } from '@/components/ui/toaster'
 import { Analytics } from '@/components/analytics'
+import ErrorHandling from '@/components/ErrorHandling'
 import { TailwindIndicator } from '@/components/tailwind-indicator'
 import { ThemeProvider } from '@/components/theme-provider'
 
@@ -11,6 +12,8 @@ import '@/styles/globals.css'
 
 import { Inter as FontSans } from 'next/font/google'
 import localFont from 'next/font/local'
+
+import { getCurrentUser } from '@/lib/session'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -66,7 +69,9 @@ export const metadata = {
   manifest: `${siteConfig.url}/site.webmanifest`,
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default async function RootLayout({ children }: RootLayoutProps) {
+  const user = await getCurrentUser()
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
@@ -78,6 +83,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+          <ErrorHandling user={user} />
           {children}
           <Analytics />
           <Toaster />
