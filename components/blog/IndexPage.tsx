@@ -30,7 +30,7 @@ export default function IndexPage(props: {
                 Virtuous to Financial Edge Sync Made Easy
               </h1>
               <p className="text-xl text-slate-300">
-                Get started for free during DonorSync&apos;s beta period!
+                Start your free 30-day trial with no credit card required!
               </p>
             </div>
             <Link
