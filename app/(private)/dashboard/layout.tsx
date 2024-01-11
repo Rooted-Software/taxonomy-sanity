@@ -37,7 +37,9 @@ export default async function DashboardLayout({
   ])
 
   if (!subscriptions.data.length) {
-    return <SubscriptionBlock />
+    return (
+      <SubscriptionBlock needsPaymentMethod={!paymentMethods.data.length} />
+    )
   }
 
   return (

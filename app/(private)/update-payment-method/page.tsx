@@ -3,16 +3,14 @@ import Stripe from 'stripe'
 
 import { authOptions } from '@/lib/auth'
 import { getCurrentUser } from '@/lib/session'
-import { createSubscriptionIfNeeded, stripe } from '@/lib/stripe'
+import { stripe } from '@/lib/stripe'
 
-export default async function BillingPage() {
+export default async function UpdatePaymentMethodPage() {
   const user = await getCurrentUser()
 
   if (!user) {
     redirect(authOptions?.pages?.signIn || '/login')
   }
-
-  await createSubscriptionIfNeeded(user, user.team)
 
   const configurationParams: Stripe.BillingPortal.ConfigurationCreateParams = {
     business_profile: {
@@ -24,38 +22,20 @@ export default async function BillingPage() {
         allowed_updates: ['address', 'email', 'name', 'phone'],
       },
       invoice_history: {
-        enabled: true,
+        enabled: false,
       },
       payment_method_update: {
         enabled: true,
       },
       subscription_cancel: {
-        enabled: true,
+        enabled: false,
       },
       subscription_pause: {
-        enabled: true,
-      },
-      subscription_update: {
-        enabled: true,
-        default_allowed_updates: ['price'],
-        products: (await stripe.products.list()).data.flatMap((product) =>
-          product.default_price
-            ? [
-                {
-                  product: product.id,
-                  prices: [
-                    typeof product.default_price === 'string'
-                      ? product.default_price
-                      : product.default_price.id,
-                  ],
-                },
-              ]
-            : []
-        ),
+        enabled: false,
       },
     },
     metadata: {
-      type: 'billing',
+      type: 'payment-method',
     },
   }
 
@@ -84,7 +64,7 @@ export default async function BillingPage() {
   const session = await stripe.billingPortal.sessions.create({
     customer: user.team.stripeCustomerId,
     configuration: configuration.id,
-    return_url: `${process.env.VERCEL_URL}/dashboard`,
+    return_url: `${process.env.VERCEL_URL}/restart-subscription`,
   })
 
   redirect(session.url)

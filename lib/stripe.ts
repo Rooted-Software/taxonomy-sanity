@@ -43,14 +43,9 @@ export async function createSubscriptionIfNeeded(
   // Create subscription if needed
   const customerId = team.stripeCustomerId
   if (customerId) {
-    const [subscriptions, paymentMethods] = await Promise.all([
-      stripe.subscriptions.list({
-        customer: customerId,
-      }),
-      stripe.paymentMethods.list({
-        customer: customerId,
-      }),
-    ])
+    const subscriptions = await stripe.subscriptions.list({
+      customer: customerId,
+    })
     if (!subscriptions.data.length) {
       const price = (
         await stripe.prices.search({ query: `lookup_key:"monthly"` })
@@ -63,7 +58,7 @@ export async function createSubscriptionIfNeeded(
             price: price.id,
           },
         ],
-        trial_period_days: trial ? 30 : paymentMethods.data.length ? 0 : 3,
+        trial_period_days: trial ? 30 : 0,
       })
       console.log('Created subscription:', subscription.id, price.id)
     }
