@@ -79,7 +79,6 @@ export default async function DashboardPage({ searchParams }) {
   })
   const historyMorePages = history.length > PAGE_SIZE
 
-  console.log(user.id)
   return (
     <DashboardShell>
       <DashboardHeader
