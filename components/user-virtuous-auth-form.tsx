@@ -67,7 +67,7 @@ export function UserVirtuousAuthForm({
       return toast({
         title: title,
         description: 'Your sign in request failed. Please try again.',
-        variant: 'error',
+        variant: 'destructive',
       })
     }
     console.log(signInResult)

@@ -51,6 +51,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     }
     // This will occur when the user tries to sign in with a deleted user
     if (signInResult.error) {
+      console.error(signInResult.error)
       return toast({
         title: 'Email address not found',
         description: "Are you sure you're using the right email?",
