@@ -8,7 +8,7 @@ export const metadata = {
 
 export default async function ConnectFEPage() {
   const user = await getCurrentUser()
-  console.log(user)
+
   return (
     <div className="flex h-full flex-col items-center justify-center space-y-2 p-8 text-center">
       <p className="text-lg">

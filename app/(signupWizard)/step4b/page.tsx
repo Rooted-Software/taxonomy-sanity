@@ -40,7 +40,7 @@ export default async function ConnectFECreditAccount() {
   } else {
     feAccounts = await getFeAccountsFromBlackbaud(user.team.id)
   }
-  console.log(user)
+
   return (
     <div className="flex h-full w-full flex-col items-center justify-center space-y-2 p-8 text-center">
       <p className="justify-left text-lg text-white">

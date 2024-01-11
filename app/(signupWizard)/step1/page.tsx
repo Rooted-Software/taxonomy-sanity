@@ -28,7 +28,6 @@ const getApiKey = cache(async (teamId: User['teamId']) => {
 
 export default async function ConnectVirtuousOrg() {
   const user = await getCurrentUser()
-  console.log(user)
   const data = await getApiKey(user?.team.id)
   return (
     <div className="flex h-full flex-col items-center justify-center">

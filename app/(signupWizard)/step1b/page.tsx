@@ -1,4 +1,3 @@
-import { getCurrentUser } from '@/lib/session'
 import { ContextualHelp } from '@/components/contextual-help'
 import { UniversalSelect } from '@/components/dashboard/universal-select'
 
@@ -8,8 +7,6 @@ export const metadata = {
 }
 
 export default async function ConnectVirtuousOrg() {
-  const user = await getCurrentUser()
-  console.log(user)
   return (
     <>
       <ContextualHelp articleId="creating-a-virtuous-permissions-groups" />

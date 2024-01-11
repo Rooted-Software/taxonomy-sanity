@@ -9,6 +9,11 @@ export default async function RestartSubscription() {
     return notFound()
   }
 
-  await createSubscriptionIfNeeded(user, false)
+  try {
+    await createSubscriptionIfNeeded(user, user.team, false)
+  } catch (err) {
+    // If it fails to create, we should print and then let them go back to subscription block
+    console.error(err)
+  }
   redirect('/dashboard')
 }
