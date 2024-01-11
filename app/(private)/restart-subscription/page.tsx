@@ -9,6 +9,6 @@ export default async function RestartSubscription() {
     return notFound()
   }
 
-  await createSubscriptionIfNeeded(user, false)
+  await createSubscriptionIfNeeded(user, user.team, false)
   redirect('/dashboard')
 }

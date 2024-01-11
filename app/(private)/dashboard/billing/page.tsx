@@ -12,7 +12,7 @@ export default async function BillingPage() {
     redirect(authOptions?.pages?.signIn || '/login')
   }
 
-  await createSubscriptionIfNeeded(user)
+  await createSubscriptionIfNeeded(user, user.team)
 
   const configurationParams: Stripe.BillingPortal.ConfigurationCreateParams = {
     business_profile: {
@@ -66,6 +66,11 @@ export default async function BillingPage() {
   } catch {
     configuration =
       await stripe.billingPortal.configurations.create(configurationParams)
+  }
+
+  if (!user.team.stripeCustomerId) {
+    // This should never happen
+    throw new Error('Missing customer ID')
   }
 
   const session = await stripe.billingPortal.sessions.create({

@@ -1,5 +1,5 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import { Prisma, Team } from '@prisma/client'
+import { Prisma, Team, User } from '@prisma/client'
 import Mailgun from 'mailgun.js'
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
@@ -18,32 +18,37 @@ type Credentials = {
 
 const FormData = require('form-data')
 
-const setDefaultNewTeam = async (user: any) => {
-  console.log('Creating new default team')
-  // create a team
-  await db.team.create({
-    data: {
-      name: user.email,
-      users: {
-        connect: {
-          id: user.id,
+const setDefaultNewTeam = async (
+  user: Pick<User, 'email' | 'id'> & { team: Team | null }
+) => {
+  try {
+    console.log('Creating new default team')
+
+    const team = await db.team.create({
+      data: {
+        name: user.email,
+        users: {
+          connect: {
+            id: user.id,
+          },
         },
       },
-    },
-    select: {
-      id: true,
-    },
-  })
-  await db.user.update({
-    where: {
-      id: user.id,
-    },
-    data: {
-      role: 'admin',
-    },
-  })
-  // return newTeam // this is here because strip secret key is failing on localhost
-  return await createSubscriptionIfNeeded(user)
+    })
+
+    await db.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        role: 'admin',
+      },
+    })
+
+    return await createSubscriptionIfNeeded(user, team)
+  } catch (err) {
+    console.error(err)
+    throw err
+  }
 }
 export const authOptions: NextAuthOptions = {
   // huh any! I know.
@@ -125,19 +130,19 @@ export const authOptions: NextAuthOptions = {
 
         let credBody =
           credentials.twoFactor !== '' &&
-            credentials.twoFactor !== undefined &&
-            credentials.twoFactor !== 'undefined'
+          credentials.twoFactor !== undefined &&
+          credentials.twoFactor !== 'undefined'
             ? 'grant_type=password&username=' +
-            credentials.email +
-            '&password=' +
-            credentials.password +
-            '&otp=' +
-            credentials.twoFactor +
-            ''
+              credentials.email +
+              '&password=' +
+              credentials.password +
+              '&otp=' +
+              credentials.twoFactor +
+              ''
             : 'grant_type=password&username=' +
-            encodeURI(credentials.email) +
-            '&password=' +
-            credentials.password
+              encodeURI(credentials.email) +
+              '&password=' +
+              credentials.password
 
         const res = await fetch('https://api.virtuoussoftware.com/Token', {
           method: 'POST',
@@ -181,6 +186,7 @@ export const authOptions: NextAuthOptions = {
                 id: true,
                 teamId: true,
                 team: true,
+                email: true,
               },
             })
             // check to see if there is a team?
@@ -288,11 +294,12 @@ export const authOptions: NextAuthOptions = {
             id: true,
             teamId: true,
             team: true,
+            email: true,
           },
         })
         // check to see if there is a team?
         if (newUser && !newUser.teamId) {
-          const newTeam = await setDefaultNewTeam(newUser)
+          await setDefaultNewTeam(newUser)
         }
         return true
       }
