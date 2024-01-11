@@ -52,7 +52,7 @@ export async function createSubscriptionIfNeeded(
           price: price.id,
         },
       ],
-      trial_period_days: trial ? 14 : undefined,
+      trial_period_days: trial ? 30 : undefined,
     })
     updates.stripeSubscriptionId = subscription.id
     updates.stripePriceId = price.id
