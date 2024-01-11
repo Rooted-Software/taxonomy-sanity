@@ -21,6 +21,10 @@ export function FeFrame({ feEnvironment, className, ...props }: ReviewProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [openWindow, setOpenWindow] = React.useState<boolean>(false)
 
+  const searchParams = useSearchParams()
+  const record_id = searchParams?.get('record_id')
+  const envid = searchParams?.get('envid')
+
   useEffect(() => {
     if (openWindow === false && window) {
       setOpenWindow(true)
@@ -43,10 +47,6 @@ export function FeFrame({ feEnvironment, className, ...props }: ReviewProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  const searchParams = useSearchParams()
-  const record_id = searchParams?.get('record_id')
-  const envid = searchParams?.get('envid')
 
   return (
     <>

@@ -29,7 +29,7 @@ export default async function CompletePage() {
         </p>
         <p>
           If you would like to manually sync your data, you can do so from the
-          Batch Management dashboard.
+          Gift Management dashboard.
         </p>
         <p>You can find the Automatic Sync Switch on the Settings menu.</p>
         <div className="mt-5 flex justify-center">
