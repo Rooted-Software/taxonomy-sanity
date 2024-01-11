@@ -84,7 +84,7 @@ export default async function BillingPage() {
   const session = await stripe.billingPortal.sessions.create({
     customer: user.team.stripeCustomerId,
     configuration: configuration.id,
-    return_url: `${process.env.VERCEL_URL}/dashboard`,
+    return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
   })
 
   redirect(session.url)

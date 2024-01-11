@@ -64,7 +64,7 @@ export default async function UpdatePaymentMethodPage() {
   const session = await stripe.billingPortal.sessions.create({
     customer: user.team.stripeCustomerId,
     configuration: configuration.id,
-    return_url: `${process.env.VERCEL_URL}/restart-subscription`,
+    return_url: `${process.env.NEXT_PUBLIC_APP_URL}/restart-subscription`,
   })
 
   redirect(session.url)
