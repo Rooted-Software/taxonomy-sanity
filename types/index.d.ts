@@ -1,5 +1,3 @@
-import { Team } from '@prisma/client'
-
 import { Icons } from '@/components/icons'
 
 export type NavItem = {
@@ -51,14 +49,3 @@ export type MarketingConfig = {
 export type DashboardConfig = {
   navigation: SidebarNavItem[]
 }
-
-export type SubscriptionPlan = {
-  name: string
-  description: string
-  stripePriceId: string
-}
-
-export type TeamSubscriptionPlan = SubscriptionPlan &
-  Pick<Team, 'stripeCustomerId' | 'stripeSubscriptionId'> & {
-    isPro: boolean
-  }

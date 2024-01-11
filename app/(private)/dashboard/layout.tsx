@@ -3,7 +3,9 @@ import { notFound } from 'next/navigation'
 
 import { dashboardConfig } from '@/config/dashboard'
 import { getCurrentUser } from '@/lib/session'
+import { stripe } from '@/lib/stripe'
 import SubscriptionBlock from '@/components/dashboard/subscription-block'
+import TrialBanner from '@/components/dashboard/trial-banner'
 import { MainNav } from '@/components/main-nav'
 import { DashboardNav } from '@/components/nav'
 import { SiteFooter } from '@/components/site-footer'
@@ -21,12 +23,29 @@ export default async function DashboardLayout({
     return notFound()
   }
 
-  if (!user.team.stripeSubscriptionId) {
+  if (!user.team.stripeCustomerId) {
+    return <SubscriptionBlock />
+  }
+
+  const [subscriptions, paymentMethods] = await Promise.all([
+    stripe.subscriptions.list({
+      customer: user.team.stripeCustomerId,
+    }),
+    stripe.paymentMethods.list({
+      customer: user.team.stripeCustomerId,
+    }),
+  ])
+
+  if (!subscriptions.data.length) {
     return <SubscriptionBlock />
   }
 
   return (
     <div className="flex min-h-screen flex-col">
+      <TrialBanner
+        subscription={subscriptions.data[0]}
+        paymentMethods={paymentMethods.data}
+      />
       <header className="sticky top-0 z-40 border-b bg-background md:hidden">
         <div className="flex h-16 items-center justify-between p-4">
           <MainNav items={dashboardConfig.navigation} />
