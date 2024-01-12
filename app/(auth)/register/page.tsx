@@ -48,7 +48,7 @@ export default function RegisterPage() {
             </Link>{' '}
             and{' '}
             <Link
-              href="/privacy"
+              href="/privacy.html"
               className="underline underline-offset-4 hover:text-brand"
             >
               Privacy Policy
