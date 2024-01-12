@@ -140,7 +140,7 @@ export const authOptions: NextAuthOptions = {
               credentials.twoFactor +
               ''
             : 'grant_type=password&username=' +
-              encodeURI(credentials.email) +
+              encodeURIComponent(credentials.email) +
               '&password=' +
               credentials.password
 
