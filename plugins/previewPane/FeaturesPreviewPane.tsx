@@ -15,7 +15,12 @@ export default function PostPreviewPane(props: Props) {
       style={{ width: '100%', height: '100%', position: 'relative' }}
     >
       <iframe
-        style={{ width: '100%', height: '100%', position: 'relative', zIndex: 1 }}
+        style={{
+          width: '100%',
+          height: '100%',
+          position: 'relative',
+          zIndex: 1,
+        }}
         src={'/features'}
       />
       <Flex

@@ -1,10 +1,9 @@
 'use client'
 
-import { Disclosure } from '@headlessui/react'
-import Link from 'next/link'
 import type { FC } from 'react'
-import { HiChevronDown } from 'react-icons/hi2'
-import { HiArrowLeft } from 'react-icons/hi2'
+import Link from 'next/link'
+import { Disclosure } from '@headlessui/react'
+import { HiArrowLeft, HiChevronDown } from 'react-icons/hi2'
 
 interface AccordionProps {
   title: string
@@ -14,17 +13,17 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ')
 }
 const Accordion: FC<AccordionProps> = ({ title, items }) => (
-  <div className="bg-gray-50 p-4">
+  <div className="bg-gray-50 p-4 text-black">
     <Link href="/support">
       <button type="button" className="inline-flex items-center">
         <HiArrowLeft
-          className="-ml-1 mr-2 h-5 w-5 relative inline-flex items-center"
+          className="relative -ml-1 mr-2 inline-flex h-5 w-5 items-center"
           aria-hidden="true"
         />{' '}
         Back{' '}
       </button>
     </Link>
-    <div className="mx-auto max-w-7xl py-12 px-4 sm:py-16 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
       <div className="mx-auto max-w-3xl divide-y-2 divide-gray-200">
         <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
           {title}

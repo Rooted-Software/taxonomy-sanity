@@ -29,7 +29,7 @@ const supportCategoryFields = groq`
 export const settingsQuery = groq`*[_type == "settings"][0]`
 
 export const indexQuery = groq`
-*[_type == "post"] | order(date desc, _updatedAt desc) {
+*[_type == "post"] | order(orderRank asc, date desc, _updatedAt desc) {
   ${postFields}
 }`
 
@@ -63,7 +63,7 @@ export const postAndMoreStoriesQuery = groq`
     content,
     ${postFields}
   },
-  "morePosts": *[_type == "post" && slug.current != $slug] | order(date desc, _updatedAt desc) [0...2] {
+  "morePosts": *[_type == "post" && slug.current != $slug] | order(orderRank asc, date desc, _updatedAt desc) [0...2] {
     content,
     ${postFields}
   }
@@ -92,9 +92,9 @@ export const docBySlugQuery = groq`
 } 
 `
 
-export const docsCategoriesWithArticleLinksQuery = groq`*[_type == "docCategory"] | order(date asc, _updatedAt asc) {
+export const docsCategoriesWithArticleLinksQuery = groq`*[_type == "docCategory"] | order(orderRank asc, _updatedAt asc) {
   title,
-  "items" : *[_type == "documentation" && references(^._id) ] { title, "slug" : slug.current} ,
+  "items" : *[_type == "documentation" && references(^._id)  ] | order(orderRank asc, _updatedAt asc) { title, "slug" : slug.current} ,
   }`
 
 export interface Author {

@@ -1,9 +1,7 @@
-import { compareDesc } from 'date-fns'
+import Link from 'next/link'
 import * as demo from 'lib/demo.data'
 import type { Post, Settings } from 'lib/sanity.queries'
-import Link from 'next/link'
 
-import BlogHeader from '@/components/blog/BlogHeader'
 import Layout from '@/components/blog/BlogLayout'
 import HeroPost from '@/components/blog/HeroPost'
 import MoreStories from '@/components/blog/MoreStories'
@@ -21,28 +19,30 @@ export default function IndexPage(props: {
 
   return (
     <>
-      <Layout preview={preview} loading={loading}>
+      <Layout preview={preview || false} loading={loading}>
         <Container>
           <div className="flex flex-col items-start gap-4 md:flex-row md:justify-between md:gap-8">
             <div className="flex-1 space-y-4">
-              <h1 className="inline-block text-4xl font-extrabold tracking-tight text-slate-900 lg:text-5xl">
-                Blog
+              <h1 className="text-34xl inline-block font-extrabold tracking-tight text-slate-100 lg:text-3xl">
+                <span className="text-accent-1">
+                  DonorSync: <br />{' '}
+                </span>
+                Virtuous to Financial Edge Sync Made Easy
               </h1>
-              <p className="text-xl text-slate-600">
-                A blog built using Sanity.io Posts are written using Portable
-                Text.
+              <p className="text-xl text-slate-300">
+                Start your free 30-day trial with no credit card required!
               </p>
             </div>
             <Link
-              href="/register"
-              className="relative inline-flex h-11 items-center rounded-md border border-slate-900 bg-white px-8 py-2 text-center font-medium text-slate-900 transition-colors hover:bg-slate-900 hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
+              href="/signUp"
+              className="relative inline-flex h-11 items-center rounded-md border border-slate-100 bg-white px-8 py-2 text-center font-medium text-slate-900 transition-colors hover:bg-slate-900 hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
             >
               Sign Up
             </Link>
           </div>
           <hr className="my-8 border-slate-200" />
 
-          <BlogHeader title={title} description={description} level={2} />
+          {/* <BlogHeader title={title} description={description} level={2} /> */}
           {heroPost && (
             <HeroPost
               title={heroPost.title}

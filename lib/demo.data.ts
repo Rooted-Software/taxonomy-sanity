@@ -54,4 +54,4 @@ export const description = [
   },
 ]
 
-export const ogImageTitle = 'Rooted Template'
+export const ogImageTitle = 'DonorSync'

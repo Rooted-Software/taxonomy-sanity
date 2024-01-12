@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import type { FC } from 'react'
+import Link from 'next/link'
 
 interface CardProps {
   title: string
@@ -12,17 +12,17 @@ interface CardProps {
 const Card: FC<CardProps> = ({ title, subText, iconUrl, count, slug }) => (
   <Link href={slug + '?title=' + title}>
     <div className="flex justify-center p-3">
-      <div className="block p-3 rounded-lg shadow-lg bg-white min-w-full">
+      <div className="block min-w-full rounded-lg bg-white p-3 shadow-lg">
         <img
           className="mb-1"
           src={iconUrl}
           style={{ height: '25px', width: '25px' }}
         />
-        <p className="text-gray-900 text-base leading-tight font-medium mb-2">
+        <p className="mb-2 text-base font-medium leading-tight text-gray-900">
           {title}
         </p>
         <p
-          className="text-gray-700 text-sm mb-2"
+          className="mb-2 text-sm text-gray-700"
           style={{ fontStyle: 'italic' }}
         >
           {count} {subText}

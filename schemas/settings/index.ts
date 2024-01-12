@@ -36,9 +36,7 @@ export default defineType({
           lists: [],
           marks: {
             decorators: [],
-            annotations: [
-              
-            ],
+            annotations: [],
           },
         }),
       ],

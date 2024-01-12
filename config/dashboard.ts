@@ -1,44 +1,31 @@
 import { DashboardConfig } from 'types'
 
 export const dashboardConfig: DashboardConfig = {
-  mainNav: [
+  navigation: [
     {
-      title: 'Features',
-      href: '/features',
-      // disabled: true,
+      title: 'Dashboard',
+      href: '/dashboard',
+      icon: 'clipboard',
     },
     {
-      title: 'Pricing',
-      href: '/pricing',
+      title: 'Gift Management',
+      href: '/dashboard/gifts',
+      icon: 'wallet',
     },
     {
-      title: 'Blog',
-      href: '/blog',
-    },
-    {
-      title: 'Documentation',
-      href: '/docs',
-    },
-    {
-      title: 'Support',
-      href: '/support',
-    },
-    {
-      title: 'Contact',
-      href: '/contact',
-      disabled: true,
-    },
-  ],
-  sidebarNav: [
-    {
-      title: 'Content Management',
-      href: '/studio',
-      icon: 'post',
+      title: 'Project Mapping',
+      href: '/dashboard/projectMapping',
+      icon: 'map',
     },
     {
       title: 'Billing',
       href: '/dashboard/billing',
       icon: 'billing',
+    },
+    {
+      title: 'Team',
+      href: '/dashboard/team',
+      icon: 'users',
     },
     {
       title: 'Settings',

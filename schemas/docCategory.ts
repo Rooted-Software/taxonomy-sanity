@@ -1,6 +1,5 @@
-import authorType from './author'
 import { ComponentIcon } from '@sanity/icons'
-import { format, parseISO } from 'date-fns'
+import { orderRankField } from '@sanity/orderable-document-list'
 import { defineField, defineType } from 'sanity'
 
 /**
@@ -19,6 +18,16 @@ export default defineType({
   name: 'docCategory',
   title: 'Documentation Category',
   icon: ComponentIcon,
+  orderings: [
+    {
+      title: 'Rank',
+      name: 'rank',
+      by: [
+        { field: 'orderRank', direction: 'asc' },
+        { field: 'orderRank', direction: 'desc' },
+      ],
+    },
+  ],
   type: 'document',
   fields: [
     defineField({
@@ -43,6 +52,7 @@ export default defineType({
       title: 'Icon',
       type: 'image',
     }),
+    orderRankField({ type: 'docCategory' }),
   ],
   preview: {
     select: {

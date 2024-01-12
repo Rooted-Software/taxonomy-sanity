@@ -1,7 +1,11 @@
 /**
  * This config is used to set up Sanity Studio that's mounted on the `/pages/studio/[[...index]].tsx` route
  */
-import { enhancedNavbar } from '@/components/studio/enhancedNavbar'
+import {
+  dashboardTool,
+  projectInfoWidget,
+  projectUsersWidget,
+} from '@sanity/dashboard'
 import { visionTool } from '@sanity/vision'
 import { apiVersion, dataset, previewSecretId, projectId } from 'lib/sanity.api'
 import { previewDocumentNode } from 'plugins/previewPane'
@@ -9,15 +13,19 @@ import { productionUrl } from 'plugins/productionUrl'
 import { settingsPlugin, settingsStructure } from 'plugins/settings'
 import { defineConfig } from 'sanity'
 import { unsplashImageAsset } from 'sanity-plugin-asset-source-unsplash'
+import { documentListWidget } from 'sanity-plugin-dashboard-widget-document-list'
+import { vercelWidget } from 'sanity-plugin-dashboard-widget-vercel'
 import { deskTool } from 'sanity/desk'
 import authorType from 'schemas/author'
 import docArticleType from 'schemas/docArticle'
 import docCategoryType from 'schemas/docCategory'
+import featuresType from 'schemas/features'
 import postType from 'schemas/post'
 import settingsType from 'schemas/settings'
 import supportType from 'schemas/support'
 import supportCategoryType from 'schemas/supportCategory'
-import featuresType from 'schemas/features'
+
+import { enhancedNavbar } from '@/components/studio/enhancedNavbar'
 
 const title = process.env.NEXT_PUBLIC_SANITY_PROJECT_TITLE || 'Rooted Template'
 
@@ -36,10 +44,20 @@ export default defineConfig({
       docArticleType,
       supportCategoryType,
       docCategoryType,
-      featuresType
+      featuresType,
     ],
   },
   plugins: [
+    dashboardTool({
+      widgets: [
+        documentListWidget({
+          title: 'Recent Documents',
+        }),
+        projectInfoWidget(),
+        projectUsersWidget(),
+        vercelWidget(),
+      ],
+    }),
     deskTool({
       structure: settingsStructure(settingsType),
       // `defaultDocumentNode` is responsible for adding a “Preview” tab to the document pane
@@ -58,7 +76,7 @@ export default defineConfig({
         docArticleType.name,
         supportCategoryType.name,
         docCategoryType.name,
-        featuresType.name
+        featuresType.name,
       ],
     }),
     // Add an image asset source for Unsplash

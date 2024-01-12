@@ -1,12 +1,24 @@
-# Taxonomy - Sanity
+# Donorsync
 
-An open source application built using the new router, server components and everything new in Next.js 13.  Forked from shadcn to use Sanity.io / PortableText rather than MDX and Contentlayer (Contentlayer doesn't yet support Sanity)
+## Dev Getting Started
 
-> **Warning**
-> This app is a work in progress. I'm building this in public. You can follow the progress on Twitter [@shadcn](https://twitter.com/shadcn).
-> See the roadmap below.
+```sh
+npm install
+```
 
-Things Broken:  Styling on the Docs page text and the Docs Toc (It actually works with the custome headings components, but for some reason they aren't passing linting/typechecks)
+You will need to create a `.env` file at the root that contains the contents of the `local .env` item in LastPass. Reach out to your POC if you don't have access to the `Shared-Donorsync` folder in LastPass.
+
+This project used ESLint and Prettier to enforce programming rules and styling. Ensure you have plugins for both enabled in your IDE.
+
+---
+
+**Everything below is the default README from taxonomy**
+
+---
+
+An open source application built using the new router, server components and everything new in Next.js 13. Forked from shadcn to use Sanity.io / PortableText rather than MDX and Contentlayer (Contentlayer doesn't yet support Sanity)
+
+Things Broken: Styling on the Docs page text and the Docs Toc (It actually works with the custome headings components, but for some reason they aren't passing linting/typechecks)
 
 ## Demo
 
@@ -14,19 +26,11 @@ Things Broken:  Styling on the Docs page text and the Docs Toc (It actually work
 
 ## About this project
 
-Right now, I'm using this project as an experiment to see how a modern app (with features like authentication, subscriptions, API routes, static pages for docs ...etc) would work in Next.js 13 and server components.
+This project as an experiment to see how a modern app (with features like authentication, subscriptions, API routes, static pages for docs ...etc) would work in Next.js 13 and server components.
 
-I'll be posting updates and issues here.
-
-A few people have asked me to turn this into a starter. I think we could do that once the new features are out of beta.
+**This is not a starter template.**
 
 ## Note on Performance
-
-> **Warning**
-> This app is using the canary releases for Next.js 13 and React 18. The new router and app dir is still in beta and not production-ready.
-> NextAuth.js, which is used for authentication, is also not fully supported in Next.js 13 and RSC.
-> **Expect some performance hits when testing the dashboard**.
-> If you see something broken, you can ping me [@shadcn](https://twitter.com/shadcn).
 
 ## Features
 
@@ -34,6 +38,8 @@ A few people have asked me to turn this into a starter. I think we could do that
 - Routing, Layouts, Nested Layouts and Layout Groups
 - Data Fetching, Caching and Mutation
 - Loading UI
+- Route handlers
+- Metadata files
 - Server and Client Components
 - API Routes and Middlewares
 - Authentication using **NextAuth.js**
@@ -53,8 +59,7 @@ A few people have asked me to turn this into a starter. I think we could do that
 - [x] ~Subscriptions using Stripe~
 - [x] ~Responsive styles~
 - [x] ~Add OG image for blog using @vercel/og~
-- [ ] Add tests
-- [ ] Dark mode
+- [x] Dark mode
 
 ## Known Issues
 
@@ -63,6 +68,7 @@ A list of things not working right now:
 1. ~GitHub authentication (use email)~
 2. ~[Prisma: Error: ENOENT: no such file or directory, open '/var/task/.next/server/chunks/schema.prisma'](https://github.com/prisma/prisma/issues/16117)~
 3. ~[Next.js 13: Client side navigation does not update head](https://github.com/vercel/next.js/issues/42414)~
+4. [Cannot use opengraph-image.tsx inside catch-all routes](https://github.com/vercel/next.js/issues/48162)
 
 ## Why not tRPC, Turborepo or X?
 
@@ -91,7 +97,5 @@ pnpm dev
 ```
 
 ## License
-
-Licensed under the [MIT license](https://github.com/shadcn/taxonomy/blob/main/LICENSE.md).
 
 Thanks to https://kittygiraudel.com/2022/05/19/table-of-contents-with-sanity-portable-text/ for the TOC generation from portabletext

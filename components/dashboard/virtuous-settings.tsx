@@ -1,0 +1,175 @@
+'use client'
+
+import * as React from 'react'
+import { useRouter } from 'next/navigation'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+
+import { cn } from '@/lib/utils'
+import { apiKeySchema } from '@/lib/validations/apiKey'
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { toast } from '@/components/ui/use-toast'
+import { ApiCallButton } from '@/components/dashboard/api-call-button'
+import { Icons } from '@/components/icons'
+
+interface VirtuousSettingsFormProps
+  extends React.HTMLAttributes<HTMLFormElement> {
+  teamName?: string
+  apiKey?: string
+}
+
+type FormData = z.infer<typeof apiKeySchema>
+
+export function VirtuousSettingsForm({
+  apiKey,
+  className,
+  teamName,
+  ...props
+}: VirtuousSettingsFormProps) {
+  const router = useRouter()
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(apiKeySchema),
+    defaultValues: {
+      apiKey: apiKey,
+    },
+  })
+  const [tested, setTested] = React.useState<boolean>(false)
+  const [permissions, setPermissions] = React.useState<boolean>(false)
+  const [isSaving, setIsSaving] = React.useState<boolean>(false)
+  const [label, setLabel] = React.useState<string>('Save')
+  const [updatedTeamName, setUpdatedTeamName] = React.useState(teamName || '')
+  const [formApiKey, setFormApiKey] = React.useState(apiKey)
+  const responseCallback = (data) => {
+    setUpdatedTeamName(data.organizationName)
+    setPermissions(data.permissions)
+    setTested(true)
+    setLabel('Click to Continue')
+  }
+  async function onSubmit(data: FormData) {
+    setIsSaving(true)
+
+    const response = await fetch(`/api/virSettings`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        apiKey: formApiKey,
+        teamName: updatedTeamName || teamName,
+      }),
+    })
+
+    setIsSaving(false)
+
+    if (!response?.ok) {
+      return toast({
+        title: 'Something went wrong.',
+        description: 'Your APIKey was not updated. Please try again.',
+        variant: 'destructive',
+      })
+    }
+
+    toast({
+      description: 'Your apiKey has been updated.',
+      type: 'success',
+    })
+
+    router.push('/step2')
+  }
+
+  return (
+    <form
+      className={`mx-8 ${cn(className)}`}
+      onSubmit={handleSubmit(onSubmit)}
+      {...props}
+    >
+      <Card>
+        <CardHeader>
+          <CardTitle>Enter Virtuous API Key:</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-1">
+            <label className="sr-only" htmlFor="name">
+              Virtuous API Key
+            </label>
+            <input
+              id="apiKey"
+              onChange={(e) => setFormApiKey(e.target.value || '')}
+              className="mx-auto my-0 mb-2 block h-9 w-full rounded-full border border-slate-300 px-3 py-2 text-sm text-slate-600 placeholder:text-slate-400 hover:border-slate-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-800 focus:ring-offset-1"
+              value={formApiKey}
+            />
+            {errors?.apiKey && (
+              <p className="px-1 text-xs text-red-600">
+                {errors.apiKey.message}
+              </p>
+            )}
+          </div>
+        </CardContent>
+        <CardFooter className="w-100 grid-1 grid items-center text-center">
+          {tested ? (
+            <>
+              <span className="font-bold text-accent-1 ">
+                Successfully connected to:{' '}
+              </span>
+              <h3 className="mb-4 text-lg font-semibold tracking-tight">
+                {updatedTeamName}
+              </h3>
+
+              {!permissions ? (
+                <div className="text-red-500">
+                  Incorrect Virtuous Permissions. Please make sure Gifts and
+                  Projects have Read permission
+                </div>
+              ) : (
+                <>
+                  <button
+                    type="submit"
+                    className={cn(
+                      'relative mt-3 inline-flex items-center justify-center rounded-full border border-transparent  bg-accent-1 px-4 py-1 text-lg font-medium text-dark hover:bg-accent-2 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2',
+                      {
+                        'cursor-not-allowed opacity-60': isSaving,
+                      },
+                      className
+                    )}
+                    disabled={isSaving}
+                  >
+                    {isSaving ? (
+                      <Icons.spinner className="display-inline float-lef mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      ''
+                    )}
+                    {label}
+                  </button>
+                </>
+              )}
+              <button
+                onClick={() => setTested(false)}
+                className="mt-4 px-8 text-center font-medium text-success underline underline-offset-4"
+              >
+                Test API key again?
+              </button>
+            </>
+          ) : (
+            <>
+              <ApiCallButton
+                apiKey={formApiKey || ''}
+                responseCallback={responseCallback}
+              />
+            </>
+          )}
+        </CardFooter>
+      </Card>
+    </form>
+  )
+}

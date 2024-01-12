@@ -1,9 +1,14 @@
-import { DashboardNav } from '@/components/dashboard/nav'
-import { UserAccountNav } from '@/components/dashboard/user-account-nav'
-import { MainNav } from '@/components/main-nav'
+import * as React from 'react'
+import { notFound } from 'next/navigation'
+
 import { dashboardConfig } from '@/config/dashboard'
 import { getCurrentUser } from '@/lib/session'
-import { notFound } from 'next/navigation'
+import { stripe } from '@/lib/stripe'
+import SubscriptionBlock from '@/components/dashboard/subscription-block'
+import TrialBanner from '@/components/dashboard/trial-banner'
+import { MainNav } from '@/components/main-nav'
+import { DashboardNav } from '@/components/nav'
+import { SiteFooter } from '@/components/site-footer'
 
 interface DashboardLayoutProps {
   children?: React.ReactNode
@@ -18,26 +23,44 @@ export default async function DashboardLayout({
     return notFound()
   }
 
+  if (!user.team.stripeCustomerId) {
+    return <SubscriptionBlock />
+  }
+
+  const [subscriptions, paymentMethods] = await Promise.all([
+    stripe.subscriptions.list({
+      customer: user.team.stripeCustomerId,
+    }),
+    stripe.paymentMethods.list({
+      customer: user.team.stripeCustomerId,
+    }),
+  ])
+
+  if (!subscriptions.data.length) {
+    return (
+      <SubscriptionBlock needsPaymentMethod={!paymentMethods.data.length} />
+    )
+  }
+
   return (
-    <div className="mx-auto flex flex-col space-y-6">
-      <header className="container sticky top-0 z-40 bg-white">
-        <div className="flex h-16 items-center justify-between border-b border-b-slate-200 py-4">
-          <MainNav items={dashboardConfig.mainNav} />
-          <UserAccountNav
-            user={{
-              name: user.name,
-              image: user.image,
-              email: user.email,
-            }}
-          />
+    <div className="flex min-h-screen flex-col">
+      <TrialBanner
+        subscription={subscriptions.data[0]}
+        paymentMethods={paymentMethods.data}
+      />
+      <header className="sticky top-0 z-40 border-b bg-background md:hidden">
+        <div className="flex h-16 items-center justify-between p-4">
+          <MainNav items={dashboardConfig.navigation} />
         </div>
       </header>
-      <div className="container grid gap-12 md:grid-cols-[200px_1fr]">
-        <aside className="hidden w-[200px] flex-col md:flex">
-          <DashboardNav items={dashboardConfig.sidebarNav} />
+      <div className="flex">
+        <aside className="sticky top-0  h-screen ">
+          <DashboardNav items={dashboardConfig.navigation} />
         </aside>
-        <main className="flex w-full flex-1 flex-col overflow-hidden">
+        <main className="flex flex-1 flex-col overflow-y-auto bg-background px-4 py-6 md:px-10">
           {children}
+
+          <SiteFooter className="mt-auto border-t" />
         </main>
       </div>
     </div>

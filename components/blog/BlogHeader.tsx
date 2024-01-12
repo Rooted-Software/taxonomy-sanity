@@ -1,5 +1,5 @@
-import { PortableText } from '@portabletext/react'
 import Link from 'next/link'
+import { PortableText } from '@portabletext/react'
 
 import styles from './BlogHeader.module.css'
 
@@ -15,8 +15,8 @@ export default function BlogHeader({
   switch (level) {
     case 1:
       return (
-        <header className="mt-16 mb-10 flex flex-col items-center md:mb-12 md:flex-row md:justify-between">
-          <h1 className="text-6xl font-bold leading-tight tracking-tighter md:pr-8 md:text-8xl">
+        <header className="mb-10 mt-16 flex flex-col items-center md:mb-12 md:flex-row md:justify-between">
+          <h1 className="text-6xl font-bold leading-tight tracking-tighter text-accent-1 md:pr-8 md:text-8xl">
             {title}
           </h1>
           <h4
@@ -30,7 +30,7 @@ export default function BlogHeader({
     case 2:
       return (
         <header>
-          <h2 className="mt-8 mb-20 text-2xl font-bold leading-tight tracking-tight md:text-4xl md:tracking-tighter">
+          <h2 className="mb-20 mt-8 text-2xl font-bold leading-tight tracking-tight md:text-4xl md:tracking-tighter">
             <Link href="/" className="hover:underline">
               {title}
             </Link>

@@ -2,16 +2,16 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider             = "mysql"
-  url                  = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
+// Using these for virtuous account details.  Was used by Next Auth for OAuth Clients.  However, credentials method on Next Auth is not supported
 model Account {
   id                String   @id @default(cuid())
   userId            String
@@ -27,11 +27,39 @@ model Account {
   session_state     String?
   createdAt         DateTime @default(now()) @map(name: "created_at")
   updatedAt         DateTime @default(now()) @map(name: "updated_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map(name: "accounts")
+}
+
+model Team {
+  id                     String                  @id @default(cuid())
+  name                   String?
+  users                  User[]
+  virtuousOrg            String?
+  virtuousOrgName        String?
+  virtuousOrgTimeZone    String?
+  APISettings            ApiSetting?
+  RESettings             FeSetting?
+  stripeCustomerId       String?                 @unique @map(name: "stripe_customer_id")
+  giftBatches            GiftBatch[]
+  gifts                  Gift[]
+  feProjects             FeProject[]
+  projectMappings        ProjectMapping[]
+  reAccounts             FeAccount[]
+  reJournals             FeJournal[]
+  feAccountCodes         FeAccountCode[]
+  defaultJournal         String?
+  defaultCreditAccount   String?
+  defaultDebitAccount    String?
+  defaultDebitAccountForGiftType Json?
+  setupStep              String?
+  ProjectAccountMapping  ProjectAccountMapping[]
+  automation             Boolean?                @default(false)
+  passProjectID          Boolean?                @default(false)
+  frequency              String?                 @default("daily")
+  syncHistory            SyncHistory[]
 }
 
 model Session {
@@ -45,22 +73,22 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?       @unique
   emailVerified DateTime?
   image         String?
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
-
-  accounts Account[]
-  sessions Session[]
-  Post     Post[]
-
-  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
-  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
-  stripePriceId          String?   @map(name: "stripe_price_id")
-  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
+  createdAt     DateTime      @default(now()) @map(name: "created_at")
+  updatedAt     DateTime      @default(now()) @map(name: "updated_at")
+  accounts      Account[]
+  sessions      Session[]
+  Post          Post[]
+  teamId        String?
+  team          Team?         @relation(fields: [teamId], references: [id])
+  role          String?       @default("user")
+  status        String?       @default("invited")
+  syncHistory   SyncHistory[]
+  deleted       Boolean       @default(false)
 
   @@map(name: "users")
 }
@@ -86,4 +114,255 @@ model Post {
   author User @relation(fields: [authorId], references: [id])
 
   @@map(name: "posts")
+}
+
+model ApiSetting {
+  id          String   @id @default(cuid())
+  virtuousAPI String   @db.MediumText
+  createdAt   DateTime @default(now()) @map(name: "created_at")
+  updatedAt   DateTime @default(now()) @map(name: "updated_at")
+  teamId      String   @unique
+  team        Team     @relation(fields: [teamId], references: [id])
+
+  @@map(name: "api_settings")
+}
+
+model FeSetting {
+  id                       String   @id @default(cuid())
+  token_type               String
+  expires_in               Int
+  refresh_token            String?  @db.Text
+  access_token             String?  @db.Text
+  environment_id           String
+  environment_name         String
+  legal_entity_id          String
+  legal_entity_name        String
+  user_id                  String
+  email                    String
+  family_name              String
+  given_name               String
+  refresh_token_expires_in Int
+  mode                     String?
+  scope                    String?
+  createdAt                DateTime @default(now()) @map(name: "created_at")
+  updatedAt                DateTime @default(now()) @map(name: "updated_at")
+  teamId                   String   @unique
+  team                     Team     @relation(fields: [teamId], references: [id])
+
+  @@map(name: "fe_settings")
+}
+
+model GiftBatch {
+  id           String        @id @default(cuid())
+  batch_name   String
+  synced       Boolean       @default(false)
+  reBatchNo    Int?
+  syncedAt     DateTime?     @map(name: "synced_at")
+  createdAt    DateTime      @default(now()) @map(name: "created_at")
+  updatedAt    DateTime      @default(now()) @map(name: "updated_at")
+  latestGiftAt DateTime?
+  teamId       String
+  team         Team          @relation(fields: [teamId], references: [id])
+  syncHistory  SyncHistory[]
+
+  @@unique([teamId, batch_name])
+  @@map(name: "gift_batches")
+}
+
+model Gift {
+  gift_id                 String    @id @default(cuid())
+  id                      Int
+  transactionSource       String?
+  transactionId           String?
+  contactId               Int?
+  contactName             String?
+  contactUrl              String?
+  giftType                String?
+  giftTypeFormatted       String?
+  giftDate                DateTime?
+  giftDateFormatted       String?
+  amount                  Decimal?
+  amountFormatted         String?
+  currencyCode            String?
+  exchangeRate            Float?
+  baseCurrencyCode        String?
+  batch                   String?
+  createDateTimeUtc       DateTime?
+  createdByUser           String?
+  modifiedDateTimeUtc     DateTime?
+  modifiedByUser          String?
+  segmentId               Int?
+  segment                 String?
+  segmentCode             String?
+  segmentUrl              String?
+  mediaOutletId           Int?
+  mediaOutlet             String?
+  grantId                 Int?
+  grant                   String?
+  grantUrl                String?
+  notes                   String?
+  tribute                 String?
+  tributeId               Int?
+  tributeType             String?
+  acknowledgeIndividualId Int?
+  receiptDate             DateTime?
+  receiptDateFormatted    String?
+  contactPassthroughId    Int?
+  contactPassthroughUrl   String?
+  contactIndividualId     Int?
+  cashAccountingCode      String?
+  giftAskId               Int?
+  contactMembershipId     Int?
+  giftUrl                 String?
+  isTaxDeductible         Boolean?
+  giftDesignations        Json
+  giftPremiums            Json?
+  recurringGiftPayments   Json?
+  pledgePayments          Json?
+  customFields            Json?
+  batch_name              String
+  synced                  Boolean?
+  createdAt               DateTime  @default(now()) @map(name: "created_at")
+  updatedAt               DateTime  @default(now()) @map(name: "updated_at")
+  teamId                  String
+  team                    Team      @relation(fields: [teamId], references: [id])
+  syncHistoryId           String?
+  syncHistory             SyncHistory? @relation(fields: [syncHistoryId], references: [id])
+
+  @@map(name: "gifts")
+}
+
+// Question: What is this?
+model FeProject {
+  id                    String           @id @default(cuid())
+  project_id            Int
+  ui_project_id         String
+  projectCode           String?
+  location              String?
+  division              String?
+  department            String?
+  type                  String?
+  status                String?
+  description           String?
+  added_by              String?
+  modified_by           String?
+  prevent_data_entry    Boolean?
+  prevent_posting_after Boolean?
+  account_restrictions  Json?
+  customFields          Json?
+  date_added            DateTime?
+  date_modified         DateTime?
+  start_date            DateTime?
+  end_date              DateTime?
+  posting_date          DateTime?
+  createdAt             DateTime         @default(now()) @map(name: "created_at")
+  updatedAt             DateTime         @default(now()) @map(name: "updated_at")
+  projectMappings       ProjectMapping[]
+  teamId                String
+  team                  Team             @relation(fields: [teamId], references: [id])
+
+  @@unique([teamId, project_id])
+  @@map(name: "fe_projects")
+}
+
+// Deprecated
+model ProjectMapping {
+  id           String    @id @default(cuid())
+  virProjectId String
+  feProject    FeProject @relation(fields: [feProjectId], references: [id])
+  feProjectId  String
+  teamId       String
+  team         Team      @relation(fields: [teamId], references: [id])
+
+  @@index([virProjectId, teamId])
+  @@map(name: "project_mappings")
+}
+
+model ProjectAccountMapping {
+  id             String    @id @default(cuid())
+  virProjectId   Int
+  virProjectName String
+  feAccount      FeAccount? @relation(name: "credit", fields: [feAccountId, teamId], references: [account_id, teamId])
+  feAccountId    Int?
+  feDebitAccount FeAccount? @relation(name: "debit", fields: [feDebitAccountId, teamId], references: [account_id, teamId])
+  feDebitAccountId Int?
+  feDebitAccountForGiftType Json?
+  teamId         String
+  team           Team      @relation(fields: [teamId], references: [id])
+
+  @@unique([virProjectId, teamId])
+  @@map(name: "project_account_mappings")
+}
+
+model FeAccount {
+  account_id                Int
+  account_number            String
+  description               String?
+  prevent_data_entry        Boolean?
+  prevent_posting_data      Boolean?
+  class                     String?
+  cashflow                  String?
+  working_capital           String?
+  custom_fields             Json?
+  default_transaction_codes Json?
+  date_added                DateTime?
+  added_by                  String?
+  date_modified             DateTime?
+  modified_by               String?
+  createdAt                 DateTime                @default(now()) @map(name: "created_at")
+  updatedAt                 DateTime                @default(now()) @map(name: "updated_at")
+  teamId                    String
+  team                      Team                    @relation(fields: [teamId], references: [id])
+  projectAccountMappingCredit ProjectAccountMapping[] @relation(name: "credit")
+  projectAccountMappingDebit ProjectAccountMapping[] @relation(name: "debit")
+
+  @@id([account_id, teamId])
+  @@unique([account_id, teamId])
+  @@map(name: "fe_accounts")
+}
+
+model FeAccountCode {
+  account_code_id Int     @id
+  value           Int
+  category        String
+  class           String?
+  is_contra       Boolean
+  is_control      Boolean
+  description     String
+  teamId          String
+  team            Team    @relation(fields: [teamId], references: [id])
+
+  @@unique([teamId, account_code_id])
+  @@map(name: "fe_account_codes")
+}
+
+model FeJournal {
+  id      Int
+  code    String
+  journal String
+  teamId  String
+  team    Team   @relation(fields: [teamId], references: [id])
+
+  @@unique([teamId, id])
+  @@map(name: "fe_journals")
+}
+
+model SyncHistory {
+  id           String     @id @default(cuid())
+  teamId       String
+  team         Team       @relation(fields: [teamId], references: [id])
+  userId       String?
+  User         User?      @relation(fields: [userId], references: [id])
+  syncDate     DateTime
+  syncType     String //manual or automatic
+  syncStatus   String
+  syncMessage  String?
+  syncDuration Int
+  giftBatch    GiftBatch? @relation(fields: [giftBatchId], references: [id])
+  giftBatchId  String?
+  syncFilter   Json?
+  jobStatus    String?
+  gifts       Gift[]
+
+  @@map(name: "sync_history")
 }

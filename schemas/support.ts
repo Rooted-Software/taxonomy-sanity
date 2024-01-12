@@ -1,6 +1,7 @@
-import supportCategoryType from './supportCategory'
 import { HiOutlineLifebuoy } from 'react-icons/hi2'
 import { defineField, defineType } from 'sanity'
+
+import supportCategoryType from './supportCategory'
 
 /**
  * This file is the schema definition for a article.
@@ -39,8 +40,8 @@ export default defineType({
     }),
     defineField({
       name: 'content',
-      title: 'Content',
-      type: 'text',
+      type: 'array',
+      of: [{ type: 'block' }, { type: 'image' }],
     }),
     defineField({
       name: 'category',

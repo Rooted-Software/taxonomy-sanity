@@ -1,10 +1,9 @@
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import SectionSeparator from 'components/SectionSeparator'
 import * as demo from 'lib/demo.data'
 import type { Post, Settings } from 'lib/sanity.queries'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
 
-import BlogHeader from '@/components/blog/BlogHeader'
 import Layout from '@/components/blog/BlogLayout'
 import MoreStories from '@/components/blog/MoreStories'
 import PostBody from '@/components/blog/PostBody'
@@ -30,11 +29,11 @@ export default function BlogPostPage(props: {
   }
 
   return (
-    <Layout preview={preview} loading={loading}>
+    <Layout preview={preview || false} loading={loading}>
       <Container>
         <Link
           href="/blog"
-          className="relative  -left-[200px] hidden items-center justify-center text-sm font-medium text-slate-600 hover:text-slate-900 xl:inline-flex"
+          className="relative  -left-[200px] hidden items-center justify-center text-sm font-medium text-slate-200 hover:text-slate-900 xl:inline-flex"
         >
           <Icons.chevronLeft className="mr-2 h-4 w-4" />
           See all posts

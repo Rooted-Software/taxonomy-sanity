@@ -1,9 +1,10 @@
-import { Editor } from '@/components/dashboard/editor'
+import { notFound, redirect } from 'next/navigation'
+import { Post, User } from '@prisma/client'
+
 import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { getCurrentUser } from '@/lib/session'
-import { Post, User } from '@prisma/client'
-import { notFound, redirect } from 'next/navigation'
+import { Editor } from '@/components/editor'
 
 async function getPostForUser(postId: Post['id'], userId: User['id']) {
   return await db.post.findFirst({
@@ -22,7 +23,7 @@ export default async function EditorPage({ params }: EditorPageProps) {
   const user = await getCurrentUser()
 
   if (!user) {
-    redirect(authOptions.pages.signIn)
+    redirect(authOptions?.pages?.signIn || '/login?from=/dashboard')
   }
 
   const post = await getPostForUser(params.postId, user.id)

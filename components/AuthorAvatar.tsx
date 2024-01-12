@@ -1,6 +1,6 @@
+import Image from 'next/image'
 import { urlForImage } from 'lib/sanity.image'
 import type { Author } from 'lib/sanity.queries'
-import Image from 'next/image'
 
 export default function AuthorAvatar(props: Author) {
   const { name, picture } = props
@@ -17,11 +17,11 @@ export default function AuthorAvatar(props: Author) {
           height={42}
           width={42}
           // @TODO add alternative text to avatar image schema
-          alt={name}
+          alt={name || 'image name'}
         />
       </div>
       <div className="flex-1 text-left leading-tight">
-        <p className="font-medium text-slate-900">{name}</p>
+        <p className="font-medium text-slate-300">{name}</p>
       </div>
     </div>
   )

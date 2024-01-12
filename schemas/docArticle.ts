@@ -1,7 +1,8 @@
-import docCategoryType from './docCategory'
 import { BookIcon } from '@sanity/icons'
-import { format, parseISO } from 'date-fns'
+import { orderRankField } from '@sanity/orderable-document-list'
 import { defineField, defineType } from 'sanity'
+
+import docCategoryType from './docCategory'
 
 /**
  * This file is the schema definition for a post.
@@ -19,6 +20,16 @@ export default defineType({
   name: 'documentation',
   title: 'Documentation Article',
   icon: BookIcon,
+  orderings: [
+    {
+      title: 'Rank',
+      name: 'rank',
+      by: [
+        { field: 'orderRank', direction: 'asc' },
+        { field: 'orderRank', direction: 'desc' },
+      ],
+    },
+  ],
   type: 'document',
   fields: [
     defineField({
@@ -48,7 +59,7 @@ export default defineType({
       name: 'content',
       title: 'Content',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [{ type: 'block' }, { type: 'image' }],
     }),
     defineField({
       name: 'coverImage',
@@ -64,6 +75,7 @@ export default defineType({
       type: 'reference',
       to: [{ type: docCategoryType.name }],
     }),
+    orderRankField({ type: 'document' }),
   ],
   preview: {
     select: {

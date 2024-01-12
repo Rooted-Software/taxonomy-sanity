@@ -2,10 +2,10 @@
 
 import { usePreview } from 'lib/sanity.preview'
 import {
-  type Post,
-  type Settings,
   postAndMoreStoriesQuery,
   settingsQuery,
+  type Post,
+  type Settings,
 } from 'lib/sanity.queries'
 
 import BlogPostPage from '@/components/blog/BlogPostPage'

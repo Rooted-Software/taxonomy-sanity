@@ -1,6 +1,4 @@
-import authorType from './author'
 import { ComponentIcon } from '@sanity/icons'
-import { format, parseISO } from 'date-fns'
 import { defineField, defineType } from 'sanity'
 
 /**

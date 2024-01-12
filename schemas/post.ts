@@ -1,5 +1,5 @@
 import { BookIcon } from '@sanity/icons'
-import { orderRankOrdering, orderRankField } from '@sanity/orderable-document-list'
+import { orderRankField } from '@sanity/orderable-document-list'
 import { format, parseISO } from 'date-fns'
 import { defineField, defineType } from 'sanity'
 
@@ -21,7 +21,16 @@ export default defineType({
   name: 'post',
   title: 'Post',
   icon: BookIcon,
-  orderings: [{ title: 'Rank', name:'rank',  by: [{ field: "orderRank",  direction: 'asc'}, { field: "orderRank",  direction: 'desc'},]} ],
+  orderings: [
+    {
+      title: 'Rank',
+      name: 'rank',
+      by: [
+        { field: 'orderRank', direction: 'asc' },
+        { field: 'orderRank', direction: 'desc' },
+      ],
+    },
+  ],
   type: 'document',
   fields: [
     defineField({
