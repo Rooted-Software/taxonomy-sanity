@@ -58,5 +58,6 @@ test('validated post previews use the fetched local path', async () => {
 
 test('public previews remain public unless secret validation is required', async () => {
   assert.equal((await request({}, {})).status, 307)
+  assert.equal((await request({}, { secret: 'unconfigured' })).status, 401)
   assert.equal((await request({ SANITY_REQUIRE_PREVIEW_SECRET: 'true' }, {})).status, 401)
 })

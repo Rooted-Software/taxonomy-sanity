@@ -48,9 +48,7 @@ export default async function preview(
   if (req.query.secret) {
     const token = process.env.SANITY_API_READ_TOKEN
     if (!token) {
-      throw new Error(
-        'A secret is provided but there is no `SANITY_API_READ_TOKEN` environment variable setup.'
-      )
+      return res.status(401).send('Invalid secret')
     }
     const client = _client.withConfig({ useCdn: false, token })
     const secret = await getSecret(client, previewSecretId)
