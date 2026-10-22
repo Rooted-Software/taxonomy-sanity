@@ -4,7 +4,7 @@ import { TailwindIndicator } from '@/components/tailwind-indicator'
 import { cn } from '@/lib/utils'
 import '@/styles/globals.css'
 import { Toaster } from '@/ui/toast'
-import { Inter as FontSans } from '@next/font/google'
+import { Inter as FontSans } from 'next/font/google'
 import 'tailwindcss/tailwind.css'
 
 const fontSans = FontSans({

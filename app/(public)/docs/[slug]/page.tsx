@@ -14,9 +14,9 @@ import { PortableText, PortableTextComponents } from '@portabletext/react'
 import { notFound } from 'next/navigation'
 
 interface DocPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 const getChildrenText = (props) =>
@@ -41,7 +41,8 @@ export async function generateStaticParams() {
   return await getAllDocsSlugs()
 }
 
-export default async function DocPage({ params }: DocPageProps) {
+export default async function DocPage(props: DocPageProps) {
+  const params = await props.params;
   const slug = params?.slug || ''
   /* load docs from slug */
   const doc = await getDocBySlug(slug)
