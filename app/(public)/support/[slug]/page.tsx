@@ -4,7 +4,9 @@ import { getAllSupportCategoryArticles } from 'lib/sanity.client'
 import Link from 'next/link'
 import React from 'react'
 
-export default async function SupportPage({ params, searchParams }: any) {
+export default async function SupportPage(props: any) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   console.log('Support Page')
   console.log(params.slug)
   var articles: any[] = []

@@ -95,3 +95,12 @@ pnpm dev
 Licensed under the [MIT license](https://github.com/shadcn/taxonomy/blob/main/LICENSE.md).
 
 Thanks to https://kittygiraudel.com/2022/05/19/table-of-contents-with-sanity-portable-text/ for the TOC generation from portabletext
+
+### Draft previews
+
+Preview entry uses Next.js Draft Mode. With `SANITY_API_READ_TOKEN` configured,
+`/api/preview` requires the existing Studio preview secret; missing or invalid
+secrets return 401. Private Sanity reads stay on the server, and the token is
+never sent in cookies or client props. Without a private token, public previews
+remain available unless `SANITY_REQUIRE_PREVIEW_SECRET=true`. Preview content
+refreshes on navigation or reload. `/api/exit-preview` disables Draft Mode.

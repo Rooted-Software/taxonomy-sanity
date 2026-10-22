@@ -24,7 +24,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { type SanityClient, createClient, groq } from 'next-sanity'
 import { type ParseBody, parseBody } from 'next-sanity/webhook'
 
-export { config } from 'next-sanity/webhook'
+export const config = { api: { bodyParser: false }, runtime: 'nodejs' }
 
 export default async function revalidate(
   req: NextApiRequest,

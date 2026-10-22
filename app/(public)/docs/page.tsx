@@ -17,11 +17,6 @@ import { notFound } from 'next/navigation'
 
 var getSlug = require('speakingurl')
 
-interface DocPageProps {
-  params: {
-    slug: string
-  }
-}
 
 const getChildrenText = (props) =>
   props.children
@@ -41,7 +36,7 @@ const TableOfContents = (props) => (
   </ol>
 )
 
-export default async function DocPage({ params }: DocPageProps) {
+export default async function DocPage() {
   const slug = process.env.DEFAULT_DOC_SLUG || 'article-1'
   /* load docs from slug */
   const doc = await getDocBySlug(slug)

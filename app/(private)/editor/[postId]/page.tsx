@@ -15,10 +15,11 @@ async function getPostForUser(postId: Post['id'], userId: User['id']) {
 }
 
 interface EditorPageProps {
-  params: { postId: string }
+  params: Promise<{ postId: string }>
 }
 
-export default async function EditorPage({ params }: EditorPageProps) {
+export default async function EditorPage(props: EditorPageProps) {
+  const params = await props.params;
   const user = await getCurrentUser()
 
   if (!user) {

@@ -1,48 +1,29 @@
 import BlogPostPage from '@/components/blog/BlogPostPage'
-import PreviewPostPage from '@/components/blog/PreviewPostPage'
-import { PreviewSuspense } from 'components/PreviewSuspense'
 import {
   getAllPostsSlugs,
   getPostAndMoreStories,
   getSettings,
 } from 'lib/sanity.client'
-import { previewData } from 'next/headers'
+import { getSanityDraft } from 'lib/sanity-draft'
 
 export async function generateStaticParams() {
   return await getAllPostsSlugs()
 }
 
 interface PostPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
-export default async function PostPage({ params }: PostPageProps) {
-  const settings = getSettings()
-  console.log(params.slug)
+export default async function PostPage(props: PostPageProps) {
+  const params = await props.params;
+  const draft = await getSanityDraft()
+  const settings = getSettings(draft.token)
 
-  if (previewData()) {
-    const token = previewData().token || null
-    const data = getPostAndMoreStories(params.slug, token)
-    console.log(data)
-    return (
-      <PreviewSuspense
-        fallback={
-          <BlogPostPage
-            loading
-            preview
-            data={await data}
-            settings={await settings}
-          />
-        }
-      >
-        <PreviewPostPage token={token} slug={params.slug} />
-      </PreviewSuspense>
-    )
-  }
-  const data = getPostAndMoreStories(params.slug)
-  return <BlogPostPage data={await data} settings={await settings} />
+
+  const data = getPostAndMoreStories(params.slug, draft.token)
+  return <BlogPostPage preview={draft.isEnabled} data={await data} settings={await settings} />
 }
 // FIXME: remove the `revalidate` export below once you've followed the instructions in `/pages/api/revalidate.ts`
 // export const revalidate = 1

@@ -31,9 +31,9 @@ const client = projectId
   ? createClient({ projectId, dataset, apiVersion, useCdn })
   : null
 
-export async function getSettings(): Promise<Settings> {
+export async function getSettings(token?: string): Promise<Settings> {
   if (client) {
-    return (await client.fetch(settingsQuery)) || {}
+    return (await (token ? client.withConfig({ token, useCdn: false }) : client).fetch(settingsQuery)) || {}
   }
   return {}
 }
@@ -48,9 +48,9 @@ export async function getAllFeatures(): Promise<Feature[]> {
 
 
 // Blog
-export async function getAllPosts(): Promise<Post[]> {
+export async function getAllPosts(token?: string): Promise<Post[]> {
   if (client) {
-    return (await client.fetch(indexQuery)) || []
+    return (await (token ? client.withConfig({ token, useCdn: false }) : client).fetch(indexQuery)) || []
   }
   return []
 }
@@ -79,7 +79,7 @@ export async function getPostAndMoreStories(
       projectId,
       dataset,
       apiVersion,
-      useCdn,
+      useCdn: token ? false : useCdn,
       token: token || undefined,
     })
     return await client.fetch(postAndMoreStoriesQuery, { slug })
